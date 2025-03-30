@@ -1,6 +1,6 @@
 <header>
   <nav>
-    <div class="logo">Школа</div>
+    <div class="logo">Павлиський ліцей імені В.О.Сухомлинського</div>
     <ul class="menu">
       <li>
         <a href="#">Про школу</a>
@@ -49,9 +49,53 @@
     </ul>
     <div class="mobile-menu-icon" (click)="toggleMobileMenu()">&#9776;</div>
   </nav>
-  <div class="mobile-menu" [class.active]="mobileMenuActive">
-    <ul>
-      <!-- Мобільне меню з тими ж пунктами -->
-    </ul>
-  </div>
 </header>
+<div class="mobile-menu" [class.active]="mobileMenuActive">
+  <div class="back-arrow" (click)="toggleMobileMenu()">&#8594; Назад</div>
+  <ul class="mobile-menu-list">
+    <li>
+      <a href="#" (click)="toggleSubmenu($event)">Про школу</a>
+      <ul class="mobile-submenu">
+        <li><a href="#">Інфраструктура школи</a></li>
+        <li><a href="#">Команда</a></li>
+        <li><a href="#">3D-тур школою</a></li>
+        <li><a href="#">Наші цінності</a></li>
+        <li><a href="#">Історія закладу</a></li>
+        <li><a href="#">Музей</a></li>
+        <li><a href="#">Традиції школи</a></li>
+        <li><a href="#">Гордість школи</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#" (click)="toggleSubmenu($event)">Вступ</a>
+      <ul class="mobile-submenu">
+        <li><a href="#">Процес вступу</a></li>
+        <li><a href="#">Онлайн-навчання</a></li>
+      </ul>
+    </li>
+    <li><a href="#">Новини</a></li>
+    <li>
+      <a href="#" (click)="toggleSubmenu($event)">Для батьків</a>
+      <ul class="mobile-submenu">
+        <li><a href="#">Довідник</a></li>
+        <li><a href="#">Дистанційна освіта</a></li>
+        <li><a href="#">Батьківський форум</a></li>
+        <li><a href="#">Психолог радить</a></li>
+        <li><a href="#">Контакти психологічної допомоги</a></li>
+        <li><a href="#">Стоп булінг</a></li>
+        <li><a href="#">Безпека в інтернеті</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#" (click)="toggleSubmenu($event)">Гуртки</a>
+      <ul class="mobile-submenu">
+        <li><a href="#">Виховна робота</a></li>
+        <li><a href="#">Інклюзивне навчання</a></li>
+        <li><a href="#">Школа радості</a></li>
+        <li><a href="#">Уроки мислення</a></li>
+        <li><a href="#">Бібліотека</a></li>
+        <li><a href="#">Добрі справи</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
