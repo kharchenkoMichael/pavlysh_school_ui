@@ -1,8 +1,8 @@
-@import "src/assets/styles/variables";
+@use "../../../../assets/styles/variables" as *;
 
 header {
-  background-color: var(--primary-color);
-  color: var(--text-color);
+  background-color: $primary-color;
+  color: $text-color;
   padding: 10px 10px;
   display: flex;
   justify-content: center;
@@ -33,7 +33,7 @@ nav {
 }
 
 .menu a {
-  color: var(--text-color);
+  color: $text-color;
   text-decoration: none;
   padding: 10px;
   white-space: nowrap;
@@ -42,7 +42,7 @@ nav {
 .submenu {
   display: none;
   position: absolute;
-  background-color: var(--secondary-color);
+  background-color: $secondary-color;
   list-style: none;
   padding: 10px;
   top: 100%;
@@ -55,13 +55,13 @@ nav {
 }
 
 .menu li:hover > a {
-  background-color: var(--secondary-color);
-  color: var(--text-color);
+  background-color: $secondary-color;
+  color: $text-color;
 }
 
 .submenu li:hover > a {
-  background-color: var(--primary-color);
-  color: var(--text-color);
+  background-color: $primary-color;
+  color: $text-color;
 }
 
 .submenu li {
@@ -79,7 +79,7 @@ nav {
 
 .back-arrow {
   cursor: pointer;
-  color: var(--text-color);
+  color: $text-color;
   padding: 10px;
   font-size: 18px;
 }
@@ -96,7 +96,7 @@ nav {
   top: 0;
   height: 100%;
   width: 250px;
-  background-color: var(--primary-color);
+  background-color: $primary-color;
   padding: 20px;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
   transform: translateX(100%);
@@ -105,13 +105,12 @@ nav {
 
 .mobile-menu ul {
   list-style: none;
-  padding: 0;
 }
 
 .mobile-menu-list a {
   display: block;
   padding: 10px;
-  color: var(--text-color);
+  color: $text-color;
   text-decoration: none;
 }
 
@@ -121,13 +120,27 @@ nav {
 
 .mobile-submenu {
   display: none;
-  background-color: var(--secondary-color);
+  background-color: $secondary-color;
   padding: 10px;
   margin-left: 20px;
 }
 
+.mobile-submenu li {
+  margin: 0px 10px;
+}
+
 .mobile-submenu.active {
   display: block;
+}
+
+.mobile-menu-list li:hover > a {
+  background-color: $secondary-color;
+  color: $text-color;
+}
+
+.mobile-submenu li:hover > a {
+  background-color: $primary-color;
+  color: $text-color;
 }
 
 @media (max-width: 830px) {
