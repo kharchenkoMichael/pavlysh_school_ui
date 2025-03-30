@@ -1,1 +1,31 @@
-<p>news works!</p>
+<div class="news-container">
+  <div class="news-title">НОВИНИ</div>
+  <div class="news-list">
+    <div
+      class="news-item-wrapper"
+      *ngFor="
+        let item of news.slice(
+          currentNewsIndex,
+          currentNewsIndex + getVisibleNewsCount()
+        );
+        let i = index
+      "
+    >
+      <div class="news-item">
+        <img [src]="currentPhotos[i]" alt="News Photo" />
+        <div class="news-date">{{ item.date }}</div>
+        <div class="news-name">{{ item.name }}</div>
+        <div class="news-description">{{ item.description }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navigation">
+    <button class="prev" (click)="previousNews()">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="next" (click)="nextNews()">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

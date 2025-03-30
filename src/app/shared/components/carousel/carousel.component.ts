@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  HostListener,
+} from '@angular/core';
 
 @Component({
   selector: 'app-carousel',
@@ -7,12 +14,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./carousel.component.scss'],
   imports: [CommonModule],
 })
-export class CarouselComponent implements OnInit {
+export class CarouselComponent implements OnInit, OnDestroy {
+  @ViewChild('carouselContainer', { static: true })
+  carouselContainer!: ElementRef;
   images = [
-    'assets/images/carusel1.jpg',
-    'assets/images/carusel2.jpg',
-    'assets/images/carusel3.jpg',
-    'assets/images/carusel4.jpg',
+    'assets/images/carusel/carusel1.jpg',
+    'assets/images/carusel/carusel2.jpg',
+    'assets/images/carusel/carusel3.jpg',
+    'assets/images/carusel/carusel4.jpg',
   ];
   currentIndex = 0;
   currentTranslate = 0;
@@ -20,6 +29,11 @@ export class CarouselComponent implements OnInit {
 
   ngOnInit() {
     this.startAutoSlide();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.updateTranslate();
   }
 
   startAutoSlide() {
@@ -47,7 +61,8 @@ export class CarouselComponent implements OnInit {
   }
 
   updateTranslate() {
-    this.currentTranslate = -this.currentIndex * window.innerWidth;
+    this.currentTranslate =
+      -this.currentIndex * document.documentElement.clientWidth;
   }
 
   ngOnDestroy() {
