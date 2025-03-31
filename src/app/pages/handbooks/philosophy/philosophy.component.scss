@@ -1,0 +1,80 @@
+@use "../../../../assets/styles/variables" as *;
+@use "sass:color";
+
+.philosophy {
+  padding: 20px;
+  background-color: $background-color;
+  color: $dark-text-color;
+  font-family: "Arial", sans-serif;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: $primary-color;
+    font-size: 2.5em;
+  }
+
+  section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid $primary-color;
+    border-radius: 10px;
+    background-color: color.adjust($background-color, $lightness: 10%);
+    position: relative;
+    overflow: hidden;
+
+    h2 {
+      color: $secondary-color;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+
+    h3 {
+      color: $primary-color;
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        margin: 10px 0;
+
+        a {
+          color: $primary-color;
+          text-decoration: none;
+          font-size: 1.2em;
+
+          &:hover {
+            text-decoration: underline;
+            color: color.adjust($primary-color, $lightness: -10%);
+          }
+        }
+      }
+    }
+  }
+
+  button {
+    background-color: $primary-color;
+    color: $text-color;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    &:hover {
+      background-color: color.adjust($primary-color, $lightness: -10%);
+    }
+  }
+}
+.offset {
+  position: relative;
+  top: -70px;
+  visibility: hidden;
+}

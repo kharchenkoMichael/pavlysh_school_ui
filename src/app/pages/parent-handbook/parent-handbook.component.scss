@@ -1,0 +1,144 @@
+@use "../../../assets/styles/variables" as *;
+@use "sass:color";
+
+.parent-handbook {
+  padding: 20px;
+  background-color: $background-color;
+  color: $dark-text-color;
+  font-family: "Arial", sans-serif;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: $primary-color;
+    font-size: 2.5em;
+  }
+
+  .handbook-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    padding: 20px;
+  }
+
+  .handbook-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid $primary-color;
+    border-radius: 10px;
+    background-color: color.adjust($background-color, $lightness: 10%);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    h2 {
+      color: $secondary-color;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 1;
+
+      a {
+        color: $primary-color;
+        text-decoration: none;
+        font-size: 1.2em;
+
+        &:hover {
+          text-decoration: underline;
+          color: color.adjust($primary-color, $lightness: -10%);
+        }
+      }
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      position: relative;
+      z-index: 1;
+
+      li {
+        margin: 10px 0;
+
+        a {
+          color: $primary-color;
+          text-decoration: none;
+          font-size: 1.2em;
+
+          &:hover {
+            text-decoration: underline;
+            color: color.adjust($primary-color, $lightness: -10%);
+          }
+        }
+      }
+    }
+  }
+
+  .philosophy::before {
+    background-image: url("/assets/images/handbooks/philosophy.jpg");
+  }
+
+  .educational-approach::before {
+    background-image: url("/assets/images/handbooks/educational-approach.jpg");
+  }
+
+  .feedback::before {
+    background-image: url("/assets/images/handbooks/feedback.jpg");
+  }
+
+  .academic-support::before {
+    background-image: url("/assets/images/handbooks/academic-support.jpg");
+  }
+
+  .school-traditions::before {
+    background-image: url("/assets/images/handbooks/school-traditions.jpg");
+  }
+
+  .ict::before {
+    background-image: url("/assets/images/handbooks/ict.jpg");
+  }
+
+  .extracurricular::before {
+    background-image: url("/assets/images/handbooks/extracurricular.jpg");
+  }
+
+  .nutrition::before {
+    background-image: url("/assets/images/handbooks/nutrition.jpg");
+  }
+
+  .medical::before {
+    background-image: url("/assets/images/handbooks/medical.jpg");
+  }
+
+  .safety::before {
+    background-image: url("/assets/images/handbooks/safety.jpg");
+  }
+
+  .regulations::before {
+    background-image: url("/assets/images/handbooks/regulations.jpg");
+  }
+}
+
+button {
+  background-color: $primary-color;
+  color: $text-color;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $button-hover-color;
+  }
+}

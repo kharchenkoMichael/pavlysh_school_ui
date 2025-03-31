@@ -11,7 +11,7 @@ import { AddressComponent } from '../../shared/components/address/address.compon
     CarouselComponent,
     NewsComponent,
     AdmissionComponent,
-    TestimonialsComponent,
+    // TestimonialsComponent,
     AddressComponent,
   ],
   templateUrl: './home.component.html',

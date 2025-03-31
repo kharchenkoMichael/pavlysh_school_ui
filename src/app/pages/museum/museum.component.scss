@@ -1,0 +1,57 @@
+@use "sass:color";
+
+$primary-color: #4caf50;
+$secondary-color: #66bb6a;
+$text-color: #fff;
+$dark-text-color: #333;
+$background-color: #f9f9f9;
+$button-hover-color: color.scale($secondary-color, $lightness: -10%);
+
+.museum {
+  padding: 20px;
+  background-color: $background-color;
+  color: $dark-text-color;
+  font-family: "Arial", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: $primary-color;
+    font-size: 2.5em;
+  }
+
+  section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid $primary-color;
+    border-radius: 10px;
+    background-color: color.adjust($background-color, $lightness: 10%);
+    position: relative;
+    overflow: hidden;
+    max-width: 800px;
+    width: 100%;
+
+    h2 {
+      color: $secondary-color;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    img {
+      width: 50%;
+      height: auto;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
