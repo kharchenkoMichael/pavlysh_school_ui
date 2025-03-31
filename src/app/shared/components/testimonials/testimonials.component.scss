@@ -1,0 +1,127 @@
+$primary-color: #4caf50;
+$secondary-color: #66bb6a;
+$text-color: #333;
+$background-color: #f9f9f9;
+
+.reviews-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+
+  h2 {
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  .reviews-navigation {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .nav-button {
+      background-color: $primary-color;
+      border: none;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+
+      &.prev-button {
+        left: 0;
+      }
+
+      &.next-button {
+        right: 0;
+      }
+    }
+  }
+
+  .reviews-list {
+    display: flex;
+    overflow-x: hidden;
+    cursor: grab;
+
+    .review-item {
+      background-color: $background-color;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      min-width: 100%;
+
+      .review-item-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        width: 100%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        text-align: left;
+        flex-direction: row;
+
+        .review-photo {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          overflow: hidden;
+          flex-shrink: 0;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .review-content {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          flex-grow: 1;
+
+          .review-quote {
+            font-style: italic;
+            color: $secondary-color;
+            position: relative;
+            padding-left: 20px;
+            padding-right: 20px;
+            word-wrap: break-word;
+            white-space: normal;
+
+            &::before {
+              content: "“";
+              font-size: 2em;
+              position: absolute;
+              left: 0;
+              top: -10px;
+              color: $secondary-color;
+            }
+
+            &::after {
+              content: "”";
+              font-size: 2em;
+              position: absolute;
+              right: 0px;
+              bottom: -10px;
+              color: $secondary-color;
+            }
+          }
+
+          .review-author {
+            font-weight: bold;
+          }
+
+          .review-details {
+            font-size: 0.9em;
+            color: $text-color;
+          }
+        }
+      }
+    }
+  }
+}

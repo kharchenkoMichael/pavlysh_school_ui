@@ -1,1 +1,25 @@
-<p>testimonials works!</p>
+<div class="reviews-container">
+  <h2>Відгуки наших родин</h2>
+  <div class="reviews-navigation">
+    <button class="nav-button prev-button" (click)="moveLeft()">
+      &#10094;
+    </button>
+    <drag-scroll class="reviews-list" #nav [scrollbar-hidden]="true">
+      <div class="review-item" drag-scroll-item *ngFor="let review of reviews">
+        <div class="review-item-container">
+          <div class="review-photo">
+            <img [src]="review.photo" alt="Review Photo" />
+          </div>
+          <div class="review-content">
+            <blockquote class="review-quote">{{ review.quote }}</blockquote>
+            <div class="review-author">{{ review.name }}</div>
+            <div class="review-details">{{ review.details }}</div>
+          </div>
+        </div>
+      </div>
+    </drag-scroll>
+    <button class="nav-button next-button" (click)="moveRight()">
+      &#10095;
+    </button>
+  </div>
+</div>

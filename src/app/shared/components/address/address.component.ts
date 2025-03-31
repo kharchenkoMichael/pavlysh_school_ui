@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-address',
-  imports: [],
   templateUrl: './address.component.html',
-  styleUrl: './address.component.scss'
+  styleUrls: ['./address.component.scss'],
+  imports: [CommonModule],
 })
-export class AddressComponent {
-
+export class AddressComponent implements OnInit {
+  ngOnInit() {}
 }

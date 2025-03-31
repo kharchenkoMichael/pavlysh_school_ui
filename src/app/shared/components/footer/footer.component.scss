@@ -1,0 +1,47 @@
+@use "../../../../assets/styles/variables" as *;
+
+.footer-container {
+  background-color: $background-color;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+
+  .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+
+    .footer-section {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+
+      h3 {
+        color: $primary-color;
+        margin-bottom: 10px;
+      }
+
+      p,
+      a {
+        color: $dark-text-color;
+        margin-bottom: 10px;
+        text-decoration: none;
+
+        &:hover {
+          color: $secondary-color;
+        }
+      }
+
+      a {
+        display: inline-block;
+        margin-right: 10px;
+
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+}

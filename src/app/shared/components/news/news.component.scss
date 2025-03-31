@@ -1,10 +1,4 @@
-@use "sass:color";
-
-$primary-color: #4caf50;
-$secondary-color: #66bb6a;
-$text-color: #333;
-$background-color: #f9f9f9;
-$button-hover-color: color.scale($secondary-color, $lightness: -10%);
+@use "../../../../assets/styles/variables" as *;
 
 body {
   background-color: $background-color;
@@ -14,7 +8,7 @@ body {
 .news-container {
   position: relative;
   text-align: center;
-  color: $text-color;
+  color: $dark-text-color;
   padding: 20px;
 
   .news-title {
@@ -82,7 +76,7 @@ body {
 
     button {
       position: absolute;
-      top: calc(50% - 20px);
+      top: calc(50% - 250px);
       transform: translateY(-50%);
       background-color: rgba(0, 0, 0, 0.5);
       color: white;

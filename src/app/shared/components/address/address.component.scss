@@ -1,0 +1,67 @@
+@use "../../../../assets/styles/variables" as *;
+
+.address-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+
+  h2 {
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  .address-content {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+
+    .map {
+      flex: 1;
+      height: 500px;
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+    }
+
+    .contact-info {
+      flex: 1;
+      background-color: $background-color;
+      padding: 2px 20px 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+
+      h3 {
+        color: $secondary-color;
+        margin-bottom: 10px;
+      }
+
+      p {
+        color: $dark-text-color;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .address-content {
+      flex-direction: column;
+      align-items: center;
+
+      .map {
+        width: 100%;
+        height: 500px;
+        margin-bottom: 20px;
+        flex: none;
+      }
+
+      .contact-info {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+}
