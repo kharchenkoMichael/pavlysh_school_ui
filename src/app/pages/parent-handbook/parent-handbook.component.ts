@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './parent-handbook.component.html',
   styleUrls: ['./parent-handbook.component.scss'],
   imports: [CommonModule],
+  standalone: true,
 })
 export class ParentHandbookComponent {
   handbookSections = [

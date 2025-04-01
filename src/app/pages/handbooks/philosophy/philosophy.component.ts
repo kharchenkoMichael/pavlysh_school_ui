@@ -6,5 +6,6 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   templateUrl: './philosophy.component.html',
   styleUrl: './philosophy.component.scss',
+  standalone: true,
 })
 export class PhilosophyComponent {}

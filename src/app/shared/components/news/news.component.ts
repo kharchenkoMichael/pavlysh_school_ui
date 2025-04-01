@@ -6,6 +6,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss'],
   imports: [CommonModule],
+  standalone: true,
 })
 export class NewsComponent implements OnInit, OnDestroy {
   news = [

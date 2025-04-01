@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-school-pride',
   templateUrl: './school-pride.component.html',
   styleUrls: ['./school-pride.component.scss'],
+  standalone: true,
 })
 export class SchoolPrideComponent {
   isAccordionOpen = false;

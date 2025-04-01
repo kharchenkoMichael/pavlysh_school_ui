@@ -16,5 +16,6 @@ import { AddressComponent } from '../../shared/components/address/address.compon
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
+  standalone: true,
 })
 export class HomeComponent {}

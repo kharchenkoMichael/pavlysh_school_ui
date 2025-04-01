@@ -4,8 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-school-history',
   imports: [],
   templateUrl: './school-history.component.html',
-  styleUrl: './school-history.component.scss'
+  styleUrl: './school-history.component.scss',
+  standalone: true,
 })
-export class SchoolHistoryComponent {
-
-}
+export class SchoolHistoryComponent {}

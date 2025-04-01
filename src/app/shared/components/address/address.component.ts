@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.scss'],
   imports: [CommonModule],
+  standalone: true,
 })
 export class AddressComponent implements OnInit {
   ngOnInit() {}

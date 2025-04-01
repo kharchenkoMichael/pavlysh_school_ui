@@ -8,6 +8,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  standalone: true,
 })
 export class AppComponent {
   title = 'pavlysh_school_ui';

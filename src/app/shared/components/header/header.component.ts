@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  standalone: true,
   imports: [RouterModule],
+  standalone: true,
 })
 export class HeaderComponent {
   mobileMenuActive = false;

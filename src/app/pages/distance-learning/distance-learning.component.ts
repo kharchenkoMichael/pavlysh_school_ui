@@ -4,8 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-distance-learning',
   imports: [],
   templateUrl: './distance-learning.component.html',
-  styleUrl: './distance-learning.component.scss'
+  styleUrl: './distance-learning.component.scss',
+  standalone: true,
 })
-export class DistanceLearningComponent {
-
-}
+export class DistanceLearningComponent {}

@@ -4,8 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-museum',
   imports: [],
   templateUrl: './museum.component.html',
-  styleUrl: './museum.component.scss'
+  styleUrl: './museum.component.scss',
+  standalone: true,
 })
-export class MuseumComponent {
-
-}
+export class MuseumComponent {}

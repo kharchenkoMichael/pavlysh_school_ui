@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   templateUrl: './admission.component.html',
   styleUrl: './admission.component.scss',
+  standalone: true,
 })
 export class AdmissionComponent {
   currentYear: number;

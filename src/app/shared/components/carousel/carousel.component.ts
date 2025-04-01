@@ -13,6 +13,7 @@ import {
   templateUrl: './carousel.component.html',
   styleUrls: ['./carousel.component.scss'],
   imports: [CommonModule],
+  standalone: true,
 })
 export class CarouselComponent implements OnInit, OnDestroy {
   @ViewChild('carouselContainer', { static: true })
