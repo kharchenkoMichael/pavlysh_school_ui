@@ -8,6 +8,9 @@ import { SchoolPrideComponent } from './pages/school-pride/school-pride.componen
 import { AdmissionPageComponent } from './pages/admission-page/admission-page.component';
 import { DistanceLearningComponent } from './pages/distance-learning/distance-learning.component';
 import { PsychologistsAdviceComponent } from './pages/psychologists-advice/psychologists-advice.component';
+import { PsychologicalHelpComponent } from './pages/psychological-help/psychological-help.component';
+import { AntiBullyingComponent } from './pages/anti-bullying/anti-bullying.component';
+import { InternetSafetyComponent } from './pages/internet-safety/internet-safety.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,4 +22,7 @@ export const routes: Routes = [
   { path: 'admission', component: AdmissionPageComponent },
   { path: 'distance-learning', component: DistanceLearningComponent },
   { path: 'advice', component: PsychologistsAdviceComponent },
+  { path: 'psychological', component: PsychologicalHelpComponent },
+  { path: 'anti-bullying', component: AntiBullyingComponent },
+  { path: 'internet-safety', component: InternetSafetyComponent },
 ];

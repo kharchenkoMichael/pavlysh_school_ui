@@ -1,0 +1,18 @@
+@use "../../../../assets/styles/variables" as *;
+
+.invitation-container {
+  background-color: $background-color;
+  text-align: center;
+  padding: 20px;
+
+  img {
+    cursor: pointer;
+    transition: transform 0.3s;
+    height: 80vh;
+    max-width: 100%;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}

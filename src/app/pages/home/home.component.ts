@@ -4,13 +4,15 @@ import { NewsComponent } from '../../shared/components/news/news.component';
 import { AdmissionComponent } from '../../shared/components/admission/admission.component';
 import { TestimonialsComponent } from '../../shared/components/testimonials/testimonials.component';
 import { AddressComponent } from '../../shared/components/address/address.component';
+import { AddmissionImageComponent } from '../../shared/components/admission-image/admission-image.component';
 
 @Component({
   selector: 'app-home',
   imports: [
     CarouselComponent,
     NewsComponent,
-    AdmissionComponent,
+    AddmissionImageComponent,
+    //AdmissionComponent,
     // TestimonialsComponent,
     AddressComponent,
   ],
