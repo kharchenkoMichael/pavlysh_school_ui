@@ -13,16 +13,100 @@ import { AntiBullyingComponent } from './pages/anti-bullying/anti-bullying.compo
 import { InternetSafetyComponent } from './pages/internet-safety/internet-safety.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'parent-handbook', component: ParentHandbookComponent },
-  //   { path: 'philosophy', component: PhilosophyComponent },
-  { path: 'school-history', component: SchoolHistoryComponent },
-  { path: 'museum', component: MuseumComponent },
-  { path: 'school-pride', component: SchoolPrideComponent },
-  { path: 'admission', component: AdmissionPageComponent },
-  { path: 'distance-learning', component: DistanceLearningComponent },
-  { path: 'advice', component: PsychologistsAdviceComponent },
-  { path: 'psychological', component: PsychologicalHelpComponent },
-  { path: 'anti-bullying', component: AntiBullyingComponent },
-  { path: 'internet-safety', component: InternetSafetyComponent },
+  {
+    path: '',
+    component: HomeComponent,
+    data: {
+      title: 'Головна – Павлиська школа',
+      description: 'Офіційний сайт Павлиської школи: новини, розклад, події та інформація для учнів і батьків.'
+    }
+  },
+  {
+    path: 'parent-handbook',
+    component: ParentHandbookComponent,
+    data: {
+      title: 'Батьківський довідник – Павлиська школа',
+      description: 'Інформація для батьків: правила, поради, документи та важливі події школи.'
+    }
+  },
+  {
+    path: 'philosophy',
+    component: PhilosophyComponent,
+    data: {
+      title: 'Філософія навчання – Павлиська школа',
+      description: 'Основні принципи та цінності Павлиської школи.'
+    }
+  },
+  {
+    path: 'school-history',
+    component: SchoolHistoryComponent,
+    data: {
+      title: 'Історія школи – Павлиська школа',
+      description: 'Дізнайтеся про історію та розвиток Павлиської школи.'
+    }
+  },
+  {
+    path: 'museum',
+    component: MuseumComponent,
+    data: {
+      title: 'Музей школи – Павлиська школа',
+      description: 'Віртуальний тур по музею школи та історичні експонати.'
+    }
+  },
+  {
+    path: 'school-pride',
+    component: SchoolPrideComponent,
+    data: {
+      title: 'Гордість школи – Павлиська школа',
+      description: 'Досягнення та успіхи учнів та вчителів Павлиської школи.'
+    }
+  },
+  {
+    path: 'admission',
+    component: AdmissionPageComponent,
+    data: {
+      title: 'Прийом до школи – Павлиська школа',
+      description: 'Інформація про вступ, документи та правила прийому до школи.'
+    }
+  },
+  {
+    path: 'distance-learning',
+    component: DistanceLearningComponent,
+    data: {
+      title: 'Дистанційне навчання – Павлиська школа',
+      description: 'Матеріали та ресурси для дистанційного навчання учнів.'
+    }
+  },
+  {
+    path: 'advice',
+    component: PsychologistsAdviceComponent,
+    data: {
+      title: 'Поради психолога – Павлиська школа',
+      description: 'Рекомендації та поради від шкільного психолога для учнів і батьків.'
+    }
+  },
+  {
+    path: 'psychological',
+    component: PsychologicalHelpComponent,
+    data: {
+      title: 'Психологічна допомога – Павлиська школа',
+      description: 'Як отримати психологічну підтримку та допомогу у школі.'
+    }
+  },
+  {
+    path: 'anti-bullying',
+    component: AntiBullyingComponent,
+    data: {
+      title: 'Протидія булінгу – Павлиська школа',
+      description: 'Інформація та правила протидії булінгу в школі.'
+    }
+  },
+  {
+    path: 'internet-safety',
+    component: InternetSafetyComponent,
+    data: {
+      title: 'Безпека в інтернеті – Павлиська школа',
+      description: 'Поради та правила безпечного користування інтернетом для учнів.'
+    }
+  },
 ];
