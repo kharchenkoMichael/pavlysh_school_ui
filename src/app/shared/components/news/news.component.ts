@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
-  selector: 'app-news',
-  templateUrl: './news.component.html',
-  styleUrls: ['./news.component.scss'],
-  imports: [CommonModule],
-  standalone: true,
+    selector: 'app-news',
+    templateUrl: './news.component.html',
+    styleUrls: ['./news.component.scss'],
+    imports: [CommonModule]
 })
 export class NewsComponent implements OnInit, OnDestroy {
   news = [

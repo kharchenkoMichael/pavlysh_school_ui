@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 @Component({
-  selector: 'app-psychologists-advice',
-  templateUrl: './psychologists-advice.component.html',
-  styleUrls: ['./psychologists-advice.component.scss'],
-  imports: [CarouselModule, CommonModule],
-  standalone: true,
+    selector: 'app-psychologists-advice',
+    templateUrl: './psychologists-advice.component.html',
+    styleUrls: ['./psychologists-advice.component.scss'],
+    imports: [CarouselModule, CommonModule]
 })
 export class PsychologistsAdviceComponent {
   images = [

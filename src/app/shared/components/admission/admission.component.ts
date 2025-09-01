@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-admission',
-  imports: [RouterModule],
-  templateUrl: './admission.component.html',
-  styleUrl: './admission.component.scss',
-  standalone: true,
+    selector: 'app-admission',
+    imports: [RouterModule],
+    templateUrl: './admission.component.html',
+    styleUrl: './admission.component.scss'
 })
 export class AdmissionComponent {
   currentYear: number;
