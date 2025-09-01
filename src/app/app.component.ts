@@ -5,12 +5,11 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
-import { AppRoutingModule } from './app-routing.module';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, AppRoutingModule],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
