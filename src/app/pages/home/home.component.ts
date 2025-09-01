@@ -7,16 +7,17 @@ import { AddressComponent } from '../../shared/components/address/address.compon
 import { AddmissionImageComponent } from '../../shared/components/admission-image/admission-image.component';
 
 @Component({
-    selector: 'app-home',
-    imports: [
-        CarouselComponent,
-        NewsComponent,
-        AddmissionImageComponent,
-        //AdmissionComponent,
-        // TestimonialsComponent,
-        AddressComponent,
-    ],
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.scss'
+  selector: 'app-home',
+  imports: [
+    CarouselComponent,
+    NewsComponent,
+    AddmissionImageComponent,
+    //AdmissionComponent,
+    // TestimonialsComponent,
+    AddressComponent,
+  ],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss',
+  standalone: true,
 })
 export class HomeComponent {}

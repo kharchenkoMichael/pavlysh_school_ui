@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-parent-handbook',
-    templateUrl: './parent-handbook.component.html',
-    styleUrls: ['./parent-handbook.component.scss'],
-    imports: [CommonModule]
+  selector: 'app-parent-handbook',
+  templateUrl: './parent-handbook.component.html',
+  styleUrls: ['./parent-handbook.component.scss'],
+  imports: [CommonModule],
+  standalone: true,
 })
 export class ParentHandbookComponent {
   handbookSections = [

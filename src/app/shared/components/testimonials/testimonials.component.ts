@@ -3,10 +3,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll';
 
 @Component({
-    selector: 'app-testimonials',
-    templateUrl: './testimonials.component.html',
-    styleUrls: ['./testimonials.component.scss'],
-    imports: [CommonModule, DragScrollComponent, DragScrollItemDirective]
+  selector: 'app-testimonials',
+  templateUrl: './testimonials.component.html',
+  styleUrls: ['./testimonials.component.scss'],
+  imports: [CommonModule, DragScrollComponent, DragScrollItemDirective],
+  standalone: true,
 })
 export class TestimonialsComponent implements OnInit {
   @ViewChild('nav', { read: DragScrollComponent }) ds!: DragScrollComponent;
