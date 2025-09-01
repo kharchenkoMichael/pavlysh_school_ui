@@ -30,6 +30,11 @@
                 "glob": "sitemap.xml",
                 "input": "src",
                 "output": "/"
+              },
+              {
+                "glob": "robots.txt",
+                "input": "src",
+                "output": "/"
               }],
             "styles": [
               "src/assets/styles/variables.scss",
