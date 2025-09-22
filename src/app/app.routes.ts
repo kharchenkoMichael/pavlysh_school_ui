@@ -11,6 +11,7 @@ import { PsychologistsAdviceComponent } from './pages/psychologists-advice/psych
 import { PsychologicalHelpComponent } from './pages/psychological-help/psychological-help.component';
 import { AntiBullyingComponent } from './pages/anti-bullying/anti-bullying.component';
 import { InternetSafetyComponent } from './pages/internet-safety/internet-safety.component';
+import { RegistrationOpenComponent } from './pages/registration-open/registration-open.component';
 
 export const routes: Routes = [
   {
@@ -107,6 +108,14 @@ export const routes: Routes = [
     data: {
       title: 'Безпека в інтернеті – Павлиська школа',
       description: 'Поради та правила безпечного користування інтернетом для учнів.'
+    }
+  },
+  {
+    path: 'registration-open',
+    component: RegistrationOpenComponent,
+    data: {
+      title: 'Реєстрація на олімпіади – Павлиська школа',
+      description: 'Інформація про відкриття реєстрації на учнівські олімпіади 2025/2026 навчального року.'
     }
   },
 ];

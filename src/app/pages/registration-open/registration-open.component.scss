@@ -1,0 +1,76 @@
+.registration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+  padding: 20px;
+}
+
+.registration-card {
+  background: #fff;
+  padding: 40px;
+  max-width: 700px;
+  text-align: center;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.registration-card h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.registration-card p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+  color: #444;
+}
+
+.registration-card .deadline {
+  font-size: 1.2rem;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.actions {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.btn.primary {
+  background: #1976d2;
+  color: white;
+}
+
+.btn.primary:hover {
+  background: #0d47a1;
+}
+
+.btn.secondary {
+  background: #f48fb1;
+  color: white;
+}
+
+.btn.secondary:hover {
+  background: #c2185b;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

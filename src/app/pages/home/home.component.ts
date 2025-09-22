@@ -5,6 +5,7 @@ import { AdmissionComponent } from '../../shared/components/admission/admission.
 import { TestimonialsComponent } from '../../shared/components/testimonials/testimonials.component';
 import { AddressComponent } from '../../shared/components/address/address.component';
 import { AddmissionImageComponent } from '../../shared/components/admission-image/admission-image.component';
+import { RegistrationOpenComponent } from '../registration-open/registration-open.component';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +13,7 @@ import { AddmissionImageComponent } from '../../shared/components/admission-imag
     CarouselComponent,
     NewsComponent,
     AddmissionImageComponent,
+    RegistrationOpenComponent,
     //AdmissionComponent,
     // TestimonialsComponent,
     AddressComponent,
