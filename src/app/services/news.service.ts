@@ -7,7 +7,7 @@ import { News } from '../models/news';
   providedIn: 'root'
 })
 export class NewsService {
-  private apiUrl = 'https://pavlysh-school-api-cte7btdcazhcahg3.northeurope-01.azurewebsites.net/news/news'; 
+  private apiUrl = 'https://pavlysh-school-api-cte7btdcazhcahg3.northeurope-01.azurewebsites.net/news'; 
   constructor(private http: HttpClient) {}
 
   getNews(): Observable<News[]> {
