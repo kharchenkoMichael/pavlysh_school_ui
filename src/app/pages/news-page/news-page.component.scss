@@ -34,6 +34,7 @@
     }
 
     .news-item {
+      position: relative;
       background-color: color.adjust($background-color, $lightness: 6%);
       border: 1px solid $primary-color;
       border-radius: 10px;
@@ -53,9 +54,11 @@
       }
 
       .news-date {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
         font-size: 0.85em;
-        color: $secondary-color;
-        margin: 10px 0 5px 0;
+        color: $dark-text-color;
       }
 
       .news-name {
