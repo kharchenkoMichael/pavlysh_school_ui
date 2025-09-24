@@ -6,6 +6,8 @@ import { TestimonialsComponent } from '../../shared/components/testimonials/test
 import { AddressComponent } from '../../shared/components/address/address.component';
 import { AddmissionImageComponent } from '../../shared/components/admission-image/admission-image.component';
 import { RegistrationOpenComponent } from '../registration-open/registration-open.component';
+import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +19,8 @@ import { RegistrationOpenComponent } from '../registration-open/registration-ope
     //AdmissionComponent,
     // TestimonialsComponent,
     AddressComponent,
+    CommonModule, 
+    HttpClientModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

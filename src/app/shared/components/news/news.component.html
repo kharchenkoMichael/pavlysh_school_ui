@@ -3,29 +3,17 @@
   <div class="news-list">
     <div
       class="news-item-wrapper"
-      *ngFor="
-        let item of news.slice(
-          currentNewsIndex,
-          currentNewsIndex + getVisibleNewsCount()
-        );
-        let i = index
-      "
+      *ngFor="let item of news; let i = index"
+      (click)="openNews(item.id)"  
     >
       <div class="news-item">
         <img [src]="currentPhotos[i]" alt="News Photo" />
         <div class="news-date">{{ item.date }}</div>
-        <div class="news-name">{{ item.name }}</div>
-        <div class="news-description">{{ item.description }}</div>
+        <div class="news-name">{{ item.title }}</div>
+        <div class="news-description">
+          {{ item.description | slice:0:100 }}...
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="navigation">
-    <button class="prev" (click)="previousNews()">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="next" (click)="nextNews()">
-      <i class="fas fa-chevron-right"></i>
-    </button>
   </div>
 </div>

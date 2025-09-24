@@ -1,0 +1,10 @@
+<div *ngIf="newsItem" class="news-detail-container">
+  <h2>{{ newsItem.title }}</h2>
+  <div class="carousel">
+    <button (click)="prevPhoto()">&lt;</button>
+    <img [src]="newsItem.images[currentPhotoIndex]" alt="News Photo" />
+    <button (click)="nextPhoto()">&gt;</button>
+  </div>
+  <div class="news-date">{{ newsItem.date }}</div>
+  <p class="news-description">{{ newsItem.description }}</p>
+</div>

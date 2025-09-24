@@ -12,6 +12,7 @@ import { PsychologicalHelpComponent } from './pages/psychological-help/psycholog
 import { AntiBullyingComponent } from './pages/anti-bullying/anti-bullying.component';
 import { InternetSafetyComponent } from './pages/internet-safety/internet-safety.component';
 import { RegistrationOpenComponent } from './pages/registration-open/registration-open.component';
+import { NewsDetailComponent } from './pages/news-detail/news-detail.component';
 
 export const routes: Routes = [
   {
@@ -118,4 +119,12 @@ export const routes: Routes = [
       description: 'Інформація про відкриття реєстрації на учнівські олімпіади 2025/2026 навчального року.'
     }
   },
+  {
+    path: 'news/:id',
+    component: NewsDetailComponent,
+    data: {
+      title: 'Новина – Павлиська школа',
+      description: 'Деталі новини та всі фотографії'
+    }
+  }
 ];
