@@ -12,6 +12,7 @@ body {
   padding: 20px;
 
   .news-title {
+    cursor: pointer;
     font-size: 2em;
     margin-bottom: 20px;
     color: $primary-color;
@@ -28,6 +29,7 @@ body {
       justify-content: center;
     }
     .news-item {
+      cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;

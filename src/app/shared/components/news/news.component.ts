@@ -77,4 +77,8 @@ export class NewsComponent implements OnInit, OnDestroy {
   openNews(newsId: number) {
     this.router.navigate(['/news', newsId]);
   }
+
+  goToNewsPage() {
+    this.router.navigate(['/news']); 
+  }
 }

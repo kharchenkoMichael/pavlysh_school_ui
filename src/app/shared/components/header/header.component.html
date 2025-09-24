@@ -25,7 +25,7 @@
           <li><a href="#">Онлайн-навчання</a></li>
         </ul> -->
       </li>
-      <li><a href="#">Новини</a></li>
+      <li><a  [routerLink]="['/news']">Новини</a></li>
       <li>
         <a [routerLink]="['/parent-handbook']">Для батьків</a>
         <ul class="submenu">
@@ -86,7 +86,7 @@
         <li><a href="#">Онлайн-навчання</a></li>
       </ul> -->
     </li>
-    <li><a href="#">Новини</a></li>
+    <li><a [routerLink]="['/news']">Новини</a></li>
     <li>
       <a (click)="toggleSubmenu($event)">Для батьків</a>
       <ul class="mobile-submenu">

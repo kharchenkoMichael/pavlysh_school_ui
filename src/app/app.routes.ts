@@ -13,6 +13,7 @@ import { AntiBullyingComponent } from './pages/anti-bullying/anti-bullying.compo
 import { InternetSafetyComponent } from './pages/internet-safety/internet-safety.component';
 import { RegistrationOpenComponent } from './pages/registration-open/registration-open.component';
 import { NewsDetailComponent } from './pages/news-detail/news-detail.component';
+import { NewsPageComponent } from './pages/news-page/news-page.component';
 
 export const routes: Routes = [
   {
@@ -126,5 +127,13 @@ export const routes: Routes = [
       title: 'Новина – Павлиська школа',
       description: 'Деталі новини та всі фотографії'
     }
-  }
+  },
+  {
+    path: 'news',
+    component: NewsPageComponent,
+    data: {
+      title: 'Новини – Павлиська школа',
+      description: 'Всі новини школи: події, досягнення та важливі оголошення.'
+    }
+  },
 ];

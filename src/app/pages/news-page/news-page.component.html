@@ -1,17 +1,17 @@
 <div class="news-container">
-  <div class="news-title" (click)="goToNewsPage()">НОВИНИ</div>
+  <div class="news-title">НОВИНИ</div>
   <div class="news-list">
     <div
       class="news-item-wrapper"
-      *ngFor="let item of news.slice(currentNewsIndex, currentNewsIndex + getVisibleNewsCount()); let i = index"
-      (click)="openNews(item.id)"  
+      *ngFor="let item of news; let i = index"
+      (click)="openNews(item.id)"
     >
       <div class="news-item">
         <img [src]="currentPhotos[i]" alt="News Photo" />
-        <div class="news-date">{{ item.date }}</div>
+        <div class="news-date">{{ item.date | date: "dd.MM.yyyy" }}</div>
         <div class="news-name">{{ item.title }}</div>
         <div class="news-description">
-          {{ item.description | slice:0:100 }}...
+          {{ item.description | slice: 0: 100 }}...
         </div>
       </div>
     </div>
