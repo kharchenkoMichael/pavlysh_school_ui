@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { News } from '../models/news';
+import { PaginatedNews } from '../models/paginated-news';
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +17,9 @@ export class NewsService {
 
   getNewsById(id: number): Observable<News> {
     return this.http.get<News>(`${this.apiUrl}${id}`);
+  }
+  
+  getPaginationNews(page: number, pageSize: number): Observable<PaginatedNews> {
+    return this.http.get<PaginatedNews>(`${this.apiUrl}/paginated?page=${page}&page_size=${pageSize}`);
   }
 }

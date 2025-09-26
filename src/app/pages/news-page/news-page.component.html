@@ -16,4 +16,10 @@
       </div>
     </div>
   </div>
+
+  <div class="pagination">
+    <button (click)="prevPage()" [disabled]="page === 1">Назад</button>
+    <span>Сторінка {{ page }} із {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="page * pageSize >= total">Вперед</button>
+  </div>
 </div>

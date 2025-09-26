@@ -4,6 +4,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NewsService } from '../../../services/news.service';
 import { News } from '../../../models/news';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-news',
@@ -21,8 +22,8 @@ export class NewsComponent implements OnInit, OnDestroy {
   constructor(private newsService: NewsService,  private router: Router) {}
 
   ngOnInit() {
-    this.newsService.getNews().subscribe((data) => {
-      this.news = data;
+    this.newsService.getPaginationNews(1,3).subscribe((data) => {
+      this.news = data.items;
       this.updateCurrentPhotos();
       this.startPhotoRotation();
     });

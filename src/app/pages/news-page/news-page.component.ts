@@ -17,18 +17,27 @@ export class NewsPageComponent implements OnInit, OnDestroy {
   currentPhotos: string[] = [];
   photoInterval: any;
 
+  page: number = 1;
+  pageSize: number = 8;
+  total: number = 0;
+
   constructor(private newsService: NewsService, private router: Router) {}
 
   ngOnInit() {
-    this.newsService.getNews().subscribe((data) => {
-      this.news = data;
-      this.setInitialPhotos();
-      this.startPhotoRotation();
-    });
+    this.loadNews();
   }
 
   ngOnDestroy() {
     clearInterval(this.photoInterval);
+  }
+
+  loadNews() {
+    this.newsService.getPaginationNews(this.page, this.pageSize).subscribe((data) => {
+      this.news = data.items;
+      this.total = data.total;
+      this.setInitialPhotos();
+      this.startPhotoRotation();
+    });
   }
 
   setInitialPhotos() {
@@ -38,10 +47,11 @@ export class NewsPageComponent implements OnInit, OnDestroy {
   }
 
   getRandomPhoto(photos: string[]): string {
-    return photos[Math.floor(Math.random() * photos.length)];
+    return photos?.length ? photos[Math.floor(Math.random() * photos.length)] : 'assets/no-photo.png';
   }
 
   startPhotoRotation() {
+    clearInterval(this.photoInterval);
     this.photoInterval = setInterval(() => {
       this.currentPhotos = this.news.map((item) =>
         this.getRandomPhoto(item.images)
@@ -52,4 +62,22 @@ export class NewsPageComponent implements OnInit, OnDestroy {
   openNews(newsId: number) {
     this.router.navigate(['/news', newsId]);
   }
+
+  nextPage() {
+    if (this.page * this.pageSize < this.total) {
+      this.page++;
+      this.loadNews();
+    }
+  }
+
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+      this.loadNews();
+    }
+  }
+  get totalPages(): number {
+    return Math.ceil(this.total / this.pageSize);
+  }
 }
+
