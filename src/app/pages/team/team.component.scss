@@ -6,6 +6,7 @@
   flex-direction: column;
   padding: 20px;
   gap: 20px;
+  box-sizing: border-box;
 
   .search {
     width: 100%;
@@ -16,6 +17,7 @@
       font-size: 1rem;
       border: 1px solid darken($background-color, 10%);
       border-radius: 6px;
+      box-sizing: border-box;
     }
   }
 
@@ -23,6 +25,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: 20px;
+    width: 100%;
 
     .employee-card {
       display: flex;
@@ -32,6 +35,12 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       overflow: hidden;
       transition: transform 0.2s;
+      max-width: 100%; 
+      box-sizing: border-box;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
 
       img {
         width: 150px;
@@ -39,15 +48,17 @@
         object-fit: cover;
         margin: 10px;
         border-radius: 10%;
+        flex-shrink: 0;
       }
 
       .info {
         padding: 10px;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
 
         h3 {
-          font-size: 1.3rem;
+          font-size: 1.2rem;
           font-weight: bold;
           margin: 0 0 5px 0;
         }
