@@ -1,0 +1,113 @@
+@use "../../../assets/styles/variables" as *;
+@use "sass:color";
+
+.team-page-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+
+  .search {
+    width: 100%;
+
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid darken($background-color, 10%);
+      border-radius: 6px;
+    }
+  }
+
+  .employees {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+
+    .employee-card {
+      display: flex;
+      flex-direction: row;
+      background-color: $background-color;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s;
+
+      img {
+        width: 150px;
+        height: 200px;
+        object-fit: cover;
+        margin: 10px;
+        border-radius: 10%;
+      }
+
+      .info {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+          font-size: 1.3rem;
+          font-weight: bold;
+          margin: 0 0 5px 0;
+        }
+
+        .position {
+          font-size: 1rem;
+          font-weight: bold;
+          color: $dark-text-color;
+          margin-bottom: 5px;
+        }
+
+        .bio {
+          font-size: 0.75rem;
+          color: $dark-text-color;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          transition: max-height 0.3s;
+        }
+
+        button {
+          margin-top: auto;
+          align-self: flex-start;
+          background-color: $primary-color;
+          color: $text-color;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $button-hover-color;
+          }
+        }
+      }
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    button {
+      background-color: $secondary-color;
+      color: $text-color;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:disabled {
+        background-color: lighten($secondary-color, 30%);
+        cursor: not-allowed;
+      }
+
+      &:hover:enabled {
+        background-color: $button-hover-color;
+      }
+    }
+  }
+}

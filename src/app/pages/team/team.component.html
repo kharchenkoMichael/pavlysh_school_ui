@@ -1,0 +1,37 @@
+<div class="team-page-container">
+  <div class="search">
+    <input
+      type="text"
+      [(ngModel)]="search"
+      (input)="onSearchChange()"
+      placeholder="Пошук вчителів..."
+    />
+  </div>
+
+  <div *ngIf="loading" class="loading">Завантаження...</div>
+
+  <div class="employees">
+    <div class="employee-card" *ngFor="let emp of employees">
+      <img *ngIf="emp.photo" [src]="emp.photo" alt="{{ emp.first_name }} {{ emp.last_name }}">
+      <div class="info">
+        <h3>{{ emp.last_name }} {{ emp.first_name }} {{ emp.middle_name || '' }}</h3>
+        <p class="position">{{ emp.position }}</p>
+        <p class="bio" *ngIf="!emp.expanded">
+          {{ emp.bio | slice:0:100 }}
+        </p>
+        <p class="bio" *ngIf="emp.expanded">
+          {{ emp.bio }}
+        </p>
+        <button *ngIf="emp.bio && emp.bio.length > 100" (click)="emp.expanded = !emp.expanded">
+          {{ emp.expanded ? 'Згорнути' : 'Розгорнути' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button (click)="onPageChange(page-1)" [disabled]="page === 1">&lt;</button>
+    <span>Сторінка {{ page }} / {{ totalPages }}</span>
+    <button (click)="onPageChange(page+1)" [disabled]="page >= totalPages">&gt;</button>
+  </div>
+</div>

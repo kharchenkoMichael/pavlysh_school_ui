@@ -8,7 +8,7 @@
         <a href="#">Про школу</a>
         <ul class="submenu">
           <!-- <li><a href="#">Інфраструктура школи</a></li> -->
-          <li><a href="#">Команда</a></li>
+          <li><a [routerLink]="['/team']">Команда</a></li>
           <li><a [routerLink]="['/registration-open']">Реєстрація</a></li>
           <!-- <li><a href="#">3D-тур школою</a></li> -->
           <!-- <li><a href="#">Наші цінності</a></li> -->
@@ -69,7 +69,7 @@
       <a (click)="toggleSubmenu($event)">Про школу</a>
       <ul class="mobile-submenu">
         <!-- <li><a href="#">Інфраструктура школи</a></li> -->
-        <li><a href="#">Команда</a></li>
+        <li><a [routerLink]="['/team']">Команда</a></li>
         <!-- <li><a href="#">3D-тур школою</a></li> -->
         <!-- <li><a href="#">Наші цінності</a></li> -->
         <li><a [routerLink]="['/registration-open']">Реєстрація</a></li>

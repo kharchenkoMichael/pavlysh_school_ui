@@ -14,6 +14,7 @@ import { InternetSafetyComponent } from './pages/internet-safety/internet-safety
 import { RegistrationOpenComponent } from './pages/registration-open/registration-open.component';
 import { NewsDetailComponent } from './pages/news-detail/news-detail.component';
 import { NewsPageComponent } from './pages/news-page/news-page.component';
+import { TeamComponent } from './pages/team/team.component';
 
 export const routes: Routes = [
   {
@@ -134,6 +135,14 @@ export const routes: Routes = [
     data: {
       title: 'Новини – Павлиська школа',
       description: 'Всі новини школи: події, досягнення та важливі оголошення.'
+    }
+  },
+  {
+    path: 'team',
+    component: TeamComponent,
+    data: {
+      title: 'Команда школи – Павлиська школа',
+      description: 'Список всіх вчителів Павлиської школи з можливістю пошуку та пагінації.'
     }
   },
 ];
