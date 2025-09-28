@@ -1,5 +1,16 @@
 <div class="news-container">
   <div class="news-title">НОВИНИ</div>
+
+  <div class="news-search">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Пошук новин..."
+      (keyup.enter)="onSearch()"
+    />
+    <button (click)="onSearch()">🔍</button>
+  </div>
+
   <div class="news-list">
     <div
       class="news-item-wrapper"

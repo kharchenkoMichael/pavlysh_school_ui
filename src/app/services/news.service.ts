@@ -19,7 +19,14 @@ export class NewsService {
     return this.http.get<News>(`${this.apiUrl}${id}`);
   }
   
-  getPaginationNews(page: number, pageSize: number): Observable<PaginatedNews> {
-    return this.http.get<PaginatedNews>(`${this.apiUrl}/paginated?page=${page}&page_size=${pageSize}`);
+  getPaginationNews(page: number, pageSize: number, search?: string): Observable<PaginatedNews> {
+    let params = new URLSearchParams();
+    params.set('page', page.toString());
+    params.set('page_size', pageSize.toString());
+    if (search) {
+      params.set('search', search);
+    }
+
+    return this.http.get<PaginatedNews>(`${this.apiUrl}/paginated?${params.toString()}`);
   }
 }

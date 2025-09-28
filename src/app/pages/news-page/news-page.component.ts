@@ -1,16 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NewsService } from '../../services/news.service';
 import { News } from '../../models/news';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-news-page',
   templateUrl: './news-page.component.html',
   styleUrls: ['./news-page.component.scss'],
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
 })
 export class NewsPageComponent implements OnInit, OnDestroy {
   news: News[] = [];
@@ -20,6 +21,8 @@ export class NewsPageComponent implements OnInit, OnDestroy {
   page: number = 1;
   pageSize: number = 8;
   total: number = 0;
+
+  searchTerm: string = ''; // <--- нове поле для пошуку
 
   constructor(private newsService: NewsService, private router: Router) {}
 
@@ -32,12 +35,14 @@ export class NewsPageComponent implements OnInit, OnDestroy {
   }
 
   loadNews() {
-    this.newsService.getPaginationNews(this.page, this.pageSize).subscribe((data) => {
-      this.news = data.items;
-      this.total = data.total;
-      this.setInitialPhotos();
-      this.startPhotoRotation();
-    });
+    this.newsService
+      .getPaginationNews(this.page, this.pageSize, this.searchTerm)
+      .subscribe((data) => {
+        this.news = data.items;
+        this.total = data.total;
+        this.setInitialPhotos();
+        this.startPhotoRotation();
+      });
   }
 
   setInitialPhotos() {
@@ -76,8 +81,13 @@ export class NewsPageComponent implements OnInit, OnDestroy {
       this.loadNews();
     }
   }
+
   get totalPages(): number {
     return Math.ceil(this.total / this.pageSize);
   }
-}
 
+  onSearch() {
+    this.page = 1; 
+    this.loadNews();
+  }
+}
