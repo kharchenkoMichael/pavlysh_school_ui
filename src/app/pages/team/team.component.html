@@ -10,7 +10,10 @@
 
   <div *ngIf="loading" class="loading">Завантаження...</div>
 
-  <div class="employees">
+  <div class="employees" infiniteScroll 
+     [infiniteScrollDistance]="2"
+     [infiniteScrollThrottle]="300"
+     (scrolled)="onScrollDown()">
     <div class="employee-card" *ngFor="let emp of employees">
       <img *ngIf="emp.photo" [src]="emp.photo" alt="{{ emp.first_name }} {{ emp.last_name }}">
       <div class="info">
@@ -27,11 +30,5 @@
         </button>
       </div>
     </div>
-  </div>
-
-  <div class="pagination">
-    <button (click)="onPageChange(page-1)" [disabled]="page === 1">&lt;</button>
-    <span>Сторінка {{ page }} / {{ totalPages }}</span>
-    <button (click)="onPageChange(page+1)" [disabled]="page >= totalPages">&gt;</button>
   </div>
 </div>

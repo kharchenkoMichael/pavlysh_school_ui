@@ -22,6 +22,7 @@
     "@popperjs/core": "^2.11.6",
     "jquery": "^3.7.1",
     "ngx-drag-scroll": "^18.0.0",
+    "ngx-infinite-scroll": "^18.0.0",
     "ngx-owl-carousel-o": "^18.0.0",
     "rxjs": "~7.8.0",
     "sass": "^1.86.0",

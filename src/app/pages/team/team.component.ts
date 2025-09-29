@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../../services/employee.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Employee } from '../../models/emplyee';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-team',
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, InfiniteScrollModule, FormsModule],
 })
 export class TeamComponent implements OnInit {
   employees: Employee[] = [];
@@ -29,22 +30,24 @@ export class TeamComponent implements OnInit {
     this.loading = true;
     this.employeeService.getEmployees(this.page, this.pageSize, this.search)
       .subscribe(res => {
-        this.employees = res.items.map(emp => ({ ...emp, expanded: false }));
+        this.employees = [...this.employees, ...res.items.map(emp => ({ ...emp, expanded: false }))];
         this.total = res.total;
         this.loading = false;
       }, () => this.loading = false);
   }
 
+  onScrollDown() {
+    if (this.page < this.totalPages) {
+      this.page++;
+      this.loadEmployees();
+    }
+  }
+  
   onSearchChange() {
     this.page = 1;
     this.loadEmployees();
   }
 
-  onPageChange(newPage: number) {
-    this.page = newPage;
-    this.loadEmployees();
-  }
-  
   get totalPages(): number {
     return Math.ceil(this.total / this.pageSize);
   }
