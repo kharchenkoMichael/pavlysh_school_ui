@@ -44,6 +44,7 @@ export class TeamComponent implements OnInit {
   }
   
   onSearchChange() {
+    this.employees=[]
     this.page = 1;
     this.loadEmployees();
   }
