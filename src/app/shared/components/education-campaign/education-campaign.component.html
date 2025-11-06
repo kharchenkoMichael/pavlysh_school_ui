@@ -1,0 +1,33 @@
+<section class="education-campaign">
+    <div class="container">
+      <h2>Кожне покоління лишає слід. Освіта визначає, який.</h2>
+  
+      <!-- 🎥 Відео -->
+      <div class="video-wrapper">
+        <video
+          controls
+          poster="assets/images/education-campaign/photo1.png"
+        >
+          <source src="assets/videos/education-campaign.mp4" type="video/mp4" />
+          Ваш браузер не підтримує відео.
+        </video>
+      </div>
+  
+      <!-- 🖼️ Галерея фото -->
+      <div class="gallery">
+        <img
+          *ngFor="let photo of photos"
+          [src]="photo"
+          alt="Освітня кампанія"
+        />
+      </div>
+  
+      <p class="description">
+        Освіта формує наше майбутнє. Підтримаймо ініціативу та поділимося цими
+        матеріалами, щоб кожне покоління пам’ятало:
+        <br />
+        <strong>Освіта визначає, який слід ми залишимо.</strong>
+      </p>
+    </div>
+  </section>
+  

@@ -29,6 +29,11 @@
       <li>
         <a [routerLink]="['/parent-handbook']">Для батьків</a>
         <ul class="submenu">
+          <li>
+            <a [routerLink]="['/education-campaign']">
+              Кожне покоління лишає слід
+            </a>
+          </li>
           <li><a [routerLink]="['/parent-handbook']">Довідник</a></li>
           <li>
             <a [routerLink]="['/distance-learning']">Дистанційна освіта</a>
@@ -90,6 +95,11 @@
     <li>
       <a (click)="toggleSubmenu($event)">Для батьків</a>
       <ul class="mobile-submenu">
+        <li>
+          <a [routerLink]="['/education-campaign']">
+            Кожне покоління лишає слід
+          </a>
+        </li>
         <li><a [routerLink]="['/parent-handbook']">Довідник</a></li>
         <li><a [routerLink]="['/distance-learning']">Дистанційна освіта</a></li>
         <!-- <li><a href="#">Батьківський форум</a></li> -->

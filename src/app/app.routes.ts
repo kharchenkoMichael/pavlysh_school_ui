@@ -15,6 +15,7 @@ import { RegistrationOpenComponent } from './pages/registration-open/registratio
 import { NewsDetailComponent } from './pages/news-detail/news-detail.component';
 import { NewsPageComponent } from './pages/news-page/news-page.component';
 import { TeamComponent } from './pages/team/team.component';
+import { EducationCampaignComponent } from './shared/components/education-campaign/education-campaign.component';
 
 export const routes: Routes = [
   {
@@ -143,6 +144,15 @@ export const routes: Routes = [
     data: {
       title: 'Команда школи – Павлиська школа',
       description: 'Список всіх вчителів Павлиської школи з можливістю пошуку та пагінації.'
+    }
+  },
+  {
+    path: 'education-campaign',
+    component: EducationCampaignComponent,
+    data: {
+      title: 'Освітня кампанія – Павлиська школа',
+      description:
+        'Комунікаційна кампанія про важливість освіти: відео та фотоматеріали. Освіта визначає, який слід ми залишимо.'
     }
   },
 ];

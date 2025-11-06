@@ -1,0 +1,71 @@
+@use "../../../../assets/styles/variables" as *;
+
+
+.education-campaign {
+  background-color: $background-color;
+  text-align: center;
+  padding: 4rem 1rem;
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .video-wrapper {
+    max-width: 800px;
+    margin: 0 auto 3rem auto;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+    margin-bottom: 2.5rem;
+
+    img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+
+  .description {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: $dark-text-color;
+
+    strong {
+      color: $primary-color;
+    }
+  }
+}

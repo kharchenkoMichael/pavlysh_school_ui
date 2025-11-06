@@ -8,6 +8,7 @@ import { AddmissionImageComponent } from '../../shared/components/admission-imag
 import { RegistrationOpenComponent } from '../registration-open/registration-open.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { EducationCampaignComponent } from "../../shared/components/education-campaign/education-campaign.component";
 
 @Component({
   selector: 'app-home',
@@ -15,13 +16,15 @@ import { CommonModule } from '@angular/common';
     CarouselComponent,
     NewsComponent,
     AddmissionImageComponent,
+    EducationCampaignComponent,
     RegistrationOpenComponent,
     //AdmissionComponent,
     // TestimonialsComponent,
     AddressComponent,
-    CommonModule, 
-    HttpClientModule
-  ],
+    CommonModule,
+    HttpClientModule,
+    EducationCampaignComponent
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   standalone: true,
