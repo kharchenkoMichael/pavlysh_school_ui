@@ -26,6 +26,7 @@
         </ul> -->
       </li>
       <li><a  [routerLink]="['/news']">Новини</a></li>
+      <li><a [routerLink]="['/parent-handbook']">Нормативна база</a></li>
       <li>
         <a [routerLink]="['/parent-handbook']">Для батьків</a>
         <ul class="submenu">
@@ -35,7 +36,6 @@
             </a>
           </li>
           <li><a href="https://olgariz.blogspot.com/" target="_blank">Блог шкільного психолога</a></li>
-          <li><a [routerLink]="['/parent-handbook']">Довідник</a></li>
           <li>
             <a [routerLink]="['/distance-learning']">Дистанційна освіта</a>
           </li>
@@ -93,6 +93,7 @@
       </ul> -->
     </li>
     <li><a [routerLink]="['/news']">Новини</a></li>
+    <li><a [routerLink]="['/parent-handbook']">Нормативна база</a></li>
     <li>
       <a (click)="toggleSubmenu($event)">Для батьків</a>
       <ul class="mobile-submenu">
@@ -102,7 +103,6 @@
           </a>
         </li>
         <li><a href="https://olgariz.blogspot.com/" target="_blank">Блог шкільного психолога</a></li>
-        <li><a [routerLink]="['/parent-handbook']">Довідник</a></li>
         <li><a [routerLink]="['/distance-learning']">Дистанційна освіта</a></li>
         <!-- <li><a href="#">Батьківський форум</a></li> -->
         <li><a [routerLink]="['/advice']">Психолог радить</a></li>
