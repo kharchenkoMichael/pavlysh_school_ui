@@ -5,12 +5,11 @@
       *ngFor="let section of handbookSections"
       [ngClass]="section.class"
     >
-      <h2>
-        <a [href]="section.link">{{ section.title }}</a>
-      </h2>
+      <h2>{{ section.title }}</h2>
+
       <ul>
         <li *ngFor="let item of section.items">
-          <a [href]="item.link">{{ item.name }}</a>
+          <a [href]="item.link" target="_blank">{{ item.name }}</a>
         </li>
       </ul>
     </div>
