@@ -7,23 +7,15 @@
       <li>
         <a href="#">Про школу</a>
         <ul class="submenu">
-          <!-- <li><a href="#">Інфраструктура школи</a></li> -->
           <li><a [routerLink]="['/team']">Команда</a></li>
           <li><a [routerLink]="['/registration-open']">Реєстрація</a></li>
-          <!-- <li><a href="#">3D-тур школою</a></li> -->
-          <!-- <li><a href="#">Наші цінності</a></li> -->
           <li><a [routerLink]="['/school-history']">Історія закладу</a></li>
           <li><a [routerLink]="['/museum']">Музей</a></li>
-          <!-- <li><a href="#">Традиції школи</a></li> -->
           <li><a [routerLink]="['/school-pride']">Гордість школи</a></li>
         </ul>
       </li>
       <li>
         <a [routerLink]="['/admission']">Вступ</a>
-        <!-- <ul class="submenu">
-          <li><a href="#">Процес вступу</a></li>
-          <li><a href="#">Онлайн-навчання</a></li>
-        </ul> -->
       </li>
       <li><a  [routerLink]="['/news']">Новини</a></li>
       <li><a [routerLink]="['/parent-handbook']">Нормативна база</a></li>
@@ -39,7 +31,6 @@
           <li>
             <a [routerLink]="['/distance-learning']">Дистанційна освіта</a>
           </li>
-          <!-- <li><a href="#">Батьківський форум</a></li> -->
           <li><a [routerLink]="['/advice']">Психолог радить</a></li>
           <li>
             <a [routerLink]="['/psychological']"
@@ -52,18 +43,6 @@
           </li>
         </ul>
       </li>
-      <li>
-        <a href="#">Гуртки</a>
-        <ul class="submenu">
-          <li><a href="#">Виховна робота</a></li>
-          <li><a href="#">Інклюзивне навчання</a></li>
-          <li><a href="#">Школа радості</a></li>
-          <li><a href="#">Уроки мислення</a></li>
-          <li><a href="#">Бібліотека</a></li>
-          <li><a href="#">Добрі справи</a></li>
-          <li><a href="#">Гурток з програмування</a></li>
-        </ul>
-      </li>
     </ul>
     <div class="mobile-menu-icon" (click)="toggleMobileMenu()">&#9776;</div>
   </nav>
@@ -74,23 +53,15 @@
     <li>
       <a (click)="toggleSubmenu($event)">Про школу</a>
       <ul class="mobile-submenu">
-        <!-- <li><a href="#">Інфраструктура школи</a></li> -->
         <li><a [routerLink]="['/team']">Команда</a></li>
-        <!-- <li><a href="#">3D-тур школою</a></li> -->
-        <!-- <li><a href="#">Наші цінності</a></li> -->
         <li><a [routerLink]="['/registration-open']">Реєстрація</a></li>
         <li><a [routerLink]="['/school-history']">Історія закладу</a></li>
         <li><a [routerLink]="['/museum']">Музей</a></li>
-        <!-- <li><a href="#">Традиції школи</a></li> -->
         <li><a [routerLink]="['/school-pride']">Гордість школи</a></li>
       </ul>
     </li>
     <li>
       <a [routerLink]="['/admission']">Вступ</a>
-      <!-- <ul class="mobile-submenu">
-        <li><a href="#">Процес вступу</a></li>
-        <li><a href="#">Онлайн-навчання</a></li>
-      </ul> -->
     </li>
     <li><a [routerLink]="['/news']">Новини</a></li>
     <li><a [routerLink]="['/parent-handbook']">Нормативна база</a></li>
@@ -104,7 +75,6 @@
         </li>
         <li><a href="https://olgariz.blogspot.com/" target="_blank">Блог шкільного психолога</a></li>
         <li><a [routerLink]="['/distance-learning']">Дистанційна освіта</a></li>
-        <!-- <li><a href="#">Батьківський форум</a></li> -->
         <li><a [routerLink]="['/advice']">Психолог радить</a></li>
         <li>
           <a [routerLink]="['/psychological']"
@@ -113,18 +83,6 @@
         </li>
         <li><a [routerLink]="['/anti-bullying']">Стоп булінг</a></li>
         <li><a [routerLink]="['/internet-safety']">Безпека в інтернеті</a></li>
-      </ul>
-    </li>
-    <li>
-      <a (click)="toggleSubmenu($event)">Гуртки</a>
-      <ul class="mobile-submenu">
-        <li><a href="#">Виховна робота</a></li>
-        <li><a href="#">Інклюзивне навчання</a></li>
-        <li><a href="#">Школа радості</a></li>
-        <li><a href="#">Уроки мислення</a></li>
-        <li><a href="#">Бібліотека</a></li>
-        <li><a href="#">Добрі справи</a></li>
-        <li><a href="#">Гурток з програмування</a></li>
       </ul>
     </li>
   </ul>
