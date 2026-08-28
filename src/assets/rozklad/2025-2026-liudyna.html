@@ -6,7 +6,7 @@
 <!-- Сторінка без навігації з сайту: відкривається лише за прямим посиланням.
      noindex — щоб вона не спливала в пошуку поміж сторінками для батьків. -->
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Розклад Павлиського ліцею на І семестр 2025/2026 і його оцінка: 6574 штрафні бали із розкладкою до кожного уроку.">
+<meta name="description" content="Розклад, який склала людина — Павлиський ліцей, І семестр 2025/2026: 6574 штрафних балів із розкладкою до кожного уроку.">
 <link rel="icon" href="/favicon.ico">
 <style>*,*::before,*::after{box-sizing:border-box}body{margin:0}</style>
 </head>
@@ -283,14 +283,29 @@
   .more:hover { border-color: var(--stamp); color: var(--stamp); }
 
   /* ── сітка розкладу ────────────────────────────────────── */
-  .picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
-  .picker button {
-    font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500;
-    padding: 5px 11px; border: 1px solid var(--rule); background: var(--surface);
-    color: var(--ink-soft); cursor: pointer;
+  .picker {
+    display: flex; flex-wrap: wrap; gap: 14px 18px;
+    align-items: center; margin-bottom: 20px;
   }
-  .picker button:hover { border-color: var(--stamp); color: var(--stamp); }
-  .picker button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .picker__group { display: flex; align-items: center; gap: 8px; }
+  .picker__label { font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+                   color: var(--ink-faint); font-weight: 600; }
+
+  .vyd { display: inline-flex; border: 1px solid var(--rule); }
+  .vyd button {
+    font: inherit; font-size: 14px; padding: 7px 16px; cursor: pointer;
+    border: 0; background: var(--surface); color: var(--ink-soft);
+  }
+  .vyd button + button { border-left: 1px solid var(--rule); }
+  .vyd button:hover { color: var(--stamp); }
+  .vyd button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+  .picker select {
+    font: inherit; font-size: 15px; padding: 7px 12px; min-width: 230px;
+    border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
+  }
+  .picker select:focus-visible { outline: 2px solid var(--stamp); outline-offset: -1px; }
+  .picker__count { font-size: 13px; color: var(--ink-faint); }
 
   .tabl { border: 1px solid var(--rule); background: var(--surface); overflow-x: auto; }
   .grid { border-collapse: collapse; width: 100%; min-width: 620px;
@@ -396,8 +411,7 @@
     <div>
       <p class="eyebrow">Павлиський ліцей · І семестр 2025/2026</p>
       <h1 class="head__title">Розклад, який склала людина</h1>
-      <p class="head__sub">Чинний розклад школи, зміряний тією самою міркою, якою рахує
-        програма. Нижче — з чого складається число і за що конкретно кожен бал.</p>
+      <p class="head__sub">Чинний розклад школи, зміряний тією самою міркою, якою рахує програма. Нижче — з чого складається число і за що конкретно кожен бал.</p>
     </div>
     <div class="head__total">
       <b class="num" id="total">—</b>
@@ -433,7 +447,20 @@
       <h2>Сам розклад</h2>
       <p>Одна сітка на цикл. Дріб — тільки там, де тижні справді розходяться.</p>
     </div>
-    <div class="picker" id="picker"></div>
+    <div class="picker">
+      <div class="picker__group">
+        <span class="picker__label">Дивитись</span>
+        <span class="vyd" id="vyd">
+          <button type="button" data-vyd="klasy" aria-pressed="true">Класи</button>
+          <button type="button" data-vyd="vchyteli" aria-pressed="false">Учителі</button>
+        </span>
+      </div>
+      <div class="picker__group">
+        <label class="picker__label" for="komu" id="komu-label">Клас</label>
+        <select id="komu"></select>
+        <span class="picker__count" id="komu-count"></span>
+      </div>
+    </div>
     <div class="tabl" id="tabl"></div>
     <p class="legend">
       <span><span class="swatch swatch--drib"></span>слот, де тижні різні: зверху чисельник
@@ -462,20 +489,27 @@
 
   function num(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
 
-  /* ── розклад по класах ─────────────────────────────────── */
-  var poKlasah = {};
+  /* ── розклад по класах і по вчителях ───────────────────── */
+  var poKlasah = {}, poVchyteliah = {};
   D.rozklad.forEach(function (e) {
     (poKlasah[e.klas] = poKlasah[e.klas] || []).push(e);
+    if (e.vchytel) {
+      (poVchyteliah[e.vchytel] = poVchyteliah[e.vchytel] || []).push(e);
+    }
   });
   var klasy = Object.keys(poKlasah).sort(function (a, b) {
     var pa = parseInt(a, 10), pb = parseInt(b, 10);
     return pa - pb || a.localeCompare(b, "uk");
   });
+  var vchyteli = Object.keys(poVchyteliah).sort(function (a, b) {
+    return a.localeCompare(b, "uk");
+  });
   var maxUrok = Math.max.apply(null, D.rozklad.map(function (e) { return e.urok; }));
 
-  function pidpys(uroky) {
+  function pidpys(uroky, klasnyi) {
     return uroky.map(function (e) {
-      return e.predmet + (e.pidhrupa ? " (" + e.pidhrupa + ")" : "") + "·" + (e.vchytel || "");
+      return e.predmet + (e.pidhrupa ? " (" + e.pidhrupa + ")" : "") +
+             "·" + (klasnyi ? (e.vchytel || "") : e.klas);
     }).sort().join(" + ");
   }
 
@@ -495,7 +529,7 @@
       for (var u = 1; u <= maxUrok; u++) {
         DNI.forEach(function (d) {
           var t1 = c[d + "|" + u + "|1"] || [], t2 = c[d + "|" + u + "|2"] || [];
-          if ((t1.length || t2.length) && pidpys(t1) !== pidpys(t2)) { n++; }
+          if ((t1.length || t2.length) && pidpys(t1, true) !== pidpys(t2, true)) { n++; }
         });
       }
     });
@@ -517,9 +551,14 @@
   }).join("");
 
   /* ── які уроки чогось коштують ─────────────────────────── */
-  var cost = {};                       // "клас|тиждень|день|урок" -> {bal, chym:[]}
-  function noteHit(klas, week, den, urok, chomu) {
-    var key = klas + "|" + week + "|" + den + "|" + urok;
+  /* Штраф прив'язується і до класу, і до вчителя: той самий урок стоїть
+     в обох сітках, і коштує в обох однаково. Частина правил взагалі
+     про вчителя («менше вікон у вчителів») — у сітці класу їх видно
+     не було б, хоч платить за них розклад той самий. */
+  var cost = {};                       // "хто|тиждень|день|урок" -> {bal, chym:[]}
+  function noteHit(hto, week, den, urok, chomu) {
+    if (!hto) { return; }
+    var key = hto + "|" + week + "|" + den + "|" + urok;
     if (!cost[key]) { cost[key] = { bal: 0, chym: [] }; }
     cost[key].bal += chomu.bal;
     cost[key].chym.push(chomu);
@@ -538,10 +577,15 @@
         detal: d.shcho || [d.predmet, d.pidhrupa ? "(" + d.pidhrupa + ")" : ""]
           .filter(Boolean).join(" ")
       };
-      // Зведена група — це кілька класів, і урок стоїть у кожного з них.
-      d.hto.split(" + ").forEach(function (klas) {
-        noteHit(klas.trim(), week, den, d.urok, chomu);
+      // `hto` — це або класи (зведена група дає кілька), або сам учитель,
+      // якщо правило про нього. Кладемо під обидва ключі: зайвого не
+      // станеться, бо імена класів і вчителів не перетинаються.
+      d.hto.split(" + ").forEach(function (h) {
+        noteHit(h.trim(), week, den, d.urok, chomu);
       });
+      if (d.vchytel && d.vchytel !== d.hto) {
+        noteHit(d.vchytel, week, den, d.urok, chomu);
+      }
     });
   });
 
@@ -610,11 +654,6 @@
   });
 
   /* ── сітка розкладу ────────────────────────────────────── */
-  var picker = document.getElementById("picker");
-  picker.innerHTML = klasy.map(function (k) {
-    return '<button type="button" data-k="' + k + '" aria-pressed="false">' + k + "</button>";
-  }).join("");
-
   function esc(s) { return String(s).replace(/"/g, "&quot;"); }
 
   /* Штрафи поточної сітки: клітинка посилається сюди номером, а картка
@@ -622,15 +661,19 @@
      урок, і картка лишається одна на сторінку. */
   var pokazani = [];
 
-  function polovyna(uroky, hit, tyzh) {
+  function polovyna(uroky, hit, tyzh, klasnyi) {
     var cls = "pol" + (hit ? " pol--pen" : "") + (uroky.length ? "" : " pol--porozhno");
     var nomer = hit ? pokazani.push(hit) - 1 : -1;
     var attrs = (hit ? ' data-bal="' + hit.bal + '" data-hit="' + nomer +
                        '" tabindex="0"' : "") +
                 (tyzh ? ' data-tyzh="' + tyzh + '"' : "");
+    // Зведений урок у сітці вчителя — це кілька класів в одному слоті,
+    // і показати треба всі: інакше «5-А» виглядало б як один клас там,
+    // де насправді сидять два.
     var vmist = uroky.length ? uroky.map(function (e) {
+      var pid = klasnyi ? (e.vchytel || "") : e.klas;
       return "<b>" + e.predmet + (e.pidhrupa ? " (" + e.pidhrupa + ")" : "") +
-             "</b><i>" + (e.vchytel || "") + "</i>";
+             "</b><i>" + pid + "</i>";
     }).join("") : "<b>—</b>";
     return '<div class="' + cls + '"' + attrs + ">" + vmist + "</div>";
   }
@@ -679,10 +722,10 @@
   });
   window.addEventListener("scroll", shovaty, true);
 
-  function drawGrid(klas) {
+  function drawGrid(hto, uroky, klasnyi) {
     pokazani = [];                       // сітка перемальовується — номери теж
     var cells = {};                      // "день|урок|тиждень" -> [уроки]
-    poKlasah[klas].forEach(function (e) {
+    uroky.forEach(function (e) {
       var k = e.den + "|" + e.urok + "|" + e.tyzhden;
       (cells[k] = cells[k] || []).push(e);
     });
@@ -696,16 +739,17 @@
         var t1 = cells[den + "|" + u + "|1"] || [];
         var t2 = cells[den + "|" + u + "|2"] || [];
         if (t1.length || t2.length) { poroshnii = false; }
-        var h1 = cost[klas + "|1|" + den + "|" + u];
-        var h2 = cost[klas + "|2|" + den + "|" + u];
+        var h1 = cost[hto + "|1|" + den + "|" + u];
+        var h2 = cost[hto + "|2|" + den + "|" + u];
 
-        if (pidpys(t1) === pidpys(t2)) {
+        if (pidpys(t1, klasnyi) === pidpys(t2, klasnyi)) {
           // Тижні збігаються — показуємо один раз, як і має бути.
           var hit = h1 || h2;
-          row += '<td class="cell">' + polovyna(t1, hit, "") + "</td>";
+          row += '<td class="cell">' + polovyna(t1, hit, "", klasnyi) + "</td>";
         } else {
           row += '<td class="cell cell--drib">' +
-                 polovyna(t1, h1, "1") + polovyna(t2, h2, "2") + "</td>";
+                 polovyna(t1, h1, "1", klasnyi) +
+                 polovyna(t2, h2, "2", klasnyi) + "</td>";
         }
       }
       // Порожній останній урок нікому не цікавий — обрізаємо сітку по факту.
@@ -717,17 +761,49 @@
       "</tr></thead><tbody>" + rows + "</tbody></table>";
   }
 
-  function show(klas) {
-    document.getElementById("tabl").innerHTML = drawGrid(klas);
-    Array.prototype.forEach.call(picker.children, function (b) {
-      b.setAttribute("aria-pressed", String(b.dataset.k === klas));
-    });
+  /* ── перемикання «класи / учителі» ─────────────────────── */
+  var vyd = "klasy";
+  var komu = document.getElementById("komu");
+  var komuLabel = document.getElementById("komu-label");
+  var komuCount = document.getElementById("komu-count");
+
+  function spysok() { return vyd === "klasy" ? klasy : vchyteli; }
+  function uroky(hto) {
+    return (vyd === "klasy" ? poKlasah : poVchyteliah)[hto] || [];
   }
-  picker.addEventListener("click", function (e) {
+
+  function show(hto) {
+    var moi = uroky(hto);
+    // У сітці класу підписуємо вчителя, у сітці вчителя — клас: те, що
+    // й так стоїть у заголовку, повторювати в кожній клітинці немає сенсу.
+    document.getElementById("tabl").innerHTML =
+      drawGrid(hto, moi, vyd === "klasy");
+    var slotiv = Object.keys(moi.reduce(function (acc, e) {
+      acc[e.tyzhden + "|" + e.den + "|" + e.urok] = 1; return acc;
+    }, {})).length;
+    komuCount.textContent = slotiv + " уроків за цикл";
+  }
+
+  function perebudovaty(hto) {
+    komuLabel.textContent = vyd === "klasy" ? "Клас" : "Учитель";
+    komu.innerHTML = spysok().map(function (k) {
+      return '<option value="' + esc(k) + '">' + k + "</option>";
+    }).join("");
+    komu.value = hto && spysok().indexOf(hto) >= 0 ? hto : spysok()[0];
+    show(komu.value);
+  }
+
+  document.getElementById("vyd").addEventListener("click", function (e) {
     var b = e.target.closest("button");
-    if (b) { show(b.dataset.k); }
+    if (!b || b.dataset.vyd === vyd) { return; }
+    vyd = b.dataset.vyd;
+    Array.prototype.forEach.call(this.children, function (x) {
+      x.setAttribute("aria-pressed", String(x.dataset.vyd === vyd));
+    });
+    perebudovaty(null);
   });
-  show(klasy[0]);
+  komu.addEventListener("change", function () { show(this.value); });
+  perebudovaty(null);
 
   /* ── примітка про метод ────────────────────────────────── */
   document.getElementById("note").innerHTML =
