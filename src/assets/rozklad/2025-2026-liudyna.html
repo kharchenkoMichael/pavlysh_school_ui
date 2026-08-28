@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uk">
+<html lang="uk" class="zamkneno">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,8 +48,12 @@
   }
   .zamok button:hover { opacity: .88; }
   .zamok__err { margin: 12px 0 0; font-size: 13.5px; color: var(--red, #9A3B32); min-height: 1.2em; }
-  .zamok[hidden] { display: none; }
-  .schovano { display: none; }
+
+  /* Замкнено — видно тільки форму; відчинено — тільки сторінку.
+     Обидва стани керуються одним класом на `<html>`, тож правило діє
+     ще до того, як браузер дійде до вмісту, і нічого не блимає. */
+  .zamkneno .wrap { display: none; }
+  html:not(.zamkneno) .zamok { display: none; }
 </style>
 
 <div class="zamok" id="zamok">
@@ -74,13 +78,12 @@
   "use strict";
   var SLOVO = 'rozklad2026';
   var KLIUCH = "rozklad-vidchyneno";
-  var zamok = document.getElementById("zamok");
-  var wrap = document.querySelector(".wrap");
   var err = document.getElementById("zamok-err");
 
+  /* Жодного звернення до вмісту сторінки: він нижче в документі й на цей
+     момент ще не існує. Знімаємо клас із кореня — і цього досить. */
   function vidchynyty() {
-    zamok.hidden = true;
-    wrap.classList.remove("schovano");
+    document.documentElement.classList.remove("zamkneno");
     try { sessionStorage.setItem(KLIUCH, "1"); } catch (e) { /* приватне вікно */ }
   }
 
@@ -330,7 +333,7 @@
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
-<div class="wrap schovano">
+<div class="wrap">
   <header class="head">
     <div>
       <p class="eyebrow">Павлиський ліцей · І семестр 2025/2026</p>
