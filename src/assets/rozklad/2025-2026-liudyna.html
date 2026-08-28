@@ -292,32 +292,49 @@
   .picker button:hover { border-color: var(--stamp); color: var(--stamp); }
   .picker button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 
-  .weeks { display: grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 22px; }
-  .week { border: 1px solid var(--rule); background: var(--surface); overflow-x: auto; }
-  .week__cap { font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
-               font-weight: 600; color: var(--ink-faint); padding: 10px 12px;
-               border-bottom: 1px solid var(--rule); }
-  .grid { border-collapse: collapse; width: 100%; font-size: 12px; table-layout: fixed; }
+  .tabl { border: 1px solid var(--rule); background: var(--surface); overflow-x: auto; }
+  .grid { border-collapse: collapse; width: 100%; min-width: 620px;
+          font-size: 12.5px; table-layout: fixed; }
   .grid th { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
-             color: var(--ink-faint); font-weight: 600; padding: 7px 4px;
+             color: var(--ink-faint); font-weight: 600; padding: 9px 6px;
              border-bottom: 1px solid var(--rule); }
-  .grid th:first-child { width: 26px; }
-  .grid td { border: 1px solid var(--rule-soft); padding: 4px 5px; vertical-align: top;
-             height: 42px; position: relative; }
+  .grid th:first-child { width: 30px; }
+  .grid td { border: 1px solid var(--rule-soft); padding: 0; vertical-align: top; }
   .grid .lnum { font-family: "JetBrains Mono", monospace; color: var(--ink-faint);
-                text-align: center; font-size: 11px; background: var(--surface-2); }
-  .cell b { font-weight: 500; display: block; line-height: 1.25; }
-  .cell i { font-style: normal; color: var(--ink-faint); font-size: 10.5px; display: block; }
-  .cell--pen { background: var(--red-weak); }
-  .cell--pen::after {
-    content: attr(data-bal); position: absolute; top: 2px; right: 3px;
+                text-align: center; font-size: 11px; background: var(--surface-2);
+                vertical-align: middle; }
+
+  /* Одна половинка клітинки: або цілий урок, або чисельник / знаменник. */
+  .pol { padding: 5px 7px; min-height: 40px; position: relative; }
+  .pol b { font-weight: 500; display: block; line-height: 1.25; }
+  .pol i { font-style: normal; color: var(--ink-faint); font-size: 10.5px; display: block; }
+  .pol--pen { background: var(--red-weak); }
+  .pol--pen::after {
+    content: attr(data-bal); position: absolute; top: 3px; right: 4px;
     font-family: "JetBrains Mono", monospace; font-size: 9.5px; color: var(--red);
     font-weight: 700;
   }
-  .legend { margin-top: 14px; font-size: 13px; color: var(--ink-soft); display: flex;
-            gap: 18px; flex-wrap: wrap; align-items: center; }
+  .pol--porozhno { color: var(--ink-faint); }
+
+  /* Дріб: чисельник над знаменником, рискою між ними — так, як це
+     пишуть у школі. Смужка ліворуч каже, що цей слот чергується,
+     ще до того, як прочитаєш обидві половинки. */
+  .cell--drib { box-shadow: inset 3px 0 0 var(--stamp); }
+  .cell--drib .pol + .pol { border-top: 1px solid var(--stamp); }
+  .cell--drib .pol { min-height: 34px; padding-left: 22px; }
+  .cell--drib .pol::before {
+    content: attr(data-tyzh); position: absolute; left: 6px; top: 5px;
+    font-family: "JetBrains Mono", monospace; font-size: 9.5px; font-weight: 700;
+    color: var(--stamp);
+  }
+
+  .legend { margin-top: 14px; font-size: 13px; color: var(--ink-soft); display: grid;
+            gap: 8px; }
+  .legend span { display: block; }
   .swatch { display: inline-block; width: 14px; height: 14px; background: var(--red-weak);
-            border: 1px solid var(--red); vertical-align: -2px; margin-right: 6px; }
+            border: 1px solid var(--red); vertical-align: -2px; margin-right: 7px; }
+  .swatch--drib { background: var(--surface); border-color: var(--rule);
+                  box-shadow: inset 3px 0 0 var(--stamp); }
 
   .note { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--rule);
           color: var(--ink-soft); font-size: 14px; max-width: 72ch; }
@@ -373,13 +390,16 @@
   <section>
     <div class="sec__head">
       <h2>Сам розклад</h2>
-      <p>Обидва тижні циклу поруч. Клітинки зі штрафом позначені на полях.</p>
+      <p>Одна сітка на цикл. Дріб — тільки там, де тижні справді розходяться.</p>
     </div>
     <div class="picker" id="picker"></div>
-    <div class="weeks" id="weeks"></div>
+    <div class="tabl" id="tabl"></div>
     <p class="legend">
-      <span><span class="swatch"></span>урок, на якому щось порушено — число праворуч у клітинці
-        показує, скільки балів він коштує</span>
+      <span><span class="swatch swatch--drib"></span>слот, де тижні різні: зверху чисельник
+        (тиждень&nbsp;1), знизу знаменник (тиждень&nbsp;2). Решта клітинок однакові
+        в обидва тижні — саме тому вони й показані один раз.</span>
+      <span><span class="swatch"></span>урок, на якому щось порушено. Число в кутку —
+        скільки балів він коштує; наведіть, щоб побачити, за якими правилами.</span>
     </p>
   </section>
 
@@ -398,14 +418,55 @@
 
   function num(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
 
+  /* ── розклад по класах ─────────────────────────────────── */
+  var poKlasah = {};
+  D.rozklad.forEach(function (e) {
+    (poKlasah[e.klas] = poKlasah[e.klas] || []).push(e);
+  });
+  var klasy = Object.keys(poKlasah).sort(function (a, b) {
+    var pa = parseInt(a, 10), pb = parseInt(b, 10);
+    return pa - pb || a.localeCompare(b, "uk");
+  });
+  var maxUrok = Math.max.apply(null, D.rozklad.map(function (e) { return e.urok; }));
+
+  function pidpys(uroky) {
+    return uroky.map(function (e) {
+      return e.predmet + (e.pidhrupa ? " (" + e.pidhrupa + ")" : "") + "·" + (e.vchytel || "");
+    }).sort().join(" + ");
+  }
+
+  /* Скільки клітинок довелося писати дробом. Рахуємо тут, а не беремо
+     готовим числом: `riznyh_slotiv` міряє **розбіжності** (урок, що є
+     в одному тижні й нема в іншому), а сітка показує **клітинки**, і
+     одна клітинка дає дві розбіжності. Показувати одне під виглядом
+     іншого — найпростіший спосіб посварити сторінку саму з собою. */
+  function porahuvatyDroby() {
+    var n = 0;
+    klasy.forEach(function (klas) {
+      var c = {};
+      poKlasah[klas].forEach(function (e) {
+        var k = e.den + "|" + e.urok + "|" + e.tyzhden;
+        (c[k] = c[k] || []).push(e);
+      });
+      for (var u = 1; u <= maxUrok; u++) {
+        DNI.forEach(function (d) {
+          var t1 = c[d + "|" + u + "|1"] || [], t2 = c[d + "|" + u + "|2"] || [];
+          if ((t1.length || t2.length) && pidpys(t1) !== pidpys(t2)) { n++; }
+        });
+      }
+    });
+    return n;
+  }
+  var drobiv = porahuvatyDroby();
+
   /* ── шапка ─────────────────────────────────────────────── */
   document.getElementById("total").textContent = num(D.shtraf);
   var facts = [
     [num(D.urokiv), "уроків за цикл"],
     [D.klasiv, "класів"],
     [num(D.uchniv), "учнів"],
-    [D.tyzhniv, "тижні в циклі"],
-    [D.riznyh_slotiv, "слотів, де тижні різні"]
+    [drobiv, "слотів із чисельником і знаменником"],
+    [D.riznyh_slotiv, "розбіжностей між тижнями"]
   ];
   document.getElementById("facts").innerHTML = facts.map(function (f) {
     return '<div class="fact"><b class="num">' + f[0] + "</b><span>" + f[1] + "</span></div>";
@@ -497,51 +558,63 @@
   });
 
   /* ── сітка розкладу ────────────────────────────────────── */
-  var poKlasah = {};
-  D.rozklad.forEach(function (e) {
-    (poKlasah[e.klas] = poKlasah[e.klas] || []).push(e);
-  });
-  var klasy = Object.keys(poKlasah).sort(function (a, b) {
-    var pa = parseInt(a, 10), pb = parseInt(b, 10);
-    return pa - pb || a.localeCompare(b, "uk");
-  });
-  var maxUrok = Math.max.apply(null, D.rozklad.map(function (e) { return e.urok; }));
-
   var picker = document.getElementById("picker");
   picker.innerHTML = klasy.map(function (k) {
     return '<button type="button" data-k="' + k + '" aria-pressed="false">' + k + "</button>";
   }).join("");
 
-  function drawWeek(klas, week) {
-    var cells = {};
+  function esc(s) { return String(s).replace(/"/g, "&quot;"); }
+
+  function polovyna(uroky, hit, tyzh) {
+    var cls = "pol" + (hit ? " pol--pen" : "") + (uroky.length ? "" : " pol--porozhno");
+    var attrs = (hit ? ' data-bal="' + hit.bal + '" title="' + esc(hit.chym.join("; ")) + '"' : "") +
+                (tyzh ? ' data-tyzh="' + tyzh + '"' : "");
+    var vmist = uroky.length ? uroky.map(function (e) {
+      return "<b>" + e.predmet + (e.pidhrupa ? " (" + e.pidhrupa + ")" : "") +
+             "</b><i>" + (e.vchytel || "") + "</i>";
+    }).join("") : "<b>—</b>";
+    return '<div class="' + cls + '"' + attrs + ">" + vmist + "</div>";
+  }
+
+  function drawGrid(klas) {
+    var cells = {};                      // "день|урок|тиждень" -> [уроки]
     poKlasah[klas].forEach(function (e) {
-      if (e.tyzhden !== week) { return; }
-      (cells[e.den + "|" + e.urok] = cells[e.den + "|" + e.urok] || []).push(e);
+      var k = e.den + "|" + e.urok + "|" + e.tyzhden;
+      (cells[k] = cells[k] || []).push(e);
     });
+
     var rows = "";
     for (var u = 1; u <= maxUrok; u++) {
-      rows += '<tr><td class="lnum">' + u + "</td>";
+      var row = "";
+      var poroshnii = true;
       for (var i = 0; i < DNI.length; i++) {
-        var here = cells[DNI[i] + "|" + u] || [];
-        var hit = cost[klas + "|" + week + "|" + DNI[i] + "|" + u];
-        var cls = "cell" + (hit ? " cell--pen" : "");
-        var title = hit ? ' title="' + hit.chym.join("; ").replace(/"/g, "&quot;") + '"' : "";
-        var bal = hit ? ' data-bal="' + hit.bal + '"' : "";
-        rows += '<td class="' + cls + '"' + bal + title + ">" + here.map(function (e) {
-          return "<b>" + e.predmet + (e.pidhrupa ? " (" + e.pidhrupa + ")" : "") +
-                 "</b><i>" + (e.vchytel || "") + "</i>";
-        }).join("") + "</td>";
+        var den = DNI[i];
+        var t1 = cells[den + "|" + u + "|1"] || [];
+        var t2 = cells[den + "|" + u + "|2"] || [];
+        if (t1.length || t2.length) { poroshnii = false; }
+        var h1 = cost[klas + "|1|" + den + "|" + u];
+        var h2 = cost[klas + "|2|" + den + "|" + u];
+
+        if (pidpys(t1) === pidpys(t2)) {
+          // Тижні збігаються — показуємо один раз, як і має бути.
+          var hit = h1 || h2;
+          row += '<td class="cell">' + polovyna(t1, hit, "") + "</td>";
+        } else {
+          row += '<td class="cell cell--drib">' +
+                 polovyna(t1, h1, "1") + polovyna(t2, h2, "2") + "</td>";
+        }
       }
-      rows += "</tr>";
+      // Порожній останній урок нікому не цікавий — обрізаємо сітку по факту.
+      if (!poroshnii) { rows += '<tr><td class="lnum">' + u + "</td>" + row + "</tr>"; }
     }
-    return '<div class="week"><div class="week__cap">Тиждень ' + week + "</div>" +
-      '<table class="grid"><thead><tr><th></th>' +
+
+    return '<table class="grid"><thead><tr><th></th>' +
       DNI.map(function (d) { return "<th>" + DNI_UA[d] + "</th>"; }).join("") +
-      "</tr></thead><tbody>" + rows + "</tbody></table></div>";
+      "</tr></thead><tbody>" + rows + "</tbody></table>";
   }
 
   function show(klas) {
-    document.getElementById("weeks").innerHTML = drawWeek(klas, 1) + drawWeek(klas, 2);
+    document.getElementById("tabl").innerHTML = drawGrid(klas);
     Array.prototype.forEach.call(picker.children, function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.k === klas));
     });
