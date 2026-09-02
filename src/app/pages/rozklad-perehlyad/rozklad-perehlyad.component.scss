@@ -1,0 +1,226 @@
+@use "../../../assets/styles/variables" as v;
+
+.gate {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  &__card {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e3e8e5;
+    border-radius: 10px;
+    padding: 32px 24px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+  }
+
+  &__title { margin: 0 0 6px; font-size: 20px; color: v.$dark-text-color; }
+  &__hint { margin: 0 0 18px; font-size: 13px; color: #7c8b83; }
+
+  &__input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #d5ddd8;
+    border-radius: 6px;
+    font-size: 15px;
+    margin-bottom: 12px;
+
+    &:focus { outline: none; border-color: v.$primary-color; }
+  }
+
+  &__button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: v.$primary-color;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+
+    &:hover { background: v.$button-hover-color; }
+  }
+
+  &__error { margin: 10px 0 0; font-size: 13px; color: #a3271c; }
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+
+  &__head { margin-bottom: 18px; }
+  &__title { margin: 0 0 4px; font-size: 24px; color: v.$dark-text-color; }
+  &__sub { margin: 0; font-size: 14px; color: #7c8b83; }
+
+  &__status { color: #7c8b83; font-size: 14px; }
+  &__status--error { color: #a3271c; }
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  &__views { display: flex; gap: 8px; flex-wrap: wrap; }
+  &__row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  &__weeks { display: flex; gap: 6px; }
+
+  &__select {
+    padding: 8px 12px;
+    border: 1px solid #d5ddd8;
+    border-radius: 6px;
+    font-size: 14px;
+    color: v.$dark-text-color;
+    min-width: 220px;
+    background: #fff;
+  }
+}
+
+.tab {
+  padding: 7px 16px;
+  border: 1px solid #d5ddd8;
+  border-radius: 20px;
+  background: #fff;
+  color: #5b6b63;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover { border-color: v.$primary-color; color: v.$primary-color; }
+
+  &--active {
+    background: v.$primary-color;
+    border-color: v.$primary-color;
+    color: #fff;
+  }
+
+  &--small { padding: 5px 12px; font-size: 13px; }
+}
+
+.single {
+  overflow-x: auto;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.all {
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;   // сама обгортка кутів не втрачає, скрол — усередині
+
+  &__wrap {
+    overflow-x: auto;
+    max-height: 78vh;
+    overflow-y: auto;
+  }
+}
+
+/**
+ * Дзеркальний скрол над таблицею. Сама смужка порожня — `__ghost` лише
+ * розтягує її вміст до ширини таблиці, щоб у неї з'явився той самий
+ * горизонтальний скрол, синхронізований із головним через (scroll).
+ */
+.scroll-mirror {
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 14px;
+  border-bottom: 1px solid #e3e8e5;
+
+  &__ghost { height: 1px; }
+}
+
+table.grid {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+
+  th, td {
+    border: 1px solid #edf1ee;
+    padding: 6px 8px;
+    text-align: center;
+    vertical-align: top;
+  }
+
+  thead th {
+    background: #f4f8f5;
+    color: v.$dark-text-color;
+    font-weight: 600;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .grid__corner { background: #f4f8f5; }
+
+  .grid__lesson {
+    background: #f4f8f5;
+    font-weight: 600;
+    color: #5b6b63;
+    white-space: nowrap;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+
+  .grid__day {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: v.$primary-color;
+  }
+
+  .grid__cell { min-width: 110px; }
+  .grid__free { color: #c3ccc6; }
+}
+
+table.grid--wide {
+  .grid__lesson { text-align: left; }
+}
+
+.grid__row--day-start th.grid__lesson,
+.grid__row--day-start td {
+  border-top: 2px solid #d5ddd8;
+}
+
+.lesson {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-align: left;
+
+  &__subject { font-weight: 600; color: v.$dark-text-color; }
+  &__subgroup { font-weight: 400; color: #7c8b83; margin-left: 3px; }
+  &__who { color: #4a5952; }
+  &__room { color: #9aa79f; font-size: 11px; }
+}
+
+.grid__cell--split {
+  background: #fbf7ec;
+}
+
+.week-part {
+  &:not(:last-child) {
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    border-bottom: 1px dashed #e3d9bd;
+  }
+
+  &__mark {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #a8823e;
+    margin-bottom: 1px;
+  }
+}

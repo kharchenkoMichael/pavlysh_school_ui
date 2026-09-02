@@ -1,0 +1,194 @@
+@if (!unlocked()) {
+  <section class="gate">
+    <div class="gate__card">
+      <h1 class="gate__title">Розклад уроків</h1>
+      <p class="gate__hint">Сторінка для своїх — введіть пароль.</p>
+      <input class="gate__input" type="password" [(ngModel)]="passwordDraft"
+             placeholder="Пароль" (keyup.enter)="tryUnlock()" #pwd
+             (ngModelChange)="passwordWrong.set(false)" />
+      <button class="gate__button" type="button" (click)="tryUnlock()">Увійти</button>
+      @if (passwordWrong()) {
+        <p class="gate__error">Не той пароль — спробуйте ще раз.</p>
+      }
+    </div>
+  </section>
+} @else {
+  <section class="page">
+    <header class="page__head">
+      <h1 class="page__title">Розклад уроків</h1>
+      @if (run(); as data) {
+        <p class="page__sub">
+          {{ data.title || ('Розрахунок №' + data.id) }}
+          @if (data.finished_at) { · оновлено {{ data.finished_at | date:'d.MM.yyyy, HH:mm' }} }
+        </p>
+      }
+    </header>
+
+    @if (loading()) {
+      <p class="page__status">Завантажую…</p>
+    }
+    @if (error()) {
+      <p class="page__status page__status--error">{{ error() }}</p>
+    }
+
+    @if (!loading() && !error() && entries().length) {
+      <div class="controls">
+        <div class="controls__views">
+          @for (v of views; track v) {
+            <button class="tab" type="button" [class.tab--active]="view() === v"
+                    (click)="setView(v)">
+              {{ viewLabel[v] }}
+            </button>
+          }
+        </div>
+
+        <div class="controls__row">
+          <select class="controls__select" [ngModel]="picked()"
+                  (ngModelChange)="picked.set($event)">
+            <option value="">— усі {{ viewLabel[view()].toLowerCase() }} —</option>
+            @for (name of options(); track name) {
+              <option [value]="name">{{ name }}</option>
+            }
+          </select>
+
+          @if (weeks() > 1) {
+            <div class="controls__weeks">
+              <button class="tab tab--small" type="button" [class.tab--active]="week() === 0"
+                      (click)="week.set(0)">
+                Обидва
+              </button>
+              <button class="tab tab--small" type="button" [class.tab--active]="week() === 1"
+                      (click)="week.set(1)">
+                Чисельник
+              </button>
+              <button class="tab tab--small" type="button" [class.tab--active]="week() === 2"
+                      (click)="week.set(2)">
+                Знаменник
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (picked(); as name) {
+        @if (grid(); as g) {
+          <div class="single">
+            <table class="grid">
+              <thead>
+                <tr>
+                  <th class="grid__corner"></th>
+                  @for (day of days; track day) {
+                    <th>{{ dayNames[day] }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (lesson of g.lessons; track lesson) {
+                  <tr>
+                    <th class="grid__lesson">{{ lesson }}</th>
+                    @for (day of days; track day) {
+                      <td class="grid__cell" [class.grid__cell--split]="cell(day, lesson) && !cell(day, lesson)!.same">
+                        @if (cell(day, lesson); as slot) {
+                          @for (part of slot.weeks; track part.week) {
+                            <div class="week-part">
+                              @if (!slot.same) {
+                                <span class="week-part__mark">{{ weekMark(part.week) }}</span>
+                              }
+                              @for (entry of part.entries; track entry.id) {
+                                <div class="lesson">
+                                  <span class="lesson__subject">
+                                    {{ entry.subject_name }}
+                                    @if (entry.subgroup) {
+                                      <span class="lesson__subgroup">({{ entry.subgroup }})</span>
+                                    }
+                                  </span>
+                                  <span class="lesson__who">{{ who(entry) }}</span>
+                                  @if (view() !== 'rooms' && entry.room_name) {
+                                    <span class="lesson__room">{{ entry.room_name }}</span>
+                                  }
+                                </div>
+                              } @empty {
+                                <span class="grid__free">—</span>
+                              }
+                            </div>
+                          }
+                        } @else {
+                          <span class="grid__free">—</span>
+                        }
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      } @else {
+        <div class="all">
+          <div class="scroll-mirror" #topScroll (scroll)="onTopScroll()">
+            <div class="scroll-mirror__ghost" [style.width.px]="ghostWidth()"></div>
+          </div>
+          <div class="all__wrap" #bottomScroll (scroll)="onBottomScroll()">
+            <table class="grid grid--wide" #wideTable>
+              <thead>
+                <tr>
+                  <th class="grid__corner">Урок</th>
+                  @for (name of options(); track name) {
+                    <th>{{ name }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of rows(); track (row.day + ':' + row.lesson)) {
+                  <tr [class.grid__row--day-start]="row.lesson === lessons()[0]">
+                    <th class="grid__lesson">
+                      @if (row.lesson === lessons()[0]) {
+                        <span class="grid__day">{{ dayShort[row.day] }}</span>
+                      }
+                      {{ row.lesson }}
+                    </th>
+                    @for (name of options(); track name) {
+                      <td class="grid__cell" [class.grid__cell--split]="allCell(name, row.day, row.lesson) && !allCell(name, row.day, row.lesson)!.same">
+                        @if (allCell(name, row.day, row.lesson); as slot) {
+                          @for (part of slot.weeks; track part.week) {
+                            <div class="week-part">
+                              @if (!slot.same) {
+                                <span class="week-part__mark">{{ weekMark(part.week) }}</span>
+                              }
+                              @for (entry of part.entries; track entry.id) {
+                                <div class="lesson">
+                                  <span class="lesson__subject">
+                                    {{ entry.subject_name }}
+                                    @if (entry.subgroup) {
+                                      <span class="lesson__subgroup">({{ entry.subgroup }})</span>
+                                    }
+                                  </span>
+                                  <span class="lesson__who">{{ who(entry) }}</span>
+                                  @if (view() !== 'rooms' && entry.room_name) {
+                                    <span class="lesson__room">{{ entry.room_name }}</span>
+                                  }
+                                </div>
+                              } @empty {
+                                <span class="grid__free">—</span>
+                              }
+                            </div>
+                          }
+                        } @else {
+                          <span class="grid__free">—</span>
+                        }
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    }
+
+    @if (!loading() && !error() && !entries().length) {
+      <p class="page__status">Готового розкладу поки немає.</p>
+    }
+  </section>
+}
