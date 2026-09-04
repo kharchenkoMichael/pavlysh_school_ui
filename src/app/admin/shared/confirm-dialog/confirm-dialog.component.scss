@@ -1,0 +1,93 @@
+@use "../../../../assets/styles/variables" as v;
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.dialog {
+  position: fixed;
+  z-index: 101;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 22px 16px;
+
+  &__title {
+    margin: 0 0 8px;
+    font-size: 17px;
+    color: v.$dark-text-color;
+  }
+
+  &__text {
+    margin: 0 0 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #5b6b63;
+  }
+
+  &__used {
+    background: #fdf3f2;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #7a3a34;
+
+    ul {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      line-height: 1.6;
+    }
+  }
+
+  &__used-title { font-weight: 600; }
+
+  &__more {
+    display: block;
+    margin-top: 6px;
+    opacity: 0.75;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+.btn {
+  border: 1px solid #d5ddd8;
+  background: #fff;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #5b6b63;
+
+  &:hover:not(:disabled) { border-color: v.$primary-color; color: v.$primary-color; }
+  &:disabled { opacity: 0.5; cursor: default; }
+
+  &--ok {
+    background: v.$primary-color;
+    border-color: v.$primary-color;
+    color: #fff;
+
+    &:hover { background: v.$button-hover-color; color: #fff; }
+  }
+
+  &--danger {
+    background: #d9534f;
+    border-color: #d9534f;
+    color: #fff;
+
+    &:hover:not(:disabled) { background: #c9302c; border-color: #c9302c; color: #fff; }
+  }
+}

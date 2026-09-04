@@ -1,0 +1,39 @@
+@use "../../../../assets/styles/variables" as v;
+
+.totals {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #5b6b63;
+
+  &__warn {
+    display: block;
+    margin-top: 4px;
+    color: #8a6100;
+  }
+}
+
+.new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+
+  &__input {
+    padding: 7px 10px;
+    border: 1px solid #d5ddd8;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 220px;
+
+    &:focus {
+      outline: none;
+      border-color: v.$primary-color;
+    }
+  }
+
+  &__error {
+    font-size: 13px;
+    color: #a3271c;
+  }
+}

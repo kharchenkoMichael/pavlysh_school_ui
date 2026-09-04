@@ -1,0 +1,230 @@
+<header class="page__head">
+  <h1 class="page__title">Правила</h1>
+  @if (saved(); as name) {
+    <span class="page__ok saved">Збережено: {{ name }}</span>
+  }
+</header>
+
+<p class="page__note">
+  <b>Залізно</b> — програма не має права це порушити. Якщо такі правила
+  суперечать одне одному, розкладу не буде взагалі, і програма скаже про це
+  прямо, а не мовчки.
+  <br />
+  <b>Зі штрафом</b> — програма намагається виконати, а вага каже, чим
+  жертвувати першою. Вага — це ціна одного порушення: правило з вагою 10
+  важливіше за два з вагою 4. Саме з цих цін і складається число, яким
+  оцінюється розклад.
+  <br />
+  Зміни зберігаються одразу.
+</p>
+
+@if (error(); as message) {
+  <p class="page__alert">{{ message }}</p>
+}
+
+@if (missing().length) {
+  <div class="missing">
+    <b>Програма вміє ще {{ missing().length }} правил, яких тут немає:</b>
+    {{ missing()[0].name }}@if (missing().length > 1) {, …}
+    <button class="page__button" type="button" [disabled]="busy()"
+            (click)="addMissing()">Додати їх</button>
+  </div>
+}
+
+<div class="own">
+  @if (!adding()) {
+    <button class="page__button page__button--main" type="button"
+            (click)="startAdd()">Додати своє правило</button>
+    <span class="own__hint">
+      Правило потрібного виду можна завести <b>кілька разів</b> із різними
+      параметрами: звільнити ще один урок під нараду, заборонити хімію
+      останнім. Вигадати геть новий вид обмеження без програміста не
+      вийде — програма має вміти його рахувати; але з того, що вона вміє,
+      складається майже все, що потрібно на практиці.
+    </span>
+  } @else {
+    <div class="own__form">
+      <label class="own__field">
+        <span>Що це за правило</span>
+        <select [ngModel]="draft.kind" (ngModelChange)="pickKind($event)">
+          <option value="">— виберіть —</option>
+          @for (spec of addable(); track spec.kind) {
+            <option [value]="spec.kind">{{ spec.name }}</option>
+          }
+        </select>
+      </label>
+
+      @if (draft.kind) {
+        @if (hintFor(draft.kind); as hint) {
+          <p class="own__about">{{ hint }}</p>
+        }
+
+        <label class="own__field">
+          <span>Назва — за нею ви його знайдете</span>
+          <input type="text" [(ngModel)]="draft.name"
+                 placeholder="напр. Не займати середу 7-м уроком" />
+        </label>
+
+        <div class="own__row">
+          <label class="own__field">
+            <span>Наскільки суворо</span>
+            <select [(ngModel)]="draft.level">
+              <option value="hard">Залізно — порушити не можна</option>
+              <option value="soft">Зі штрафом — намагатися</option>
+            </select>
+          </label>
+
+          @if (draft.level === 'soft') {
+            <label class="own__field own__field--narrow">
+              <span>Вага</span>
+              <input type="number" min="0" max="100" [(ngModel)]="draft.weight" />
+            </label>
+          }
+        </div>
+
+        @for (key of draftParams(); track key) {
+          <label class="own__field">
+            <span>{{ paramLabel(key) }}</span>
+            <input type="text" [(ngModel)]="draft.params[key]" />
+          </label>
+        }
+      }
+
+      <div class="own__buttons">
+        <button class="page__button page__button--main" type="button"
+                [disabled]="busy()" (click)="saveNew()">Зберегти</button>
+        <button class="page__button" type="button" (click)="cancelAdd()">
+          Скасувати
+        </button>
+      </div>
+    </div>
+  }
+</div>
+
+@if (hardRows().length) {
+  <h2 class="section">Виконується залізно</h2>
+  <div class="rules">
+    @for (row of hardRows(); track row.rule.id) {
+      <ng-container *ngTemplateOutlet="card; context: { $implicit: row }"></ng-container>
+    }
+  </div>
+}
+
+@if (softRows().length) {
+  <h2 class="section">Побажання зі штрафом</h2>
+  <div class="rules">
+    @for (row of softRows(); track row.rule.id) {
+      <ng-container *ngTemplateOutlet="card; context: { $implicit: row }"></ng-container>
+    }
+  </div>
+}
+
+@if (offRows().length) {
+  <h2 class="section">Вимкнені</h2>
+  <div class="rules">
+    @for (row of offRows(); track row.rule.id) {
+      <ng-container *ngTemplateOutlet="card; context: { $implicit: row }"></ng-container>
+    }
+  </div>
+}
+
+@if (!rows().length) {
+  <p class="empty">
+    {{ busy()
+        ? 'Завантажую…'
+        : 'Правил ще немає. Їх можна залити готовим набором з екрана «Огляд».' }}
+  </p>
+}
+
+<ng-template #card let-row>
+  <article class="rule" [class.rule--off]="row.mode === 'off'">
+    <div class="rule__main">
+      <div class="rule__text">
+        <h3 class="rule__name">
+          {{ row.rule.name }}
+          @if (row.mode === 'soft') {
+            <span class="rule__weight" title="Ціна одного порушення">
+              штраф {{ row.rule.weight }}
+            </span>
+          }
+          @if (row.mode === 'hard') {
+            <span class="rule__weight rule__weight--hard">залізно</span>
+          }
+        </h3>
+        @if (row.spec?.comment || row.rule.comment) {
+          <p class="rule__why">{{ row.spec?.comment || row.rule.comment }}</p>
+        }
+      </div>
+
+      <div class="rule__mode">
+        @if (fixed(row)) {
+          <span class="rule__fixed"
+                title="Це не налаштовується: без нього розклад не має сенсу">
+            не перемикається
+          </span>
+        } @else {
+          <div class="switch">
+            <button
+              type="button"
+              class="switch__btn"
+              [class.switch__btn--on]="row.mode === 'hard'"
+              [disabled]="busy()"
+              (click)="setMode(row, 'hard')"
+            >Залізно</button>
+            <button
+              type="button"
+              class="switch__btn"
+              [class.switch__btn--on]="row.mode === 'soft'"
+              [disabled]="busy()"
+              (click)="setMode(row, 'soft')"
+            >Зі штрафом</button>
+            <button
+              type="button"
+              class="switch__btn"
+              [class.switch__btn--on]="row.mode === 'off'"
+              [disabled]="busy()"
+              (click)="setMode(row, 'off')"
+            >Вимкнено</button>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (row.mode === 'soft') {
+      <div class="weight">
+        <span class="weight__label">Ціна порушення</span>
+        <input
+          class="weight__slider"
+          type="range" min="1" max="10"
+          [value]="row.rule.weight"
+          (change)="setWeight(row, +$any($event.target).value)"
+        />
+        <span class="weight__value">{{ row.rule.weight }}</span>
+      </div>
+    }
+
+    @if (row.mode !== 'off' && paramKeys(row).length) {
+      <div class="params">
+        @for (key of paramKeys(row); track key) {
+          <label class="params__field">
+            <span>{{ paramLabel(key) }}</span>
+            <input
+              type="text"
+              [value]="paramValue(row, key)"
+              (change)="setParam(row, key, $any($event.target).value)"
+            />
+          </label>
+        }
+      </div>
+    }
+
+    @if (row.spec && !fixed(row)) {
+      <button class="rule__reset" type="button" [disabled]="busy()"
+              (click)="reset(row)">Повернути як було</button>
+    }
+    @if (isOwn(row)) {
+      <button class="rule__reset rule__reset--danger" type="button"
+              [disabled]="busy()" (click)="remove(row)">Видалити</button>
+    }
+  </article>
+</ng-template>

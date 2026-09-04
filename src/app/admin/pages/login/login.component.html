@@ -1,0 +1,41 @@
+<div class="vhid">
+  <form class="card" (ngSubmit)="submit()">
+    <h1 class="card__title">Складання розкладу</h1>
+    <p class="card__sub">Павлиський ліцей ім. В. О. Сухомлинського</p>
+
+    <label class="field">
+      <span class="field__label">Логін</span>
+      <input
+        class="field__input"
+        name="username"
+        autocomplete="username"
+        [(ngModel)]="username"
+        [disabled]="busy()"
+        required
+      />
+    </label>
+
+    <label class="field">
+      <span class="field__label">Пароль</span>
+      <input
+        class="field__input"
+        type="password"
+        name="password"
+        autocomplete="current-password"
+        [(ngModel)]="password"
+        [disabled]="busy()"
+        required
+      />
+    </label>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+
+    <button class="submit" type="submit" [disabled]="busy() || !username || !password">
+      {{ busy() ? 'Заходжу…' : 'Увійти' }}
+    </button>
+
+    <a class="back" routerLink="/">← На сайт школи</a>
+  </form>
+</div>

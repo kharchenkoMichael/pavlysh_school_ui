@@ -1,0 +1,163 @@
+@use "../../../../assets/styles/variables" as v;
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+
+  &__title {
+    margin: 0;
+    font-size: 22px;
+    color: v.$dark-text-color;
+    flex: 1;
+  }
+
+  &__refresh {
+    padding: 7px 14px;
+    border: 1px solid #d5ddd8;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) { border-color: v.$primary-color; }
+    &:disabled { opacity: 0.6; }
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 14px 16px;
+
+  &__value {
+    display: block;
+    font-size: 26px;
+    font-weight: 700;
+    color: v.$dark-text-color;
+  }
+
+  &__label {
+    display: block;
+    font-size: 13px;
+    color: #7c8b83;
+    margin-top: 2px;
+  }
+}
+
+.block {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+
+  &__title {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: v.$dark-text-color;
+  }
+
+  &__note {
+    margin: 0 0 14px;
+    font-size: 13px;
+    color: #7c8b83;
+    line-height: 1.5;
+  }
+}
+
+.alert {
+  margin: 0 0 8px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+
+  &--error { background: #fdecea; color: #a3271c; }
+  &--warn { background: #fff6e0; color: #8a6100; }
+  &--ok {
+    background: #eaf7ea;
+    color: #2c6b2f;
+
+    a { color: #2c6b2f; }
+  }
+}
+
+.runs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th, td {
+    text-align: left;
+    padding: 7px 10px;
+    border-bottom: 1px solid #eef1ef;
+  }
+
+  th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #8a9992;
+    font-weight: 600;
+  }
+
+  &__penalty { font-variant-numeric: tabular-nums; }
+
+  a {
+    color: v.$primary-color;
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+
+  &--done { background: #eaf7ea; color: #2c6b2f; }
+  &--running { background: #eaf1f7; color: #1c5480; }
+  &--failed { background: #fdecea; color: #a3271c; }
+}
+
+.empty {
+  margin: 0;
+  font-size: 14px;
+  color: #8a9992;
+}
+
+.runs {
+  &__actions {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    white-space: nowrap;
+  }
+
+  // Видалення розрахунку забирає й сам розклад, тож кнопка навмисно
+  // скромна: її треба знайти, а не наткнутися на неї.
+  &__drop {
+    border: 0;
+    background: transparent;
+    color: #b3beb8;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover:not(:disabled) { color: #c0392b; }
+    &:disabled { cursor: default; }
+  }
+}

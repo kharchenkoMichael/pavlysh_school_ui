@@ -1,0 +1,277 @@
+@use "../../../../assets/styles/variables" as v;
+
+.saved {
+  font-size: 13px;
+  padding: 5px 10px;
+  margin: 0;
+}
+
+.section {
+  margin: 22px 0 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a9992;
+  font-weight: 600;
+
+  &:first-of-type { margin-top: 4px; }
+}
+
+.missing {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: #f4f8f5;
+  border: 1px solid #dce7de;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #5b6b63;
+
+  button { margin-left: 8px; }
+}
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rule {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 14px 16px;
+
+  &--off { opacity: 0.6; }
+
+  &__main {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 15px;
+    color: v.$dark-text-color;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__weight {
+    font-size: 12px;
+    font-weight: 400;
+    background: #fff6e0;
+    color: #8a6100;
+    border-radius: 10px;
+    padding: 2px 9px;
+
+    &--hard {
+      background: #eaf1f7;
+      color: #1c5480;
+    }
+  }
+
+  &__why {
+    margin: 5px 0 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #7c8b83;
+    max-width: 620px;
+  }
+
+  &__fixed {
+    display: inline-block;
+    padding: 5px 12px;
+    background: #f0f4f1;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #5b6b63;
+  }
+
+  &__reset {
+    margin-top: 10px;
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: 12px;
+    color: #8a9992;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover:not(:disabled) { color: v.$primary-color; }
+    &:disabled { opacity: 0.5; cursor: default; }
+  }
+}
+
+.switch {
+  display: flex;
+  border: 1px solid #d5ddd8;
+  border-radius: 6px;
+  overflow: hidden;
+
+  &__btn {
+    background: #fff;
+    border: 0;
+    border-right: 1px solid #e3e8e5;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #5b6b63;
+    white-space: nowrap;
+
+    &:last-child { border-right: 0; }
+    &:hover:not(:disabled):not(&--on) { background: #f4f8f5; }
+    &:disabled { cursor: default; }
+
+    &--on {
+      background: v.$primary-color;
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+}
+
+.weight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+
+  &__label {
+    font-size: 13px;
+    color: #5b6b63;
+  }
+
+  &__slider {
+    flex: 1;
+    max-width: 260px;
+    accent-color: v.$primary-color;
+  }
+
+  &__value {
+    font-size: 14px;
+    font-weight: 600;
+    color: v.$dark-text-color;
+    min-width: 18px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eef1ef;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: #7c8b83;
+
+    input {
+      padding: 5px 8px;
+      border: 1px solid #d5ddd8;
+      border-radius: 5px;
+      font-size: 13px;
+      font-family: inherit;
+      min-width: 180px;
+
+      &:focus {
+        outline: none;
+        border-color: v.$primary-color;
+      }
+    }
+  }
+}
+
+.empty {
+  padding: 22px;
+  text-align: center;
+  color: #8a9992;
+  font-size: 14px;
+}
+
+// ── своє правило ─────────────────────────────────────────────
+//
+// Форма будується з каталогу солвера: які параметри бувають у цього
+// виду, ті поля й з'являються. Тому додати правило в програму — це
+// дописати його в каталог, а не ще й тут.
+.own {
+  margin: 14px 0 18px;
+
+  &__hint {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #7c8b83;
+  }
+
+  &__form {
+    background: #fff;
+    border: 1px solid v.$primary-color;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: grid;
+    gap: 10px;
+    max-width: 640px;
+  }
+
+  &__about {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #5b6b63;
+    background: #f5f8f6;
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+
+  &__row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #5b6b63;
+    flex: 1;
+    min-width: 180px;
+
+    &--narrow { flex: 0 0 90px; min-width: 90px; }
+
+    input, select {
+      border: 1px solid #d5ddd8;
+      border-radius: 6px;
+      padding: 6px 9px;
+      font-size: 14px;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+.rule__reset--danger {
+  color: #c0392b;
+}

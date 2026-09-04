@@ -1,0 +1,47 @@
+<header class="page__head">
+  <h1 class="page__title">Предмети</h1>
+</header>
+
+<p class="page__note">
+  <b>Синоніми</b> — те, як предмет може бути написаний деінде: у картці
+  вчителя на сайті або в CSV торішнього розкладу. «Алгебра» й «Геометрія»
+  як синоніми Математики означають, що і те, і те впізнається автоматично.
+  Не впізнаний предмет не зіставиться, і оцінка розкладу порахується без
+  нього — тобто буде заниженою.
+</p>
+
+@if (crud.error(); as message) {
+  <p class="page__alert">{{ message }}</p>
+}
+
+<app-dovidnyk-table
+  [columns]="columns"
+  [rows]="crud.rows()"
+  [blank]="blank"
+  [busy]="crud.busy()"
+  addLabel="предмет"
+  emptyText="Предметів ще немає. Їх можна залити готовим набором з екрана «Огляд»."
+  (save)="crud.save($event)"
+  (remove)="crud.askDelete($event)"
+></app-dovidnyk-table>
+
+@if (crud.pending(); as subject) {
+  <app-confirm-dialog
+    title="Видалити предмет?"
+    [message]="'Прибрати ' + crud.describe(subject) + '?'"
+    confirmLabel="Видалити"
+    [busy]="crud.busy()"
+    (confirm)="crud.confirmDelete()"
+    (cancel)="crud.cancelDelete()"
+  ></app-confirm-dialog>
+}
+
+@if (crud.blocked(); as block) {
+  <app-confirm-dialog
+    title="Видалити не можна"
+    [message]="block.message"
+    [usedBy]="block.usedBy"
+    [blocked]="true"
+    (cancel)="crud.cancelDelete()"
+  ></app-confirm-dialog>
+}

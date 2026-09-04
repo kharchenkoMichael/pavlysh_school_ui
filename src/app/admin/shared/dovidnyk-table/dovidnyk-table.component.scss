@@ -1,0 +1,114 @@
+@use "../../../../assets/styles/variables" as v;
+
+.wrap {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  // Широкі довідники гортаються всередині картки, а не розпирають сторінку
+  overflow-x: auto;
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th, td {
+    text-align: left;
+    padding: 7px 10px;
+    border-bottom: 1px solid #eef1ef;
+    vertical-align: middle;
+  }
+
+  th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #8a9992;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__row:hover { background: #fafbfa; }
+
+  &__row--edit {
+    background: #f3f8f4;
+
+    &:hover { background: #f3f8f4; }
+  }
+
+  &__actions {
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  &__static { color: #7c8b83; }
+
+  &__range {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    input[type="number"] { min-width: 48px; }
+  }
+
+  &__empty {
+    padding: 18px 10px;
+    color: #8a9992;
+    text-align: center;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    min-width: 70px;
+    padding: 5px 7px;
+    border: 1px solid #d5ddd8;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: v.$primary-color;
+    }
+  }
+}
+
+.btn {
+  background: none;
+  border: 1px solid #d5ddd8;
+  border-radius: 5px;
+  padding: 4px 10px;
+  margin-left: 5px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #5b6b63;
+
+  &:hover:not(:disabled) { border-color: v.$primary-color; color: v.$primary-color; }
+  &:disabled { opacity: 0.5; cursor: default; }
+
+  &--ok {
+    background: v.$primary-color;
+    border-color: v.$primary-color;
+    color: #fff;
+
+    &:hover:not(:disabled) { background: v.$button-hover-color; color: #fff; }
+  }
+
+  &--danger:hover:not(:disabled) { border-color: #d9534f; color: #d9534f; }
+}
+
+.add {
+  margin-top: 10px;
+  background: none;
+  border: 1px dashed #c8d1cc;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #5b6b63;
+
+  &:hover { border-color: v.$primary-color; color: v.$primary-color; }
+}

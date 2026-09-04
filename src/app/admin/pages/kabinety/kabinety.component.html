@@ -1,0 +1,133 @@
+<header class="page__head">
+  <h1 class="page__title">Кабінети</h1>
+</header>
+
+<p class="page__note">
+  <b>Кількість кабінетів кожного типу — жорстка межа.</b> Одночасних уроків
+  інформатики не буває більше, ніж кабінетів інформатики: трьох учителів
+  у два кабінети не посадиш, скільки не переставляй уроки.
+  <br />
+  <b>Якщо клас ділиться на підгрупи</b> — кабінетів потрібного типу має бути
+  два, інакше обидві підгрупи не проведеш одночасно.
+  <br />
+  <b>Закріплення — це пріоритет, а не власність.</b> Спершу той, за ким
+  кабінет закріплений; потім хто веде той самий предмет; потім будь-хто.
+  Коли двоє закріплених стоять одночасно, той, хто програв, іде в інший
+  вільний звичайний кабінет.
+</p>
+
+@if (countByKind().length) {
+  <div class="tally">
+    @for (item of countByKind(); track item.label) {
+      <span class="tally__item">{{ item.label }}: <b>{{ item.count }}</b></span>
+    }
+  </div>
+}
+
+@if (crud.error(); as message) {
+  <p class="page__alert">{{ message }}</p>
+}
+
+<app-dovidnyk-table
+  [columns]="columns"
+  [rows]="crud.rows()"
+  [blank]="blank"
+  [busy]="crud.busy()"
+  addLabel="кабінет"
+  emptyText="Кабінетів ще немає. Заведіть хоча б звичайні класні кімнати."
+  (save)="crud.save($event)"
+  (remove)="crud.askDelete($event)"
+></app-dovidnyk-table>
+
+@if (crud.rows().length) {
+  <section class="links">
+    <h2 class="links__title">Закріплення</h2>
+    <p class="page__note">
+      За ким кабінет закріплений — за вчителем, за предметом, або за обома.
+      @if (unassigned().length) {
+        Без жодного закріплення: <b>{{ unassigned().length }}</b> —
+        це нормально для запасних і других місць у залі.
+      }
+    </p>
+
+    @if (linkError(); as message) {
+      <p class="page__alert">{{ message }}</p>
+    }
+
+    <ul class="links__list">
+      @for (room of crud.rows(); track room.id) {
+        <li class="links__room">
+          <div class="links__head">
+            <b>{{ room.name }}</b>
+            @if (room.corpus) {
+              <span class="links__corpus">{{ room.corpus }}</span>
+            }
+          </div>
+
+          <div class="links__chips">
+            @for (link of room.assignments ?? []; track link.id) {
+              <span class="chip" [class.chip--subject]="!link.teacher_name">
+                {{ link.teacher_name ?? link.subject_name }}
+                @if (link.teacher_name && link.subject_name) {
+                  <span class="chip__and">· {{ link.subject_name }}</span>
+                }
+                <button type="button" class="chip__x" title="Прибрати закріплення"
+                        (click)="removeLink(link.id)">×</button>
+              </span>
+            } @empty {
+              <span class="links__none">нікого не закріплено</span>
+            }
+
+            @if (adding() === room.id) {
+              <span class="add">
+                <select [(ngModel)]="draftTeacher">
+                  <option [ngValue]="null">— вчитель —</option>
+                  @for (person of teachers(); track person.id) {
+                    <option [ngValue]="person.id">{{ teacherLabel(person) }}</option>
+                  }
+                </select>
+                <select [(ngModel)]="draftSubject">
+                  <option [ngValue]="null">— предмет —</option>
+                  @for (subject of subjects(); track subject.id) {
+                    <option [ngValue]="subject.id">{{ subject.name }}</option>
+                  }
+                </select>
+                <button type="button" class="add__ok" (click)="addLink(room)">
+                  Закріпити
+                </button>
+                <button type="button" class="add__no" (click)="cancelAdd()">
+                  Скасувати
+                </button>
+              </span>
+            } @else {
+              <button type="button" class="chip chip--add" (click)="startAdd(room)">
+                + закріпити
+              </button>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+@if (crud.pending(); as room) {
+  <app-confirm-dialog
+    title="Видалити кабінет?"
+    [message]="'Прибрати ' + crud.describe(room) + '?'"
+    confirmLabel="Видалити"
+    [busy]="crud.busy()"
+    (confirm)="crud.confirmDelete()"
+    (cancel)="crud.cancelDelete()"
+  ></app-confirm-dialog>
+}
+
+@if (crud.blocked(); as block) {
+  <app-confirm-dialog
+    title="Видалити не можна"
+    [message]="block.message"
+    [usedBy]="block.usedBy"
+    [blocked]="true"
+    (cancel)="crud.cancelDelete()"
+  ></app-confirm-dialog>
+}

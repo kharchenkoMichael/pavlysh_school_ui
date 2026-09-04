@@ -1,0 +1,208 @@
+<header class="page__head">
+  <h1 class="page__title">Навантаження</h1>
+  <button class="page__button" type="button" [disabled]="busy()" (click)="load()">
+    {{ busy() ? 'Оновлюю…' : 'Оновити' }}
+  </button>
+</header>
+
+<p class="page__note">
+  Години вводяться просто в клітинці — Tab переходить до наступної, зміна
+  зберігається сама. Нуль прибирає предмет із навантаження класу.
+  Щоб указати вчителя або поділ на підгрупи, натисніть на прізвище під
+  годинами.
+</p>
+
+@if (error(); as message) {
+  <p class="page__alert">{{ message }}</p>
+}
+
+<div class="matrix-wrap">
+  <table class="matrix">
+    <thead>
+      <tr>
+        <th class="matrix__corner">Клас</th>
+        @for (subject of visibleSubjects(); track subject.id) {
+          <th class="matrix__subject" [title]="subject.name">
+            <span>{{ subject.name }}</span>
+          </th>
+        }
+        <th class="matrix__total">Разом</th>
+        <th class="matrix__copy"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (group of visibleGroups(); track group.id) {
+        <tr>
+          <th class="matrix__group">{{ group.name }}</th>
+
+          @for (subject of visibleSubjects(); track subject.id) {
+            <td class="cell" [class.cell--filled]="hours(group, subject)"
+                [class.cell--gap]="hasGap(group, subject)"
+                [class.cell--inactive]="hasInactiveTeacher(group, subject)"
+                [title]="hasInactiveTeacher(group, subject)
+                          ? 'Учитель уже звільнений — потрібно призначити іншого'
+                          : ''">
+              <input
+                class="cell__hours"
+                type="number"
+                min="0"
+                max="12"
+                step="0.5"
+                title="Годин на тиждень. Половина буває: 0,5 означає, що
+                       предмет іде через тиждень."
+                [value]="hours(group, subject) ?? ''"
+                (change)="setHours(group, subject, $any($event.target).value)"
+              />
+              @if (hours(group, subject)) {
+                <button class="cell__who" type="button" (click)="pick(group, subject)">
+                  {{ who(group, subject) }}
+                </button>
+              }
+              @if (merged(group, subject); as with) {
+                <span class="cell__merged"
+                      title="Урок ведуть цим класам разом — правка стосується всіх"
+                >{{ with }}</span>
+              }
+            </td>
+          }
+
+          <td
+            class="matrix__total"
+            [class.matrix__total--over]="(perGroup().get(group.id) ?? 0) > capacity(group)"
+            [title]="'Сітка класу вміщає ' + capacity(group) + ' уроків на тиждень'"
+          >{{ show(perGroup().get(group.id) ?? 0) }}</td>
+
+          <td class="matrix__copy">
+            <select
+              class="matrix__copy-select"
+              (change)="copyRow(group, $any($event.target).value); $any($event.target).value = ''"
+            >
+              <option value="">копіювати в…</option>
+              @for (other of visibleGroups(); track other.id) {
+                @if (other.id !== group.id) {
+                  <option [value]="other.id">{{ other.name }}</option>
+                }
+              }
+            </select>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td class="matrix__empty" [attr.colspan]="visibleSubjects().length + 3">
+            {{ busy() ? 'Завантажую…' : 'Немає класів. Заведіть їх на сторінці «Класи».' }}
+          </td>
+        </tr>
+      }
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <th class="matrix__group">Разом</th>
+        @for (subject of visibleSubjects(); track subject.id) {
+          <td class="matrix__subtotal">{{ show(perSubject().get(subject.id) ?? 0) }}</td>
+        }
+        <td class="matrix__total"></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+@if (perTeacher().length) {
+  <section class="teachers">
+    <h2 class="teachers__title">Годин у вчителів</h2>
+    <div class="teachers__list">
+      @for (item of perTeacher(); track item.id) {
+        <span
+          class="teachers__chip"
+          [class.teachers__chip--over]="item.hours > teacherLimit"
+          [title]="item.hours > teacherLimit
+            ? 'Більше за ' + teacherLimit + ' годин на тиждень'
+            : ''"
+        >{{ item.label }}: <b>{{ show(item.hours) }}</b></span>
+      }
+    </div>
+  </section>
+}
+
+@if (picked(); as cell) {
+  <div class="scrim" (click)="closePicker()"></div>
+  <div class="picker">
+    <h2 class="picker__title">
+      {{ cell.load?.group_name || cell.group.name }} · {{ cell.subject.name }}
+    </h2>
+    @if ((cell.load?.group_ids?.length ?? 1) > 1) {
+      <p class="picker__hint">
+        Це <b>зведена група</b>: урок ведуть цим класам разом, і зміна
+        стосується всіх одразу.
+      </p>
+    }
+
+    <label class="picker__field">
+      <span>Годин на тиждень</span>
+      <input
+        type="number" min="0" max="12" step="0.5"
+        [value]="cell.load?.hours_per_week ?? 1"
+        (change)="saveCell(cell, { hours_per_week: +$any($event.target).value })"
+      />
+      <small class="picker__hint">
+        Половина буває: 0,5 означає, що предмет іде через тиждень.
+      </small>
+    </label>
+
+    <label class="picker__field">
+      <span>Учитель</span>
+      <select
+        [value]="cell.load?.teacher_id ?? ''"
+        (change)="saveCell(cell, { teacher_id: +$any($event.target).value || null })"
+      >
+        <option value="">не вказано</option>
+        @for (option of teacherOptions(cell); track option.id) {
+          <option [value]="option.id">{{ option.label }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="picker__check">
+      <input
+        type="checkbox"
+        [checked]="cell.load?.split"
+        (change)="saveCell(cell, { split: $any($event.target).checked })"
+      />
+      <span>Клас ділиться на дві підгрупи</span>
+    </label>
+
+    @if (cell.load?.split) {
+      <label class="picker__field">
+        <span>Учитель другої підгрупи</span>
+        <select
+          [value]="cell.load?.teacher2_id ?? ''"
+          (change)="saveCell(cell, { teacher2_id: +$any($event.target).value || null })"
+        >
+          <option value="">той самий</option>
+          @for (person of teachersFor(cell.subject); track person.id) {
+            <option [value]="person.id">{{ label(person) }}</option>
+          }
+        </select>
+      </label>
+
+      <p class="picker__hint">
+        Два різні вчителі — підгрупи йдуть <b>одночасно</b> у двох кабінетах.
+        Так іде інформатика, і кабінетів цього типу має бути два.
+        <br />
+        Один учитель на обидві — він фізично не роздвоїться, тож підгрупи
+        стануть на різні уроки.
+      </p>
+    }
+
+    <div class="picker__buttons">
+      @if (cell.load) {
+        <button class="page__button" type="button"
+                (click)="removeCell(cell)">Прибрати предмет</button>
+      }
+      <button class="page__button page__button--main" type="button"
+              (click)="closePicker()">Готово</button>
+    </div>
+  </div>
+}

@@ -1,0 +1,139 @@
+<header class="head">
+  <h1 class="head__title">Навчальні роки</h1>
+</header>
+
+@if (error()) {
+  <p class="alert alert--error">{{ error() }}</p>
+}
+
+<section class="block">
+  <h2 class="block__title">Роки в базі</h2>
+  @if (years().length) {
+    <table class="years">
+      <thead>
+        <tr><th>Рік</th><th>Стан</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (year of years(); track year.id) {
+          <tr>
+            <td>{{ year.name }}</td>
+            <td>
+              @if (year.is_current) {
+                <span class="badge badge--done">поточний</span>
+              } @else {
+                <span class="badge">—</span>
+              }
+            </td>
+            <td>
+              @if (!year.is_current) {
+                <button type="button" class="years__activate"
+                        [disabled]="busy()" (click)="activate(year)">
+                  Зробити поточним
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="empty">Завантажую…</p>
+  }
+</section>
+
+<section class="block">
+  <h2 class="block__title">Створити новий рік</h2>
+  <p class="block__note">
+    Класи зсуваються на паралель уперед (5-А → 6-А), учитель тягнеться
+    за когортою, предмети — за програмою тієї паралелі торік. 11-й клас
+    випускається. Кабінети, закріплення, правила й зміни копіюються як
+    були. Новий рік не стає поточним автоматично — зроби це кнопкою
+    вище, коли перевіриш результат.
+  </p>
+  <form class="rollover" (ngSubmit)="rollover()">
+    <label class="rollover__field">
+      Назва року
+      <input type="text" name="name" [(ngModel)]="name"
+             placeholder="2026–2027" required />
+    </label>
+    <label class="rollover__field">
+      Скільки перших класів
+      <input type="number" name="firstGradeCount" [(ngModel)]="firstGradeCount"
+             min="0" max="10" />
+    </label>
+    <button type="submit" class="rollover__submit" [disabled]="busy() || !name.trim()">
+      {{ busy() ? 'Переношу…' : 'Створити новий рік' }}
+    </button>
+  </form>
+</section>
+
+@if (result(); as r) {
+  <section class="block">
+    <h2 class="block__title">Результат: «{{ r.year.name }}»</h2>
+
+    <section class="cards">
+      <div class="card">
+        <span class="card__value">{{ r.groups_created.length }}</span>
+        <span class="card__label">класів створено</span>
+      </div>
+      <div class="card">
+        <span class="card__value">{{ r.groups_graduated.length }}</span>
+        <span class="card__label">випустилось</span>
+      </div>
+      <div class="card">
+        <span class="card__value">{{ r.loads_created }}</span>
+        <span class="card__label">записів навантаження</span>
+      </div>
+      <div class="card">
+        <span class="card__value">{{ r.loads_without_teacher.length }}</span>
+        <span class="card__label">без учителя</span>
+      </div>
+    </section>
+
+    <p class="result__row">
+      <strong>Класи:</strong> {{ r.groups_created.join(', ') || '—' }}
+    </p>
+    @if (r.groups_graduated.length) {
+      <p class="result__row">
+        <strong>Випустились:</strong> {{ r.groups_graduated.join(', ') }}
+      </p>
+    }
+    <p class="result__row">
+      <strong>Скопійовано:</strong>
+      {{ r.rooms_copied }} кабінетів, {{ r.room_assignments_copied }} закріплень,
+      {{ r.rules_copied }} правил, {{ r.shifts_copied }} змін,
+      {{ r.prefs_copied }} побажань вчителів.
+    </p>
+
+    @if (r.class_teacher_moves.length) {
+      <p class="result__row">
+        <strong>Класні керівники на нових місцях:</strong>
+        {{ r.class_teacher_moves.length }}
+        (4-ті класи — на нові перші, 11-ті — на нові п'яті)
+      </p>
+      <table class="gaps">
+        <thead><tr><th>Клас</th><th>Керівник</th></tr></thead>
+        <tbody>
+          @for (move of r.class_teacher_moves; track move.group_name) {
+            <tr><td>{{ move.group_name }}</td><td>{{ move.teacher_name }}</td></tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    @if (r.loads_without_teacher.length) {
+      <h3 class="result__subtitle">Нема кому вести — предмет новий для класу</h3>
+      <table class="gaps">
+        <thead><tr><th>Клас</th><th>Предмет</th></tr></thead>
+        <tbody>
+          @for (gap of r.loads_without_teacher; track gap.group_name + gap.subject_name) {
+            <tr><td>{{ gap.group_name }}</td><td>{{ gap.subject_name }}</td></tr>
+          }
+        </tbody>
+      </table>
+      <p class="block__note">
+        Розстав вручну на сторінці «Навантаження», коли перейдеш на цей рік.
+      </p>
+    }
+  </section>
+}

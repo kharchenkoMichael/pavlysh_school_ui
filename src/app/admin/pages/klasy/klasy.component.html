@@ -1,0 +1,66 @@
+<header class="page__head">
+  <h1 class="page__title">Класи</h1>
+</header>
+
+<p class="page__note">
+  <b>Зміна</b> порожня — програма підбере її сама. Вибрана — так і буде,
+  наказ є наказ. <b>Рахувати</b> — чи ставити цей клас у розклад узагалі.
+</p>
+
+<p class="totals">
+  @if (withoutClassTeacher().length) {
+    <span class="totals__warn">
+      Без класного керівника: {{ withoutClassTeacher().join(', ') }} —
+      у них не буде години класного керівника.
+    </span>
+  }
+</p>
+
+@if (crud.error(); as message) {
+  <p class="page__alert">{{ message }}</p>
+}
+
+<app-dovidnyk-table
+  [columns]="columns()"
+  [rows]="crud.rows()"
+  [canAdd]="false"
+  [busy]="crud.busy()"
+  emptyText="Класів ще немає."
+  (save)="crud.save($event)"
+  (remove)="crud.askDelete($event)"
+></app-dovidnyk-table>
+
+<div class="new">
+  <input
+    class="new__input"
+    placeholder="Назва нового класу, напр. 5-Б"
+    [(ngModel)]="newName"
+    (keyup.enter)="addGroup()"
+  />
+  <button class="page__button page__button--main" type="button"
+          [disabled]="!newName.trim()" (click)="addGroup()">Додати клас</button>
+  @if (addError(); as message) {
+    <span class="new__error">{{ message }}</span>
+  }
+</div>
+
+@if (crud.pending(); as group) {
+  <app-confirm-dialog
+    title="Видалити клас?"
+    [message]="'Прибрати ' + crud.describe(group) + ' зовсім? Разом із ним зникне і його навантаження — усі записи «клас × предмет × учитель», де він єдиний клас. Щоб лише виключити клас із розрахунку, не чіпаючи навантаження, зніміть галочку «У розкладі».'"
+    confirmLabel="Видалити"
+    [busy]="crud.busy()"
+    (confirm)="crud.confirmDelete()"
+    (cancel)="crud.cancelDelete()"
+  ></app-confirm-dialog>
+}
+
+@if (crud.blocked(); as block) {
+  <app-confirm-dialog
+    title="Видалити не можна"
+    [message]="block.message"
+    [usedBy]="block.usedBy"
+    [blocked]="true"
+    (cancel)="crud.cancelDelete()"
+  ></app-confirm-dialog>
+}

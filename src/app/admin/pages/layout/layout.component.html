@@ -1,0 +1,49 @@
+<div class="shell" [class.shell--menu-open]="menuOpen()">
+  <aside class="side">
+    <div class="side__brand">
+      <span class="side__title">Розклад</span>
+      <span class="side__school">Павлиський ліцей</span>
+    </div>
+
+    <nav class="side__nav">
+      @for (item of nav; track item.path) {
+        <a
+          class="side__link"
+          [routerLink]="item.path"
+          routerLinkActive="side__link--active"
+          [title]="item.hint"
+          (click)="closeMenu()"
+        >{{ item.label }}</a>
+      }
+    </nav>
+
+    <div class="side__foot">
+      <a class="side__back" routerLink="/">← На сайт школи</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <button class="top__burger" type="button" (click)="toggleMenu()"
+              aria-label="Меню">☰</button>
+      @if (years().length) {
+        <select class="top__year" [disabled]="yearBusy()"
+                [ngModel]="currentYearId()" (ngModelChange)="setYear($event)"
+                name="year">
+          @for (year of years(); track year.id) {
+            <option [ngValue]="year.id">{{ year.name }}</option>
+          }
+        </select>
+      }
+      <div class="top__spacer"></div>
+      <span class="top__user">{{ user()?.full_name || user()?.username }}</span>
+      <button class="top__exit" type="button" (click)="logout()">Вийти</button>
+    </header>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <div class="scrim" (click)="closeMenu()"></div>
+</div>

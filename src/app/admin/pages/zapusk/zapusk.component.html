@@ -1,0 +1,192 @@
+<header class="page__head">
+  <h1 class="page__title">Розрахунок</h1>
+</header>
+
+<section class="card">
+  <h2 class="card__title">1. Наявний розклад</h2>
+  <p class="card__note">
+    Щоб оцінити або покращити торішній розклад, завантажте його файлом CSV.
+    Колонки: <code>klas,den,urok,predmet,vchytel,zmina,hrupa</code>.
+    Дні — <code>pn, vt, sr, cht, pt</code>. Колонка <code>hrupa</code>
+    заповнюється лише для поділених класів (<code>A</code> або <code>B</code>).
+  </p>
+
+  <details class="sample">
+    <summary>Показати зразок</summary>
+    <pre>{{ sample }}</pre>
+  </details>
+
+  <div class="upload">
+    <input type="file" accept=".csv,text/csv" (change)="pickFile($event)" />
+    <button
+      class="page__button page__button--main"
+      type="button"
+      [disabled]="!csvText.trim() || importing()"
+      (click)="upload()"
+    >{{ importing() ? 'Завантажую…' : 'Завантажити' }}</button>
+  </div>
+
+  @if (importError(); as message) {
+    <p class="page__alert">{{ message }}</p>
+  }
+
+  @if (imported(); as run) {
+    <div class="imported">
+      <p class="page__ok">
+        Завантажено як запуск №{{ run.id }}.
+      </p>
+      @if (run.unmatched?.length) {
+        <div class="unmatched">
+          <b>Не зіставилося рядків: {{ run.unmatched!.length }}.</b>
+          Оцінка порахується без них, тобто буде заниженою.
+          <ul>
+            @for (item of run.unmatched!.slice(0, 15); track item) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+          @if (run.unmatched!.length > 15) {
+            <span>…та ще {{ run.unmatched!.length - 15 }}</span>
+          }
+        </div>
+      } @else {
+        <p class="page__note">Усі рядки зіставилися з довідниками.</p>
+      }
+    </div>
+  }
+</section>
+
+<section class="card">
+  <h2 class="card__title">2. Що зробити</h2>
+
+  <div class="modes">
+    <label class="mode" [class.mode--on]="mode === 'build'">
+      <input type="radio" name="mode" value="build" [(ngModel)]="mode" />
+      <span class="mode__name">Скласти з нуля</span>
+      <span class="mode__hint">Програма сама розставляє все з навантаження.</span>
+    </label>
+
+    <label class="mode" [class.mode--on]="mode === 'evaluate'">
+      <input type="radio" name="mode" value="evaluate" [(ngModel)]="mode" />
+      <span class="mode__name">Оцінити наявний</span>
+      <span class="mode__hint">
+        Нічого не переставляє — лише рахує, скільки вікон і порушень
+        у вже складеному розкладі.
+      </span>
+    </label>
+
+    <label class="mode" [class.mode--on]="mode === 'improve'">
+      <input type="radio" name="mode" value="improve" [(ngModel)]="mode" />
+      <span class="mode__name">Покращити наявний</span>
+      <span class="mode__hint">
+        Відштовхується від наявного і рухає лише те, що справді дає виграш.
+      </span>
+    </label>
+  </div>
+
+  @if (needsSource()) {
+    <label class="field">
+      <span>Який розклад брати за основу</span>
+      <select [(ngModel)]="basedOn">
+        @for (run of sources(); track run.id) {
+          <option [ngValue]="run.id">{{ runLabel(run) }}</option>
+        }
+      </select>
+    </label>
+    @if (!sources().length) {
+      <p class="page__alert">
+        Немає жодного розкладу, від якого можна відштовхнутися.
+        Завантажте CSV угорі або спершу складіть розклад з нуля.
+      </p>
+    }
+  }
+
+  @if (mode === 'improve') {
+    <div class="keep">
+      <span class="keep__label">Наскільки триматися наявного</span>
+      <input type="range" min="0" max="100" [(ngModel)]="keepWeight" />
+      <span class="keep__value">{{ keepWeight }}</span>
+      <p class="keep__hint">
+        Це ціна одного переставленого уроку. Нуль — переставляти вільно;
+        велике число — рухати тільки те, без чого ніяк.
+      </p>
+    </div>
+  }
+</section>
+
+<section class="card">
+  <h2 class="card__title">3. Умови</h2>
+
+  <div class="fields">
+    <label class="field">
+      <span>Назва розрахунку</span>
+      <input type="text" [(ngModel)]="title" placeholder="напр. Варіант 1" />
+    </label>
+
+    <label class="field">
+      <span>Ліміт часу</span>
+      <select [(ngModel)]="timeLimit">
+        <option [ngValue]="120">2 хвилини</option>
+        <option [ngValue]="600">10 хвилин</option>
+        <option [ngValue]="1800">30 хвилин</option>
+        <option [ngValue]="3600">1 година</option>
+        <option [ngValue]="86400">Поки не зупиню сам</option>
+      </select>
+    </label>
+
+    @if (mode === 'build') {
+      <label class="field">
+        <span>Цикл</span>
+        <select [(ngModel)]="weeks" (ngModelChange)="recheck()">
+          <option [ngValue]="1">Один тиждень</option>
+          <option [ngValue]="2">Два тижні (чисельник і знаменник)</option>
+        </select>
+      </label>
+    }
+  </div>
+
+  @if (mode === 'build' && weeks > 1) {
+    <p class="card__note">
+      Двотижневий цикл складається у два проходи: спершу цілі години на
+      один тиждень, потім вони дзеркаляться в обидва й прибиваються, і аж
+      тоді розставляються дробові залишки. Тому тижні виходять однакові
+      скрізь, крім тих уроків, яких пів години на тиждень.
+    </p>
+  }
+
+  @if (timeLimit >= 86400) {
+    <p class="card__note">
+      Розрахунок не спиниться сам — на сторінці результату буде графік
+      і кнопка «Зупинити». Дивіться на дві лінії: коли вони зійшлися,
+      кращого не існує; коли лягли поруч і не рухаються — далі чекати
+      немає сенсу.
+    </p>
+  }
+
+  @if (blockers().length) {
+    <div class="blockers">
+      <b>Дані поки не дозволяють скласти розклад:</b>
+      <ul>
+        @for (problem of blockers(); track problem.text) {
+          <li>{{ problem.text }}</li>
+        }
+      </ul>
+    </div>
+  }
+
+  @if (error(); as message) {
+    <p class="page__alert">{{ message }}</p>
+  }
+
+  <button
+    class="page__button page__button--main start"
+    type="button"
+    [disabled]="busy() || (needsSource() && !basedOn)"
+    (click)="start()"
+  >{{ busy() ? 'Запускаю…' : 'Порахувати' }}</button>
+
+  <p class="card__note">
+    Розрахунок триває хвилини. Сторінка результату відкриється одразу
+    і сама оновиться, коли він завершиться, — її можна перезавантажувати
+    й закривати, розрахунок від цього не зупиниться.
+  </p>
+</section>

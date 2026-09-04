@@ -1,0 +1,494 @@
+@if (run(); as data) {
+  <header class="page__head">
+    <h1 class="page__title">
+      Розрахунок №{{ data.id }}
+      @if (renaming()) {
+        <input class="head__edit" type="text" [(ngModel)]="draftTitle"
+               placeholder="Назва розрахунку"
+               (keyup.enter)="saveTitle()" (keyup.escape)="renaming.set(false)" />
+        <button class="page__button" type="button" (click)="saveTitle()">
+          Зберегти
+        </button>
+        <button class="page__button" type="button" (click)="renaming.set(false)">
+          Скасувати
+        </button>
+      } @else {
+        @if (data.title) { <span class="head__name">· {{ data.title }}</span> }
+        <button class="head__rename" type="button" (click)="startRename()"
+                title="Перейменувати">Перейменувати</button>
+      }
+    </h1>
+    @if (data.status === 'done') {
+      @if (canEvaluate()) {
+        <button class="page__button page__button--main" type="button"
+                [disabled]="evaluating()" (click)="evaluate()">
+          {{ evaluating() ? 'Рахую…' : 'Порахувати якість' }}
+        </button>
+      }
+      <button class="page__button" type="button"
+              [disabled]="placingHours()" (click)="placeClassHours()"
+              title="Година класного керівника — окрема дія, після побудови й перед кабінетами">
+        {{ placingHours() ? 'Ставлю…' : 'Поставити ГКК' }}
+      </button>
+      @if (withoutRoom()) {
+        <button class="page__button" type="button"
+                [disabled]="assigningRooms()" (click)="assignRooms()">
+          {{ assigningRooms() ? 'Розставляю…' : 'Проставити кабінети' }}
+        </button>
+      }
+      <button class="page__button" type="button" (click)="downloadCsv()">Вивантажити CSV</button>
+      <button class="page__button" type="button" (click)="print()">Друк</button>
+    }
+  </header>
+
+  @if (running()) {
+    <section class="waiting">
+      <div class="waiting__bar"><span></span></div>
+      <p class="waiting__text">
+        Рахую… минуло {{ waited() }} с із {{ data.time_limit }} відведених.
+      </p>
+      <p class="waiting__hint">
+        Сторінку можна закрити або перезавантажити — розрахунок від цього
+        не зупиниться. Адреса цієї сторінки веде до нього ж.
+      </p>
+    </section>
+  }
+
+  @if (curve(); as line) {
+    <section class="card curve">
+      <h2 class="card__title">Як іде пошук</h2>
+      <div class="curve__head">
+        <span class="curve__key curve__key--penalty">штраф {{ line.last.penalty ?? '—' }}</span>
+        <span class="curve__key curve__key--bound">межа {{ line.last.bound ?? '—' }}</span>
+        @if (line.proved) {
+          <span class="curve__verdict curve__verdict--done">оптимум доведено</span>
+        } @else if (line.gap !== null) {
+          <span class="curve__verdict">ще шукає, розрив {{ line.gap }}{{ line.gapPct !== null ? ' (' + line.gapPct + '%)' : '' }}</span>
+        }
+      </div>
+
+      <div class="curve__modes">
+        <button type="button" [attr.aria-pressed]="scale() === 'linear'"
+                (click)="scale.set('linear')">Лінійна</button>
+        <button type="button" [attr.aria-pressed]="scale() === 'log'"
+                (click)="scale.set('log')">Логарифмічна</button>
+        <span class="curve__modes-hint">
+          @if (scale() === 'log') {
+            Хвіст розтягнуто: видно рух там, де лінійна шкала показує пряму.
+          } @else {
+            Чесні пропорції: видно, наскільки саме впав штраф.
+          }
+        </span>
+      </div>
+
+      <svg class="curve__plot" viewBox="0 0 640 180" preserveAspectRatio="none"
+           role="img" aria-label="Крива збіжності: штраф і доведена нижня межа">
+        @for (segment of line.bound; track $index) {
+          <polyline class="curve__line curve__line--bound" [attr.points]="segment" />
+        }
+        @for (segment of line.penalty; track $index) {
+          <polyline class="curve__line curve__line--penalty" [attr.points]="segment" />
+        }
+      </svg>
+
+      <div class="curve__axis">
+        <span>0 с</span>
+        <span class="curve__range">
+          {{ line.lo }} … {{ line.hi }} балів{{ scale() === 'log' ? ', логарифм' : '' }}
+        </span>
+        <span>{{ line.seconds }} с</span>
+      </div>
+
+      @if (line.stages > 1 || line.stage > 1) {
+        <p class="curve__stage">
+          @if (line.stage === 1) {
+            <b>Прохід 1</b> — каркас одного тижня, самі цілі години.
+            Цей штраф міряє тиждень, а не цикл, тож із підсумковим числом
+            його порівнювати не можна.
+          } @else {
+            <b>Прохід 2</b> — дробові залишки на повній сітці. Цілі години
+            вже стоять в обидва тижні однаково. Оцей штраф і є підсумковий.
+          }
+        </p>
+      }
+
+      @if (running()) {
+        <p class="curve__hint">
+          @if (line.proved) {
+            Лінії зійшлися — кращого розкладу за цих правил не існує,
+            далі чекати немає сенсу.
+          } @else if (line.stableFor >= 20) {
+            Штраф не змінюється вже {{ line.stableFor }} с — схоже на плато.
+          } @else {
+            Поки лінії сходяться, солверу є куди рухатись.
+          }
+        </p>
+        <button class="page__button" type="button"
+                [disabled]="stopping()" (click)="stopSearch()">
+          @if (stopping()) {
+            Зупиняю…
+          } @else if (line.stage === 1) {
+            Досить шукати каркас — добудувати
+          } @else {
+            Зупинити й забрати найкращий
+          }
+        </button>
+        @if (line.stage === 1 && !stopping()) {
+          <p class="curve__hint">
+            Прохід 1 віддає не розклад, а каркас тижня — забирати там нічого.
+            Тому кнопка тут спиняє тільки пошук кращого каркаса, а прохід 2
+            все одно відпрацює. Спинити і його — натиснути ще раз.
+          </p>
+        }
+      }
+    </section>
+  }
+
+  @if (data.status === 'failed') {
+    <section class="card">
+      <h2 class="card__title">Не вийшло</h2>
+      @if (data.problems?.length) {
+        @for (problem of data.problems!; track problem.text) {
+          <p class="page__alert">{{ problem.text }}</p>
+        }
+      } @else {
+        <p class="page__alert">Розрахунок не завершився.</p>
+      }
+    </section>
+  }
+
+  @if (data.status === 'done') {
+    <section class="numbers">
+      <div class="number number--main">
+        <span class="number__value">{{ totalGaps() }}</span>
+        <span class="number__label">вікон у вчителів</span>
+      </div>
+      <div class="number">
+        <span class="number__value">{{ data.penalty ?? '—' }}</span>
+        <span class="number__label">сумарний штраф</span>
+      </div>
+      @if (data.moved_lessons !== null && data.moved_lessons !== undefined) {
+        <div class="number">
+          <span class="number__value">{{ data.moved_lessons }}</span>
+          <span class="number__label">уроків зрушено</span>
+        </div>
+        <div class="number">
+          <span class="number__value">{{ data.kept_lessons ?? 0 }}</span>
+          <span class="number__label">лишилося на місці</span>
+        </div>
+      }
+      <div class="number">
+        <span class="number__value">{{ data.seconds ?? 0 }} с</span>
+        <span class="number__label">рахувалося</span>
+      </div>
+    </section>
+
+    @if (breakdownRows().length) {
+      <section class="card">
+        <h2 class="card__title">Чим довелося пожертвувати</h2>
+        <table class="give">
+          <tbody>
+            @for (row of breakdownRows(); track row.kind) {
+              <tr>
+                <td>{{ row.name }}</td>
+                <td class="give__value">{{ row.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <p class="card__note">
+          Це не помилки, а ціна компромісів: чим більше число, тим більше
+          довелося поступитися цим побажанням.
+        </p>
+      </section>
+    } @else {
+      <p class="page__ok">Усі побажання виконано.</p>
+    }
+
+    @if (data.moved_list?.length) {
+      <section class="card">
+        <h2 class="card__title">Що саме зрушилося</h2>
+        <ul class="moved">
+          @for (item of data.moved_list!.slice(0, 30); track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+        @if (data.moved_list!.length > 30) {
+          <p class="card__note">…та ще {{ data.moved_list!.length - 30 }}</p>
+        }
+      </section>
+    }
+
+    @if (data.unmatched?.length) {
+      <section class="card">
+        <h2 class="card__title">Розбіжності з навантаженням</h2>
+        <p class="card__note">
+          Рядки про <b>зведені групи</b> — це особливість школи, а не втрата:
+          уроки на місці, просто запис навантаження не вміє сказати, що
+          група збирається різними парами в різні дні. Оцінка від них не
+          змінюється. А от рядки «не зіставилося з довідниками» означають,
+          що урок у розрахунок не потрапив, і оцінка занижена.
+        </p>
+        <ul class="moved">
+          @for (item of data.unmatched!.slice(0, 20); track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (data.problems?.length) {
+      <section class="card">
+        <h2 class="card__title">Що знайдено в цьому розкладі</h2>
+        @for (problem of data.problems!; track problem.text) {
+          <p [class]="problem.level === 'error' ? 'page__alert' : 'warn'">
+            {{ problem.text }}
+          </p>
+        }
+      </section>
+    }
+
+    @if (entries().length) {
+      <div class="picker">
+        <div class="tabs">
+          <button
+            type="button"
+            class="tabs__btn"
+            [class.tabs__btn--on]="view() === 'groups'"
+            (click)="setView('groups')"
+          >По класах</button>
+          <button
+            type="button"
+            class="tabs__btn"
+            [class.tabs__btn--on]="view() === 'teachers'"
+            (click)="setView('teachers')"
+          >По вчителях</button>
+          <button
+            type="button"
+            class="tabs__btn"
+            [class.tabs__btn--on]="view() === 'rooms'"
+            (click)="setView('rooms')"
+          >По кабінетах</button>
+        </div>
+
+        <select class="picker__one" [(ngModel)]="picked"
+                [attr.aria-label]="'Вибрати конкретний'">
+          <option value="">
+            @switch (view()) {
+              @case ('teachers') { усі вчителі ({{ options().length }}) }
+              @case ('rooms') { усі кабінети ({{ options().length }}) }
+              @default { усі класи ({{ options().length }}) }
+            }
+          </option>
+          @for (item of options(); track item.key) {
+            <option [value]="item.key">{{ item.title }}</option>
+          }
+        </select>
+
+        @if (picked()) {
+          <button type="button" class="picker__clear" (click)="picked.set('')">
+            показати всіх
+          </button>
+        }
+      </div>
+
+      @if (weeks() > 1) {
+        <div class="weeks">
+          <span class="weeks__label">Тиждень циклу:</span>
+          <button type="button" class="weeks__btn"
+                  [class.weeks__btn--on]="week() === 0"
+                  (click)="week.set(0)">Обидва</button>
+          <button type="button" class="weeks__btn"
+                  [class.weeks__btn--on]="week() === 1"
+                  (click)="week.set(1)">Чисельник</button>
+          <button type="button" class="weeks__btn"
+                  [class.weeks__btn--on]="week() === 2"
+                  (click)="week.set(2)">Знаменник</button>
+          <span class="weeks__hint">
+            @if (week() === 0) {
+              Різниться клітинок: <b>{{ differing() }}</b>. Де тижні
+              однакові, урок написаний один раз; де ні — обидва, з
+              позначками «чис.» і «знам.».
+            } @else {
+              Показано лише {{ week() === 1 ? 'чисельник' : 'знаменник' }}.
+            }
+          </span>
+        </div>
+      }
+
+      <div class="marks-bar">
+        <button type="button" class="marks-bar__btn"
+                [class.marks-bar__btn--on]="!showMarks()"
+                (click)="showMarks.set(false)">Чистий розклад</button>
+        <button type="button" class="marks-bar__btn"
+                [class.marks-bar__btn--on]="showMarks()"
+                (click)="showMarks.set(true)">Показати, за що штраф</button>
+
+        @if (showMarks()) {
+          <span class="marks-bar__legend">
+            @for (item of markTally(); track item.kind) {
+              <span class="marks-bar__item">{{ item.name }}: <b>{{ item.count }}</b></span>
+            } @empty {
+              <span class="marks-bar__none">У сітці нічого не позначено.</span>
+            }
+          </span>
+        }
+      </div>
+
+      @if (showMarks()) {
+        <p class="card__note">
+          Позначки показують <b>де</b> правило поступилося, а не
+          перераховують штраф: сумарне число рахує програма, і воно єдине
+          правильне. Правила, які не вміщаються в одну клітинку — рівне
+          навантаження по днях, справедливість між учителями, — позначок
+          не мають; їх видно тільки в переліку «чим довелося пожертвувати».
+        </p>
+      }
+
+      @if (view() === 'rooms' && withoutRoom()) {
+        <p class="warn">
+          {{ withoutRoom() }} уроків без призначеного кабінету — вони в цей
+          розріз не потрапили. Кнопка «Проставити кабінети» вгорі сторінки
+          розставить їх окремою дією.
+        </p>
+      }
+
+      @if (hoursResult(); as hours) {
+        <section class="card">
+          <h2 class="card__title">ГКК поставлено</h2>
+          <p class="card__note">
+            Поставлено {{ hours.placed }} годин класного керівника
+            (тижні: {{ hours.weeks.join(', ') }}).
+          </p>
+          @if (hours.swapped_for_teacher.length) {
+            <p class="warn">Довелося обміняти урок, щоб звільнити слот:</p>
+            @for (line of hours.swapped_for_teacher; track line) {
+              <p class="warn">{{ line }}</p>
+            }
+          }
+          @if (hours.proposed_swaps.length) {
+            <p class="warn">Можна переставити вручну, щоб звільнити слот:</p>
+            @for (line of hours.proposed_swaps; track line) {
+              <p class="warn">{{ line }}</p>
+            }
+          }
+          @if (hours.teacher_conflict.length) {
+            <p class="page__alert">Не вдалося поставити, потрібне ручне рішення:</p>
+            @for (line of hours.teacher_conflict; track line) {
+              <p class="page__alert">{{ line }}</p>
+            }
+          }
+          @if (hours.did_not_fit.length) {
+            <p class="page__alert">Не влізло в сітку уроків: {{ hours.did_not_fit.join(', ') }}</p>
+          }
+          @if (hours.without_class_teacher.length) {
+            <p class="warn">Без класного керівника: {{ hours.without_class_teacher.join(', ') }}</p>
+          }
+        </section>
+      }
+
+      @if (roomsResult(); as rooms) {
+        <section class="card">
+          <h2 class="card__title">Кабінети розставлено</h2>
+          <p class="card__note">
+            Розкладено {{ rooms.placed }} із {{ rooms.entries }} уроків.
+            @if (rooms.unplaced) {
+              Не влізло: <b>{{ rooms.unplaced }}</b> — дивіться нижче, що
+              саме завадило.
+            }
+          </p>
+          @if (rooms.problems.length) {
+            @for (problem of rooms.problems; track problem.text) {
+              <p [class]="problem.level === 'error' ? 'page__alert' : 'warn'">
+                {{ problem.text }}
+              </p>
+            }
+          }
+        </section>
+      }
+
+      <div class="grids">
+        @for (grid of grids(); track grid.key) {
+          @let gaps = gapsOf(grid);
+          <section class="grid-card">
+            <h3 class="grid-card__title">
+              {{ grid.title }}
+              <span class="grid-card__sub">{{ grid.subtitle }}</span>
+              @if (grid.gaps) {
+                <span class="grid-card__gaps">вікон: {{ grid.gaps }}</span>
+              }
+            </h3>
+
+            <table class="grid">
+              <thead>
+                <tr>
+                  <th></th>
+                  @for (day of days; track day) {
+                    <th>{{ dayShort[day] }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (lesson of grid.lessons; track lesson) {
+                  <tr>
+                    <th class="grid__lesson">{{ lesson }}</th>
+                    @for (day of days; track day) {
+                      @if (cell(grid, day, lesson); as slot) {
+                        <td class="grid__cell" [class.grid__cell--split]="!slot.same">
+                          @for (part of slot.weeks; track part.week) {
+                            <div class="week-part">
+                              @if (!slot.same) {
+                                <span class="week-part__mark">{{ weekMark(part.week) }}</span>
+                              }
+                              @for (entry of part.entries; track entry.id) {
+                                <div class="lesson"
+                                     [class.lesson--marked]="marksFor(entry).length">
+                                  <span class="lesson__subject">
+                                    {{ entry.subject_name }}@if (entry.subgroup) {
+                                      <span class="lesson__group"> ({{ entry.subgroup }})</span>
+                                    }
+                                  </span>
+                                  <span class="lesson__who">{{ who(entry) }}</span>
+                                  @if (view() !== 'rooms' && entry.room_name) {
+                                    <span class="lesson__room">{{ entry.room_name }}</span>
+                                  }
+                                  @for (mark of marksFor(entry); track mark.kind) {
+                                    <span class="mark" [title]="ruleName(mark.kind)">
+                                      {{ mark.text }}
+                                    </span>
+                                  }
+                                </div>
+                              } @empty {
+                                @if (gaps.has(day + ':' + lesson)) {
+                                  <span class="mark mark--gap">вікно</span>
+                                } @else {
+                                  <span class="grid__free">—</span>
+                                }
+                              }
+                            </div>
+                          }
+                        </td>
+                      } @else {
+                        <td class="grid__cell">
+                          @if (gaps.has(day + ':' + lesson)) {
+                            <span class="mark mark--gap">вікно</span>
+                          } @else {
+                            <span class="grid__free">—</span>
+                          }
+                        </td>
+                      }
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </section>
+        }
+      </div>
+    }
+  }
+} @else if (error()) {
+  <p class="page__alert">{{ error() }}</p>
+} @else {
+  <p class="page__note">Завантажую…</p>
+}

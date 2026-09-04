@@ -1,0 +1,239 @@
+@use "../../../../assets/styles/variables" as v;
+
+.search {
+  padding: 7px 11px;
+  border: 1px solid #d5ddd8;
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 260px;
+
+  &:focus {
+    outline: none;
+    border-color: v.$primary-color;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.teacher {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 10px 14px;
+
+  &--edit { border-color: v.$primary-color; }
+
+  &__line {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  &__who {
+    min-width: 190px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    font-weight: 600;
+    color: v.$dark-text-color;
+  }
+
+  &__badge {
+    margin-left: 6px;
+    padding: 1px 7px;
+    border-radius: 9px;
+    background: #f1f3f2;
+    color: #8a9992;
+    font-size: 11px;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
+  &__position {
+    font-size: 12px;
+    color: #8a9992;
+  }
+
+  &__subjects {
+    flex: 1;
+    min-width: 150px;
+    font-size: 13px;
+    color: #5b6b63;
+  }
+
+  // Години — те, за чим завуч приходить на цю сторінку найчастіше,
+  // тож вони мають читатися з відстані, а не серед іншого дрібного.
+  &__hours {
+    min-width: 130px;
+    font-size: 13px;
+    color: #3f5a4a;
+    white-space: nowrap;
+
+    b { font-size: 15px; }
+
+    &--none { color: #b3beb8; font-style: italic; }
+
+    // Перевантажений — те саме число й той самий колір, що на сторінці
+    // навантаження: людина має впізнати попередження, а не розгадувати.
+    &--over {
+      color: #c0392b;
+      b { font-weight: 700; }
+    }
+  }
+
+  &__where {
+    display: block;
+    font-size: 11px;
+    color: #8a9992;
+  }
+
+  &__pref {
+    min-width: 180px;
+    font-size: 13px;
+    color: #7c8b83;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+  }
+}
+
+.prefs {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eef1ef;
+
+  &__row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #5b6b63;
+
+    &--wide { flex: 1; min-width: 200px; }
+
+    input, select {
+      padding: 6px 9px;
+      border: 1px solid #d5ddd8;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: v.$primary-color;
+      }
+    }
+  }
+
+  &__grid-title {
+    font-size: 13px;
+    color: #5b6b63;
+    margin-bottom: 6px;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+}
+
+.slots {
+  border-collapse: collapse;
+
+  th {
+    font-size: 12px;
+    color: #8a9992;
+    font-weight: 600;
+    padding: 2px 4px;
+  }
+
+  &__day {
+    text-align: right;
+    padding-right: 8px;
+  }
+
+  td { padding: 2px; }
+
+  &__cell {
+    width: 30px;
+    height: 26px;
+    border: 1px solid #dfe5e2;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    color: #a3271c;
+
+    &:hover { border-color: v.$primary-color; }
+
+    &--off {
+      background: #fdecea;
+      border-color: #f0c4bf;
+    }
+  }
+}
+
+.empty {
+  padding: 20px;
+  text-align: center;
+  color: #8a9992;
+  font-size: 14px;
+}
+
+.hire {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+
+  &__row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #7c8b83;
+    flex: 1;
+    min-width: 140px;
+
+    &--wide { flex-basis: 100%; }
+
+    input {
+      padding: 7px 10px;
+      border: 1px solid #d5ddd8;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 10px;
+  }
+}

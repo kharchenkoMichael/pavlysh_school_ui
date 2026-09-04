@@ -1,0 +1,277 @@
+@use "../../../../assets/styles/variables" as v;
+
+.matrix-wrap {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  // Матриця на 15 предметів ширша за екран — гортається всередині картки,
+  // а не розпирає сторінку
+  overflow-x: auto;
+}
+
+.matrix {
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 100%;
+
+  th, td {
+    border: 1px solid #eef1ef;
+    padding: 0;
+  }
+
+  &__corner,
+  &__group {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: #fafbfa;
+    padding: 6px 10px;
+    text-align: left;
+    white-space: nowrap;
+    font-weight: 600;
+    color: v.$dark-text-color;
+    min-width: 74px;
+  }
+
+  &__corner { z-index: 3; }
+
+  &__subject {
+    padding: 6px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #5b6b63;
+    background: #fafbfa;
+    // Назви предметів довгі, а стовпці вузькі — ставимо їх боком
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    height: 116px;
+    white-space: nowrap;
+  }
+
+  &__total {
+    padding: 6px 10px;
+    text-align: center;
+    font-weight: 600;
+    background: #fafbfa;
+    font-variant-numeric: tabular-nums;
+
+    &--over {
+      background: #fdecea;
+      color: #a3271c;
+    }
+  }
+
+  &__subtotal {
+    padding: 5px 4px;
+    text-align: center;
+    background: #fafbfa;
+    color: #7c8b83;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__copy { padding: 4px 6px; }
+
+  &__copy-select {
+    border: 1px solid #e3e8e5;
+    border-radius: 5px;
+    padding: 3px 5px;
+    font-size: 12px;
+    color: #7c8b83;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  &__empty {
+    padding: 22px;
+    text-align: center;
+    color: #8a9992;
+  }
+}
+
+.cell {
+  min-width: 60px;
+  text-align: center;
+  vertical-align: top;
+
+  &--filled { background: #f6faf6; }
+
+  // Прогалина — нема кому вести. Найгучніший колір на сторінці навмисно:
+  // це саме те, що завуч має побачити першим, не шукаючи очима «?».
+  &--gap {
+    background: #fdecea;
+
+    .cell__who { color: #a3271c; }
+  }
+
+  // Учитель є, але вже звільнений — інакше, ніж прогалина (тут є на
+  // кого дивитись), тому інший колір, не червоний.
+  &--inactive {
+    background: #fff6e0;
+
+    .cell__who { color: #8a6100; }
+  }
+
+  &__hours {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    padding: 5px 2px 2px;
+    text-align: center;
+    font-size: 14px;
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+    color: v.$dark-text-color;
+
+    &:focus {
+      outline: 2px solid v.$primary-color;
+      outline-offset: -2px;
+      background: #fff;
+    }
+
+    // Стрілочки лише плутають при швидкому наборі з клавіатури
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  &__who {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: none;
+    padding: 0 2px 4px;
+    font-size: 10px;
+    color: #7c8b83;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:hover {
+      color: v.$primary-color;
+      text-decoration: underline;
+    }
+  }
+}
+
+.teachers {
+  margin-top: 18px;
+
+  &__title {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: v.$dark-text-color;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__chip {
+    background: #fff;
+    border: 1px solid #e3e8e5;
+    border-radius: 20px;
+    padding: 3px 11px;
+    font-size: 13px;
+    color: #5b6b63;
+
+    &--over {
+      background: #fff6e0;
+      border-color: #f0dcae;
+      color: #8a6100;
+    }
+  }
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.picker {
+  position: fixed;
+  z-index: 101;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(400px, calc(100vw - 32px));
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 22px 16px;
+
+  &__title {
+    margin: 0 0 14px;
+    font-size: 17px;
+    color: v.$dark-text-color;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #5b6b63;
+
+    input, select {
+      padding: 7px 9px;
+      border: 1px solid #d5ddd8;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: v.$primary-color;
+      }
+    }
+  }
+
+  &__check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #5b6b63;
+    cursor: pointer;
+  }
+
+  &__hint {
+    margin: 0 0 14px;
+    padding: 9px 11px;
+    background: #f4f8f5;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #5b6b63;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+/* Позначка зведеної групи в клітинці: «+ 5-Б». Дрібно й непомітно,
+   поки не придивишся, — але без неї правка мовчки зачепила б два класи. */
+.cell__merged {
+  display: block;
+  font-size: 10px;
+  line-height: 1.2;
+  opacity: 0.65;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

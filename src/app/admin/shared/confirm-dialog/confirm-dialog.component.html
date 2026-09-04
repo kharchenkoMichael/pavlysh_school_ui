@@ -1,0 +1,33 @@
+<div class="scrim" (click)="cancel.emit()"></div>
+
+<div class="dialog" role="dialog" aria-modal="true">
+  <h2 class="dialog__title">{{ title }}</h2>
+
+  @if (message) {
+    <p class="dialog__text">{{ message }}</p>
+  }
+
+  @if (usedBy.length) {
+    <div class="dialog__used">
+      <span class="dialog__used-title">Де це використовується:</span>
+      <ul>
+        @for (item of usedBy.slice(0, 12); track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+      @if (usedBy.length > 12) {
+        <span class="dialog__more">…та ще {{ usedBy.length - 12 }}</span>
+      }
+    </div>
+  }
+
+  <div class="dialog__buttons">
+    @if (blocked) {
+      <button type="button" class="btn btn--ok" (click)="cancel.emit()">Зрозуміло</button>
+    } @else {
+      <button type="button" class="btn" (click)="cancel.emit()">{{ cancelLabel }}</button>
+      <button type="button" class="btn btn--danger" [disabled]="busy"
+              (click)="confirm.emit()">{{ confirmLabel }}</button>
+    }
+  </div>
+</div>

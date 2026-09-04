@@ -1,0 +1,574 @@
+@use "../../../../assets/styles/variables" as v;
+
+.head__name {
+  font-weight: 400;
+  color: #7c8b83;
+}
+
+.waiting {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+
+  &__bar {
+    height: 4px;
+    background: #eef1ef;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 14px;
+
+    span {
+      display: block;
+      height: 100%;
+      width: 35%;
+      background: v.$primary-color;
+      animation: crawl 1.4s ease-in-out infinite;
+    }
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 15px;
+    color: v.$dark-text-color;
+  }
+
+  &__hint {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #7c8b83;
+  }
+}
+
+@keyframes crawl {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(320%); }
+}
+
+/**
+ * Крива збіжності. Дві лінії, ніякого пакета для графіків: `viewBox`
+ * розтягує їх під будь-яку ширину сам.
+ */
+.curve {
+  margin-top: 16px;
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+
+  &__key {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: v.$dark-text-color;
+
+    &::before {
+      content: "";
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+    }
+
+    &--penalty::before { background: v.$primary-color; }
+    &--bound::before { background: #b9a24a; }
+  }
+
+  &__verdict {
+    margin-left: auto;
+    font-size: 13px;
+    color: #7c8b83;
+
+    &--done { color: v.$primary-color; font-weight: 600; }
+  }
+
+  &__modes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+
+    button {
+      font: inherit;
+      font-size: 13px;
+      padding: 4px 12px;
+      border: 1px solid #d5ddd8;
+      background: #fff;
+      color: #5b6b63;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: v.$primary-color; color: v.$primary-color; }
+
+    button[aria-pressed="true"] {
+      background: v.$primary-color;
+      border-color: v.$primary-color;
+      color: #fff;
+    }
+  }
+
+  &__modes-hint {
+    font-size: 12.5px;
+    color: #9aa8a1;
+    flex: 1 1 220px;
+  }
+
+  &__plot {
+    display: block;
+    width: 100%;
+    height: 180px;
+    background: #f7f9f8;
+    border: 1px solid #e3e8e5;
+    border-radius: 6px;
+  }
+
+  // Товщина не масштабується разом із розтягнутим viewBox — інакше при
+  // preserveAspectRatio="none" лінія була б розчавлена по вертикалі.
+  &__line {
+    fill: none;
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: round;
+
+    &--penalty { stroke: v.$primary-color; }
+    &--bound { stroke: #b9a24a; stroke-dasharray: 5 4; }
+  }
+
+  &__axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #7c8b83;
+  }
+
+  &__range { color: #9aa8a1; }
+
+  &__hint {
+    margin: 12px 0;
+    font-size: 13px;
+    color: #7c8b83;
+  }
+
+  &__stage {
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    background: #f2f6f4;
+    border-left: 3px solid v.$primary-color;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #5b6b63;
+  }
+}
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.number {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 14px 16px;
+
+  &--main {
+    border-color: v.$primary-color;
+    background: #f6faf6;
+  }
+
+  &__value {
+    display: block;
+    font-size: 26px;
+    font-weight: 700;
+    color: v.$dark-text-color;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__label {
+    display: block;
+    font-size: 13px;
+    color: #7c8b83;
+    margin-top: 2px;
+  }
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+
+  &__title {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: v.$dark-text-color;
+  }
+
+  &__note {
+    margin: 10px 0 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #7c8b83;
+  }
+}
+
+.warn {
+  margin: 0 0 8px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  background: #fff6e0;
+  color: #8a6100;
+  font-size: 14px;
+}
+
+.give {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #eef1ef;
+  }
+
+  &__value {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    width: 90px;
+  }
+}
+
+.moved {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #5b6b63;
+}
+
+.picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+
+  &__one {
+    border: 1px solid #d5ddd8;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 14px;
+    color: #3f5a4a;
+    background: #fff;
+    min-width: 220px;
+    max-width: 100%;
+  }
+
+  &__clear {
+    border: 0;
+    background: transparent;
+    color: v.$primary-color;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+
+  &__btn {
+    border: 1px solid #d5ddd8;
+    background: #fff;
+    padding: 7px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #5b6b63;
+
+    &:first-child { border-radius: 6px 0 0 6px; }
+    // Саме `not(:first-child)`, а не `:last-child`: вкладок стало три,
+    // і в середньої лишалася б подвійна рамка на стику з першою.
+    &:not(:first-child) { border-left: 0; }
+    &:last-child { border-radius: 0 6px 6px 0; }
+
+    &--on {
+      background: v.$primary-color;
+      border-color: v.$primary-color;
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+}
+
+.weeks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  font-size: 13px;
+
+  &__label { color: #5b6b63; }
+
+  &__btn {
+    border: 1px solid #d5ddd8;
+    background: #fff;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #5b6b63;
+
+    &--on {
+      background: #eef4f0;
+      border-color: v.$primary-color;
+      color: v.$primary-color;
+      font-weight: 600;
+    }
+  }
+
+  &__hint {
+    color: #8a9992;
+    margin-left: 4px;
+    flex: 1 1 260px;
+    min-width: 0;
+  }
+}
+
+.marks-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  font-size: 13px;
+
+  &__btn {
+    border: 1px solid #d5ddd8;
+    background: #fff;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #5b6b63;
+
+    &--on {
+      background: #eef4f0;
+      border-color: v.$primary-color;
+      color: v.$primary-color;
+      font-weight: 600;
+    }
+  }
+
+  &__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: 6px;
+    color: #7c8b83;
+  }
+
+  &__none { color: #8a9992; }
+}
+
+.mark {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 9px;
+  line-height: 1.4;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: #fdecea;
+  color: #a5372a;
+  border: 1px solid #f3cfc9;
+
+  // Вікно стоїть у порожній клітинці, і його треба бачити здалеку:
+  // саме за вікнами завуч і приходить на цю сторінку.
+  &--gap {
+    background: #fff4e0;
+    color: #8a5a12;
+    border-color: #f0dcae;
+    font-weight: 600;
+  }
+}
+
+.grids {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 14px;
+}
+
+.grid-card {
+  background: #fff;
+  border: 1px solid #e3e8e5;
+  border-radius: 8px;
+  padding: 12px 14px;
+  break-inside: avoid;
+
+  &__title {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: v.$dark-text-color;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: #8a9992;
+  }
+
+  &__gaps {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 400;
+    background: #fff6e0;
+    color: #8a6100;
+    border-radius: 10px;
+    padding: 2px 9px;
+  }
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  table-layout: fixed;
+
+  th, td {
+    border: 1px solid #eef1ef;
+    padding: 3px 5px;
+    vertical-align: top;
+  }
+
+  th {
+    font-size: 11px;
+    color: #8a9992;
+    font-weight: 600;
+    background: #fafbfa;
+  }
+
+  &__lesson {
+    width: 26px;
+    text-align: center;
+  }
+
+  &__cell {
+    height: 34px;
+
+    // Клітинка, де тижні розходяться. Підсвічена навмисно: чисельник
+    // зі знаменником — це те, що завуч шукає очима, і воно має
+    // знаходитися без вчитування в кожну клітинку.
+    &--split { background: #fffaf0; }
+  }
+
+  &__free {
+    color: #d5ddd8;
+  }
+}
+
+.week-part {
+  display: flex;
+  flex-direction: column;
+
+  & + & {
+    margin-top: 3px;
+    padding-top: 3px;
+    border-top: 1px solid #f0d9ae;
+  }
+
+  &__mark {
+    font-size: 9px;
+    font-weight: 600;
+    color: #b98a2a;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+}
+
+.lesson {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+
+  & + & {
+    margin-top: 3px;
+    padding-top: 3px;
+    border-top: 1px dashed #e3e8e5;
+  }
+
+  &__subject { color: v.$dark-text-color; }
+
+  &__group { color: #7c8b83; }
+
+  &__who {
+    font-size: 10px;
+    color: #8a9992;
+  }
+
+  &__room {
+    font-size: 10px;
+    color: #a8b5ae;
+  }
+
+  // Урок, за який програма щось заплатила. Підсвітка ледь помітна
+  // навмисно: позначка й так червона, а розклад має лишатися читним.
+  &--marked { background: #fffbfa; }
+}
+
+@media print {
+  .page__head button,
+  .weeks__btn,
+  .picker__clear,
+  .picker__one,
+  .tabs { display: none; }
+
+  .grids { grid-template-columns: repeat(2, 1fr); }
+
+  .grid-card,
+  .card,
+  .number {
+    border-color: #999;
+    box-shadow: none;
+  }
+}
+
+.head {
+  &__rename {
+    border: 0;
+    background: transparent;
+    color: #9aa8a0;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0 0 0 8px;
+
+    &:hover { color: v.$primary-color; }
+  }
+
+  &__edit {
+    border: 1px solid v.$primary-color;
+    border-radius: 6px;
+    padding: 4px 9px;
+    font-size: 16px;
+    min-width: 280px;
+    margin: 0 6px;
+  }
+}

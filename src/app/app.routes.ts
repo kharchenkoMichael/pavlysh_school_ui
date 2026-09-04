@@ -156,9 +156,19 @@ export const routes: Routes = [
     }
   },
   {
+    // Адмінка складання розкладу. Лінивий маршрут — і це навмисно:
+    // решта сторінок публічні й потрібні одразу, а адмінка не має
+    // роздувати бандл, який отримує кожен відвідувач сайту.
+    path: 'rozklad',
+    loadChildren: () => import('./admin/rozklad.routes').then(m => m.rozkladRoutes),
+    data: {
+      title: 'Складання розкладу – Павлиська школа',
+      description: 'Службовий розділ.'
+    }
+  },
+  {
     // Публічний перегляд готового розкладу — з косметичним паролем на
-    // сторінці, не з логіном. Лінивий маршрут, щоб не роздувати бандл,
-    // який отримує кожен відвідувач сайту.
+    // сторінці, не з логіном. Теж лінивий, тим самим міркуванням.
     path: 'rozklad-perehlyad',
     loadComponent: () => import('./pages/rozklad-perehlyad/rozklad-perehlyad.component')
       .then(m => m.RozkladPerehlyadComponent),

@@ -1,0 +1,188 @@
+<header class="page__head">
+  <h1 class="page__title">Учителі</h1>
+  <input
+    class="search"
+    placeholder="Пошук за прізвищем або предметом"
+    [ngModel]="search()"
+    (ngModelChange)="search.set($event)"
+  />
+  @if (!hiring()) {
+    <button class="page__button page__button--main" type="button"
+            (click)="startHire()">Найняти вчителя</button>
+  }
+</header>
+
+@if (hiring()) {
+  <div class="hire">
+    @if (hireError(); as message) {
+      <p class="page__alert">{{ message }}</p>
+    }
+    <div class="hire__row">
+      <label class="hire__field">
+        <span>Прізвище</span>
+        <input type="text" [(ngModel)]="hireDraft.last_name" />
+      </label>
+      <label class="hire__field">
+        <span>Ім'я</span>
+        <input type="text" [(ngModel)]="hireDraft.first_name" />
+      </label>
+      <label class="hire__field">
+        <span>По батькові</span>
+        <input type="text" [(ngModel)]="hireDraft.middle_name" />
+      </label>
+    </div>
+    <div class="hire__row">
+      <label class="hire__field hire__field--wide">
+        <span>Посада</span>
+        <input type="text" [(ngModel)]="hireDraft.position"
+               placeholder="напр. Вчитель математики" />
+      </label>
+      <label class="hire__field hire__field--wide">
+        <span>Предмети (через кому)</span>
+        <input type="text" [(ngModel)]="hireDraft.subjects"
+               placeholder="напр. Математика, Алгебра" />
+      </label>
+    </div>
+    <div class="hire__buttons">
+      <button class="page__button page__button--main" type="button"
+              [disabled]="busy()" (click)="hire()">Найняти</button>
+      <button class="page__button" type="button" (click)="cancelHire()">Скасувати</button>
+    </div>
+  </div>
+}
+
+<p class="page__note">
+  Список педагогів — той самий, що на сторінці «Наша команда». Тут до нього
+  додається лише те, що потрібно розкладу: коли вчителя точно немає, яку
+  зміну він просить, скільки уроків на день витримує.
+  <br />
+  Прізвища скрізь з ініціалами — у школі троє однофамільців Сірих, дві з них
+  Наталії.
+</p>
+
+@if (error(); as message) {
+  <p class="page__alert">{{ message }}</p>
+}
+
+<div class="list">
+  @for (row of visible(); track row.employee.id) {
+    <div class="teacher" [class.teacher--edit]="editing() === row.employee.id">
+      <div class="teacher__line">
+        <div class="teacher__who">
+          <span class="teacher__name">
+            {{ row.label }}
+            @if (row.employee.is_active === false) {
+              <span class="teacher__badge">звільнений</span>
+            }
+          </span>
+          <span class="teacher__position">{{ row.employee.position }}</span>
+        </div>
+        <div class="teacher__subjects">
+          {{ row.subjects.length ? row.subjects.join(', ') : 'предмети не вказані' }}
+        </div>
+        <div class="teacher__hours"
+             [class.teacher__hours--none]="!row.hours"
+             [class.teacher__hours--over]="row.hours > teacherLimit"
+             [title]="row.groups.length
+                        ? 'Класи: ' + row.groups.join(', ')
+                        : 'Годин у навантаженні немає'">
+          @if (row.hours) {
+            <b>{{ row.hours }}</b> год/тиждень
+            <span class="teacher__where">{{ row.groups.length }} кл.</span>
+          } @else {
+            <span>без годин</span>
+          }
+        </div>
+        <div class="teacher__pref">{{ prefSummary(row) }}</div>
+        <div class="teacher__buttons">
+          @if (editing() === row.employee.id) {
+            <button class="page__button" type="button" (click)="cancelEdit()">Закрити</button>
+          } @else {
+            <button class="page__button" type="button"
+                    (click)="startEdit(row)">Побажання</button>
+            @if (row.employee.is_active === false) {
+              <button class="page__button" type="button"
+                      [disabled]="busy()" (click)="reactivate(row)">Повернути</button>
+            } @else {
+              <button class="page__button" type="button"
+                      (click)="askDeactivate(row)">Звільнити</button>
+            }
+          }
+        </div>
+      </div>
+
+      @if (editing() === row.employee.id) {
+        <div class="prefs">
+          <div class="prefs__row">
+            <label class="prefs__field">
+              <span>Не більше уроків на день</span>
+              <input type="number" min="1" max="12"
+                     [(ngModel)]="draft.max_lessons_per_day" placeholder="без межі" />
+            </label>
+
+            <label class="prefs__field prefs__field--wide">
+              <span>Примітка</span>
+              <input type="text" [(ngModel)]="draft.comment"
+                     placeholder="напр. методичний день" />
+            </label>
+          </div>
+
+          <div class="prefs__grid-title">
+            Коли вчителя точно немає — натисніть клітинки
+          </div>
+          <table class="slots">
+            <thead>
+              <tr>
+                <th></th>
+                @for (lesson of lessonNumbers(); track lesson) {
+                  <th>{{ lesson }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (day of days; track day) {
+                <tr>
+                  <th class="slots__day">{{ dayShort[day] }}</th>
+                  @for (lesson of lessonNumbers(); track lesson) {
+                    <td>
+                      <button
+                        type="button"
+                        class="slots__cell"
+                        [class.slots__cell--off]="isBusy(day, lesson)"
+                        (click)="toggleSlot(day, lesson)"
+                        [attr.aria-label]="dayShort[day] + ', урок ' + lesson"
+                      >{{ isBusy(day, lesson) ? '×' : '' }}</button>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+
+          <div class="prefs__buttons">
+            <button class="page__button page__button--main" type="button"
+                    [disabled]="busy()" (click)="savePref(row)">Зберегти</button>
+            <button class="page__button" type="button" (click)="cancelEdit()">Скасувати</button>
+          </div>
+        </div>
+      }
+    </div>
+  } @empty {
+    <p class="empty">
+      {{ busy() ? 'Завантажую…' : 'Нікого не знайдено.' }}
+    </p>
+  }
+</div>
+
+@if (pending(); as row) {
+  <app-confirm-dialog
+    title="Звільнити педагога?"
+    [message]="row.label + ' зникне з публічної сторінки «Наша команда» і з підказок, '
+      + 'кому запропонувати нову годину. Торішнє навантаження нікуди не дінеться — '
+      + 'картку можна повернути в будь-який момент кнопкою «Повернути».'"
+    confirmLabel="Звільнити"
+    [busy]="busy()"
+    (confirm)="confirmDeactivate()"
+    (cancel)="cancelDeactivate()"
+  ></app-confirm-dialog>
+}

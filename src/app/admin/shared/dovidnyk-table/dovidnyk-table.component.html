@@ -1,0 +1,115 @@
+<div class="wrap">
+  <table class="grid">
+    <thead>
+      <tr>
+        @for (column of columns; track column.key) {
+          <th [style.width]="column.width" [title]="column.hint || ''">
+            {{ column.label }}
+          </th>
+        }
+        <th class="grid__actions"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (row of rows; track row.id) {
+        @if (editingId() === row.id) {
+          <tr class="grid__row grid__row--edit">
+            @for (column of columns; track column.key) {
+              <td>
+                @if (column.readonly) {
+                  <span class="grid__static">{{ show(row, column) }}</span>
+                } @else if (column.type === 'checkbox') {
+                  <input type="checkbox" [(ngModel)]="draft[column.key]" />
+                } @else if (column.type === 'select') {
+                  <select [(ngModel)]="draft[column.key]">
+                    @for (option of column.options; track option.value) {
+                      <option [ngValue]="option.value">{{ option.label }}</option>
+                    }
+                  </select>
+                } @else if (column.type === 'range') {
+                  <span class="grid__range">
+                    <input type="number" placeholder="з" min="0"
+                           [(ngModel)]="draft[column.key + '__from']" />
+                    &ndash;
+                    <input type="number" placeholder="по" min="0"
+                           [(ngModel)]="draft[column.key + '__to']" />
+                  </span>
+                } @else {
+                  <input
+                    [type]="column.type === 'number' ? 'number' : 'text'"
+                    [placeholder]="column.placeholder || ''"
+                    [(ngModel)]="draft[column.key]"
+                  />
+                }
+              </td>
+            }
+            <td class="grid__actions">
+              <button type="button" class="btn btn--ok"
+                      [disabled]="!valid || busy" (click)="commit()">Зберегти</button>
+              <button type="button" class="btn" (click)="cancel()">Скасувати</button>
+            </td>
+          </tr>
+        } @else {
+          <tr class="grid__row">
+            @for (column of columns; track column.key) {
+              <td>{{ show(row, column) }}</td>
+            }
+            <td class="grid__actions">
+              <button type="button" class="btn" (click)="startEdit(row)">Змінити</button>
+              @if (canDelete) {
+                <button type="button" class="btn btn--danger"
+                        (click)="remove.emit(row)">Видалити</button>
+              }
+            </td>
+          </tr>
+        }
+      } @empty {
+        <tr>
+          <td class="grid__empty" [attr.colspan]="columns.length + 1">{{ emptyText }}</td>
+        </tr>
+      }
+
+      @if (adding()) {
+        <tr class="grid__row grid__row--edit">
+          @for (column of columns; track column.key) {
+            <td>
+              @if (column.type === 'checkbox') {
+                <input type="checkbox" [(ngModel)]="draft[column.key]" />
+              } @else if (column.type === 'select') {
+                <select [(ngModel)]="draft[column.key]">
+                  @for (option of column.options; track option.value) {
+                    <option [ngValue]="option.value">{{ option.label }}</option>
+                  }
+                </select>
+              } @else if (column.type === 'range') {
+                <span class="grid__range">
+                  <input type="number" placeholder="з" min="0"
+                         [(ngModel)]="draft[column.key + '__from']" />
+                  &ndash;
+                  <input type="number" placeholder="по" min="0"
+                         [(ngModel)]="draft[column.key + '__to']" />
+                </span>
+              } @else {
+                <input
+                  [type]="column.type === 'number' ? 'number' : 'text'"
+                  [placeholder]="column.placeholder || ''"
+                  [(ngModel)]="draft[column.key]"
+                />
+              }
+            </td>
+          }
+          <td class="grid__actions">
+            <button type="button" class="btn btn--ok"
+                    [disabled]="!valid || busy" (click)="commit()">Додати</button>
+            <button type="button" class="btn" (click)="cancel()">Скасувати</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (canAdd && !adding()) {
+  <button type="button" class="add" (click)="startAdd()">+ {{ addLabel }}</button>
+}

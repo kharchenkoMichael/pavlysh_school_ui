@@ -1,0 +1,112 @@
+<header class="head">
+  <h1 class="head__title">Огляд</h1>
+  <button class="head__refresh" type="button" (click)="refresh()" [disabled]="busy()">
+    {{ busy() ? 'Перевіряю…' : 'Перевірити' }}
+  </button>
+</header>
+
+@if (error()) {
+  <p class="alert alert--error">{{ error() }}</p>
+}
+
+@if (check(); as data) {
+  <section class="cards">
+    <div class="card">
+      <span class="card__value">{{ data.groups }}</span>
+      <span class="card__label">класів у розкладі</span>
+    </div>
+    <div class="card">
+      <span class="card__value">{{ data.loads }}</span>
+      <span class="card__label">записів навантаження</span>
+    </div>
+  </section>
+
+  @if (errors().length) {
+    <section class="block">
+      <h2 class="block__title">Заважає порахувати</h2>
+      @for (problem of errors(); track problem.text) {
+        <p class="alert alert--error">{{ problem.text }}</p>
+      }
+    </section>
+  }
+
+  @if (notBlocking().length) {
+    <section class="block">
+      <h2 class="block__title">Не заважає порахувати</h2>
+      <p class="block__note">
+        Розклад із цим складеться. Показано, щоб не загубилося.
+      </p>
+      @for (problem of notBlocking(); track problem.text) {
+        <p class="alert alert--warn">{{ problem.text }}</p>
+      }
+    </section>
+  }
+
+  @if (warnings().length) {
+    <section class="block">
+      <h2 class="block__title">Варто глянути</h2>
+      @for (problem of warnings(); track problem.text) {
+        <p class="alert alert--warn">{{ problem.text }}</p>
+      }
+    </section>
+  }
+
+  @if (data.ok && !errors().length) {
+    <p class="alert alert--ok">
+      Дані сходяться — можна рахувати.
+      <a routerLink="../zapusk">Перейти до розрахунку →</a>
+    </p>
+  }
+}
+
+<section class="block">
+  <h2 class="block__title">Останні розрахунки</h2>
+  @if (runs().length) {
+    <table class="runs">
+      <thead>
+        <tr>
+          <th>№</th><th>Що зроблено</th><th>Назва</th>
+          <th>Штраф</th><th>Стан</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (run of runs(); track run.id) {
+          <tr>
+            <td>{{ run.id }}</td>
+            <td>{{ runLabel(run) }}</td>
+            <td>{{ run.title || '—' }}</td>
+            <td class="runs__penalty">{{ run.penalty ?? '—' }}</td>
+            <td>
+              <span class="badge" [class]="'badge--' + run.status">
+                {{ run.status === 'done' ? 'готово'
+                   : run.status === 'running' ? 'рахую…' : 'не вийшло' }}
+              </span>
+            </td>
+            <td class="runs__actions">
+              <a [routerLink]="['../rezultat', run.id]">Показати</a>
+              @if (run.status !== 'running') {
+                <button type="button" class="runs__drop"
+                        [disabled]="busy()" (click)="askDelete(run)">Видалити</button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="empty">Розрахунків ще не було.</p>
+  }
+</section>
+
+@if (pending(); as run) {
+  <app-confirm-dialog
+    title="Видалити розрахунок?"
+    [message]="'Прибрати розрахунок №' + run.id
+               + (run.title ? ' «' + run.title + '»' : '')
+               + '? Разом із ним зникне і сам розклад цього розрахунку.'"
+    confirmLabel="Видалити"
+    [busy]="busy()"
+    (confirm)="confirmDelete()"
+    (cancel)="pending.set(null)"
+  ></app-confirm-dialog>
+}
