@@ -73,11 +73,41 @@
   .page-status { color: #7c8b83; font-size: 14px; }
   footer.pagefoot { margin-top: 26px; padding-top: 14px; border-top: 1px solid #edf1ee; color: #9aa79f; font-size: 12px; line-height: 1.6; }
   footer.pagefoot code { font-family: ui-monospace, Menlo, monospace; background: #f4f8f5; padding: 1px 5px; border-radius: 4px; }
+
+  .gate { min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .gate__card {
+    width: 100%; max-width: 320px; text-align: center; background: #fff;
+    border: 1px solid #e3e8e5; border-radius: 10px; padding: 32px 24px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.05);
+  }
+  .gate__title { margin: 0 0 6px; font-size: 20px; color: #333; }
+  .gate__hint { margin: 0 0 18px; font-size: 13px; color: #7c8b83; }
+  .gate__input {
+    width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #d5ddd8;
+    border-radius: 6px; font-size: 15px; margin-bottom: 12px; font-family: inherit;
+  }
+  .gate__input:focus { outline: none; border-color: #4caf50; }
+  .gate__button {
+    width: 100%; padding: 10px; border: none; border-radius: 6px; background: #4caf50;
+    color: #fff; font-size: 15px; cursor: pointer; font-family: inherit;
+  }
+  .gate__button:hover { background: #43a047; }
+  .gate__error { margin: 10px 0 0; font-size: 13px; color: #a3271c; }
 </style>
 </head>
 <body>
 
-<section class="page">
+<section class="gate" id="gate">
+  <div class="gate__card">
+    <h1 class="gate__title">Розклад уроків</h1>
+    <p class="gate__hint">Сторінка для своїх — введіть пароль.</p>
+    <input class="gate__input" type="password" id="gatePwd" placeholder="Пароль">
+    <button class="gate__button" type="button" id="gateBtn">Увійти</button>
+    <p class="gate__error" id="gateError" style="display:none;">Не той пароль — спробуйте ще раз.</p>
+  </div>
+</section>
+
+<section class="page" id="mainContent" style="display:none;">
   <header>
     <h1>Розклад уроків</h1>
     <p class="page__sub">Запуск №54 · 2026–2027 н.р. · оновлено 06.09.2026</p>
@@ -294,6 +324,29 @@ renderTabs();
 renderSelect();
 renderWeekTabs();
 renderGrid();
+
+// ---- password gate (косметична, не безпека — той самий пароль, що й на /rozklad-perehlyad) ----
+const GATE_PASSWORD = "2026rozklad2027";
+const GATE_STORAGE_KEY = "rozklad-54-vidkryto";
+function unlock() {
+  $("gate").style.display = "none";
+  $("mainContent").style.display = "";
+}
+if (localStorage.getItem(GATE_STORAGE_KEY) === "1") {
+  unlock();
+}
+function tryUnlock() {
+  const val = $("gatePwd").value.trim();
+  if (val === GATE_PASSWORD) {
+    localStorage.setItem(GATE_STORAGE_KEY, "1");
+    $("gateError").style.display = "none";
+    unlock();
+  } else {
+    $("gateError").style.display = "";
+  }
+}
+$("gateBtn").addEventListener("click", tryUnlock);
+$("gatePwd").addEventListener("keyup", (e) => { if (e.key === "Enter") tryUnlock(); });
 </script>
 </body>
 </html>
