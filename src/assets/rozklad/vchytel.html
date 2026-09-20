@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#4f5bd5">
+<title>Мій розклад</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%85%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f4f6fc;
+  --glow1: #dfe6ff;
+  --glow2: #ffe9f1;
+  --card: #ffffff;
+  --ink: #1b2340;
+  --muted: #667090;
+  --line: #e3e8f5;
+  --accent: #4f5bd5;
+  --accent-ink: #ffffff;
+  --ring: rgba(79, 91, 213, .22);
+  --shadow: 0 1px 2px rgba(20, 30, 70, .06), 0 10px 28px rgba(20, 30, 70, .07);
+  --chip-s: 85%;
+  --chip-l: 93%;
+  --dot-s: 68%;
+  --dot-l: 40%;
+  --dot-ink: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1323;
+    --glow1: #1b2350;
+    --glow2: #2a1a33;
+    --card: #182040;
+    --ink: #eef1ff;
+    --muted: #9aa4c9;
+    --line: #2a3358;
+    --accent: #8b95ff;
+    --accent-ink: #0e1323;
+    --ring: rgba(139, 149, 255, .28);
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 28px rgba(0, 0, 0, .28);
+    --chip-s: 38%;
+    --chip-l: 25%;
+    --dot-s: 78%;
+    --dot-l: 72%;
+    --dot-ink: #0e1323;
+  }
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(1100px 480px at 8% -8%, var(--glow1), transparent 62%),
+    radial-gradient(900px 480px at 100% 0%, var(--glow2), transparent 58%),
+    var(--bg);
+  font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 22px 16px 40px; }
+
+/* ── шапка ─────────────────────────────── */
+.top { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.logo {
+  width: 58px; height: 58px; border-radius: 19px; flex: none;
+  display: grid; place-items: center;
+  color: #fff; font-weight: 800; font-size: 23px; letter-spacing: -.02em;
+  background: linear-gradient(135deg, #4f5bd5, #8a6bff 60%, #c66bff);
+  box-shadow: 0 8px 20px rgba(100, 90, 230, .35);
+}
+h1 { margin: 0; font-size: clamp(25px, 4.2vw, 35px); letter-spacing: -.025em; line-height: 1.1; }
+.brand p { margin: 3px 0 0; color: var(--muted); font-size: 14px; }
+
+.clock { text-align: right; font-variant-numeric: tabular-nums; }
+.clock .t { font-size: clamp(30px, 5.5vw, 42px); font-weight: 750; letter-spacing: -.02em; line-height: 1; }
+.clock .d { margin-top: 5px; color: var(--muted); font-size: 13.5px; }
+@media (max-width: 639px) { .clock { text-align: left; } }
+
+/* ── перемикач і статус ────────────────── */
+.controls { margin: 24px 0 22px; display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; }
+
+.seg {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr;
+  width: min(100%, 350px); padding: 4px; border-radius: 18px;
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow);
+}
+.seg .thumb {
+  position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+  border-radius: 14px; background: var(--accent);
+  transition: transform .28s cubic-bezier(.3, .9, .3, 1);
+}
+.seg[data-value="D"] .thumb { transform: translateX(100%); }
+.seg button {
+  position: relative; z-index: 1; border: 0; background: none; cursor: pointer;
+  padding: 12px 8px; border-radius: 14px; color: var(--muted);
+  font: inherit; font-weight: 700; font-size: 15.5px;
+  transition: color .2s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+}
+.seg button[aria-checked="true"] { color: var(--accent-ink); }
+.seg button:focus-visible { outline: 3px solid var(--ring); outline-offset: 1px; }
+.seg .dot { width: 8px; height: 8px; border-radius: 50%; background: #2fbf71; box-shadow: 0 0 0 3px rgba(47, 191, 113, .25); display: none; }
+.seg button.is-now .dot { display: inline-block; }
+
+.status {
+  flex: 1 1 260px; margin: 0; padding: 11px 16px; border-radius: 16px;
+  background: var(--card); border: 1px solid var(--line);
+  color: var(--muted); font-size: 15px;
+}
+.status b { color: var(--ink); font-weight: 700; }
+.status.vac { border-color: transparent; background: rgba(43, 165, 255, .14); color: var(--ink); }
+
+/* ── дні ───────────────────────────────── */
+.days { display: grid; gap: 14px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 640px)  { .days { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .days { grid-template-columns: repeat(5, 1fr); gap: 12px; } }
+@media (max-width: 639px)  { .day.today { order: -1; } }
+
+.day {
+  background: var(--card); border: 1px solid var(--line); border-radius: 22px;
+  padding: 14px 12px 14px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.day.today { border-color: var(--accent); box-shadow: 0 0 0 4px var(--ring), var(--shadow); }
+.dh { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 2px 6px 2px; }
+.dh h2 { margin: 0; font-size: 19px; letter-spacing: -.01em; }
+.dh .sub { margin-top: 1px; color: var(--muted); font-size: 13px; }
+.badge {
+  background: var(--accent); color: var(--accent-ink); white-space: nowrap;
+  font-size: 12px; font-weight: 750; padding: 4px 10px; border-radius: 999px;
+}
+
+.day ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.lesson {
+  display: flex; align-items: center; gap: 10px; min-height: 46px;
+  padding: 8px 10px 8px 8px; border-radius: 15px;
+  background: hsl(var(--h) var(--chip-s) var(--chip-l));
+}
+.lesson .n {
+  flex: none; width: 29px; height: 29px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 800; font-size: 14px;
+  background: hsl(var(--h) var(--dot-s) var(--dot-l)); color: var(--dot-ink);
+}
+.lesson .name { font-weight: 600; line-height: 1.25; }
+.lesson .alt { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height: 1.3; }
+.off {
+  padding: 22px 12px; text-align: center; font-weight: 600; color: var(--muted);
+  border: 1.5px dashed var(--line); border-radius: 15px;
+}
+
+.lesson.gap { background: transparent; border: 1.5px dashed var(--line); min-height: 40px; }
+.lesson.gap .n { background: var(--line); color: var(--muted); }
+.lesson.gap .name { font-weight: 500; color: var(--muted); }
+
+@keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.days.swap .day { animation: pop .32s both; }
+.days.swap .day:nth-child(2) { animation-delay: .03s; }
+.days.swap .day:nth-child(3) { animation-delay: .06s; }
+.days.swap .day:nth-child(4) { animation-delay: .09s; }
+.days.swap .day:nth-child(5) { animation-delay: .12s; }
+@media (prefers-reduced-motion: reduce) {
+  .seg .thumb { transition: none; }
+  .days.swap .day { animation: none; }
+}
+
+.note { margin: 18px 4px 0; color: var(--muted); font-size: 13.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">📅</div>
+      <div>
+        <h1>Мій розклад</h1>
+        <p>Уроки на тиждень · 2026/2027 навчальний рік</p>
+      </div>
+    </div>
+    <div class="clock" id="clock" hidden>
+      <div class="t" id="clockTime">00:00:00</div>
+      <div class="d" id="clockDate"></div>
+    </div>
+  </header>
+
+  <section class="controls">
+    <div class="seg" id="seg" role="radiogroup" aria-label="Тиждень" data-value="N">
+      <span class="thumb" aria-hidden="true"></span>
+      <button type="button" role="radio" data-v="N" aria-checked="true">Чисельник<i class="dot" aria-hidden="true"></i></button>
+      <button type="button" role="radio" data-v="D" aria-checked="false">Знаменник<i class="dot" aria-hidden="true"></i></button>
+    </div>
+    <p class="status" id="status"></p>
+  </section>
+
+  <main class="days" id="days"></main>
+
+  <p class="note">Синім — математика в 5-Б, червоним — заміни. У знаменнику 7-го уроку в середу й четвер немає.</p>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const DAY = 864e5;
+  const DAYS = ['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П’ятниця'];
+  const TYPE_NAME = { N: 'чисельник', D: 'знаменник' };
+
+  /* Мій розклад: 7 уроків на день. null — вікно / немає уроку;
+     { t, only: 'N' } — лише в чисельнику. */
+  const SCHEDULE = [
+    ['Матем. 5-Б', '10-Б', null, '11-А', 'Заміна: 4-Б', null, '9-Б'],
+    [null, 'Матем. 5-Б', '5-А', '5-Б', 'Заміна: 3-А', null, '8-А/8-Б'],
+    ['6-А', '6-Б', null, 'Матем. 5-Б', 'Заміна: 4-А', '9-А', { t: '9-Б', only: 'N' }],
+    ['Матем. 5-Б', 'Заміна: 2-Б', 'Заміна: 2-А', '8-Б', null, '8-А', { t: '9-А', only: 'N' }],
+    ['Матем. 5-Б', '11-А', '7-А', '7-Б', 'Заміна: 3-Б', null, 'ГКК'],
+  ];
+
+  /* Кольори: заміни — червоні, математика в 5-Б — сині */
+  const kindOf = txt => /^Заміна/.test(txt) ? 355 : /^Матем/.test(txt) ? 218 : txt === 'ГКК' ? 235 : 190;
+
+  /* Календар учителя 2026–2027: понеділок тижня → N (чисельник) | D (знаменник) | null (канікули).
+     Після канікул відлік починається знову з чисельника — так у календарі. */
+  const WEEKS = {
+    '2026-08-31': 'N', '2026-09-07': 'D', '2026-09-14': 'N', '2026-09-21': 'D', '2026-09-28': 'N',
+    '2026-10-05': 'D', '2026-10-12': 'N', '2026-10-19': 'D', '2026-10-26': null,
+    '2026-11-02': 'N', '2026-11-09': 'D', '2026-11-16': 'N', '2026-11-23': 'D', '2026-11-30': 'N',
+    '2026-12-07': 'D', '2026-12-14': 'N', '2026-12-21': 'D', '2026-12-28': null,
+    '2027-01-04': null, '2027-01-11': 'N', '2027-01-18': 'D', '2027-01-25': 'N',
+    '2027-02-01': 'D', '2027-02-08': 'N', '2027-02-15': 'D', '2027-02-22': 'N',
+    '2027-03-01': 'D', '2027-03-08': 'N', '2027-03-15': 'D', '2027-03-22': null, '2027-03-29': 'N',
+    '2027-04-05': 'D', '2027-04-12': 'N', '2027-04-19': 'D', '2027-04-26': 'N',
+    '2027-05-03': 'D', '2027-05-10': 'N', '2027-05-17': 'D', '2027-05-24': 'N',
+  };
+  const VACATIONS = [
+    { from: '2026-10-26', to: '2026-10-30' },
+    { from: '2026-12-28', to: '2027-01-08' },
+    { from: '2027-03-22', to: '2027-03-26' },
+  ];
+  const HOLIDAYS = new Set(['2026-10-01', '2026-12-25', '2027-01-01', '2027-03-08']);
+
+  const WEEK_KEYS = Object.keys(WEEKS).sort();
+  const FIRST = WEEK_KEYS[0];
+  const LAST = WEEK_KEYS[WEEK_KEYS.length - 1];
+
+  /* ── час (Київ) ────────────────────────── */
+  const TZ = (() => {
+    try { new Intl.DateTimeFormat('uk', { timeZone: 'Europe/Kyiv' }); return 'Europe/Kyiv'; }
+    catch { return 'Europe/Kiev'; }
+  })();
+  const partsFmt = new Intl.DateTimeFormat('en-GB', {
+    timeZone: TZ, year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: 'numeric', second: 'numeric', hourCycle: 'h23',
+  });
+  const clockDateFmt = new Intl.DateTimeFormat('uk-UA', { timeZone: TZ, weekday: 'long', day: 'numeric', month: 'long' });
+  const longFmt = new Intl.DateTimeFormat('uk-UA', { timeZone: 'UTC', day: 'numeric', month: 'long' });
+  const shortFmt = new Intl.DateTimeFormat('uk-UA', { timeZone: 'UTC', day: 'numeric', month: 'short' });
+
+  /* ?now=2026-09-21T10:15:00%2B03:00 — переглянути сторінку «в інший момент» */
+  const override = Date.parse(new URLSearchParams(location.search).get('now') || '');
+  const skew = Number.isNaN(override) ? 0 : override - Date.now();
+
+  const iso = ms => new Date(ms).toISOString().slice(0, 10);
+  const pad = n => String(n).padStart(2, '0');
+
+  function getState() {
+    const date = new Date(Date.now() + skew);
+    const p = {};
+    for (const x of partsFmt.formatToParts(date)) if (x.type !== 'literal') p[x.type] = +x.value;
+
+    const today = Date.UTC(p.year, p.month - 1, p.day);
+    const dow = new Date(today).getUTCDay() || 7;                 // 1 = пн … 7 = нд
+    const minutes = p.hour * 60 + p.minute;
+    const inHours = dow <= 5 && minutes >= 8 * 60 + 30 && minutes < 15 * 60 + 5;   // 8:30–15:05, будні
+
+    const thisMon = today - (dow - 1) * DAY;
+    const target = dow >= 6 ? thisMon + 7 * DAY : thisMon;        // на вихідних показуємо наступний тиждень
+
+    let ref = null;                                               // найближчий навчальний тиждень
+    if (iso(target) <= LAST) {
+      ref = Math.max(target, Date.parse(FIRST));
+      while (!WEEKS[iso(ref)]) ref += 7 * DAY;
+    }
+    const vac = WEEKS[iso(target)] === null
+      ? VACATIONS.find(v => iso(target) >= v.from && iso(target) <= v.to) : null;
+
+    return { date, p, dow, inHours, thisMon, target, ref, refType: ref === null ? null : WEEKS[iso(ref)], vac };
+  }
+
+  /* ── відображення ──────────────────────── */
+  const $ = id => document.getElementById(id);
+  const seg = $('seg'), daysEl = $('days'), statusEl = $('status');
+  const clockEl = $('clock'), timeEl = $('clockTime'), dateEl = $('clockDate');
+
+  let manual = null;      // { value, ref } — вибір користувача діє лише в межах тижня
+  let lastKey = '';
+
+  function fmtRange(mon) {
+    const a = new Date(mon), b = new Date(mon + 4 * DAY);
+    return a.getUTCMonth() === b.getUTCMonth()
+      ? `${a.getUTCDate()}–${longFmt.format(b)}`
+      : `${longFmt.format(a)} – ${longFmt.format(b)}`;
+  }
+
+  function statusHtml(s) {
+    if (s.ref === null) return '<b>Навчальний рік завершено.</b> Гарного літа!';
+    const range = fmtRange(s.ref), type = `<b>${TYPE_NAME[s.refType]}</b>`;
+    if (s.vac) return `<b>Канікули до ${longFmt.format(Date.parse(s.vac.to))}.</b> Далі (${range}) — ${type}`;
+    if (s.ref !== s.target) return `Перший навчальний тиждень (${range}) — ${type}`;
+    return s.target === s.thisMon ? `Цей тиждень (${range}) — ${type}` : `Наступний тиждень (${range}) — ${type}`;
+  }
+
+  const isShown = (it, sel) => it && (!it.only || it.only === sel);
+  const plural = n => n % 10 === 1 && n % 100 !== 11 ? 'урок'
+    : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'уроки' : 'уроків';
+
+  function lessonHtml(n, it, sel) {
+    if (!isShown(it, sel)) {
+      return `<li class="lesson gap"><span class="n">${n}</span><span class="name">Вікно</span></li>`;
+    }
+    const txt = typeof it === 'string' ? it : it.t;
+    const alt = it.only ? `<span class="alt">лише ${TYPE_NAME[it.only]}</span>` : '';
+    return `<li class="lesson" style="--h:${kindOf(txt)}"><span class="n">${n}</span>` +
+           `<span class="txt"><span class="name">${txt}</span>${alt}</span></li>`;
+  }
+
+  function dayHtml(i, sel, s, showDates) {
+    const items = SCHEDULE[i];
+    const dayMs = showDates ? s.ref + i * DAY : null;
+    const holiday = showDates && HOLIDAYS.has(iso(dayMs));
+    const isToday = showDates && s.ref === s.thisMon && s.dow <= 5 && i === s.dow - 1;
+
+    const shown = items.map((it, k) => isShown(it, sel) ? k : -1).filter(k => k >= 0);
+    const count = `${shown.length} ${plural(shown.length)}`;
+    const sub = showDates ? `${shortFmt.format(dayMs)}${holiday ? '' : ' · ' + count}` : count;
+
+    let body;
+    if (holiday) body = '<div class="off">Святковий день — уроків немає</div>';
+    else if (!shown.length) body = '<div class="off">Уроків немає</div>';
+    else {
+      const from = shown[0], to = shown[shown.length - 1];
+      body = `<ol>${items.slice(from, to + 1).map((it, k) => lessonHtml(from + k + 1, it, sel)).join('')}</ol>`;
+    }
+
+    return `<article class="day${isToday ? ' today' : ''}">` +
+           `<header class="dh"><div><h2>${DAYS[i]}</h2><div class="sub">${sub}</div></div>` +
+           `${isToday ? '<span class="badge">Сьогодні</span>' : ''}</header>${body}</article>`;
+  }
+
+  function update(s, animate) {
+    if (manual && manual.ref !== s.ref) manual = null;
+    const sel = manual ? manual.value : (s.refType || 'N');
+    const showDates = s.ref !== null && sel === s.refType;
+
+    seg.dataset.value = sel;
+    seg.querySelectorAll('button').forEach(b => {
+      b.setAttribute('aria-checked', String(b.dataset.v === sel));
+      b.classList.toggle('is-now', s.ref === s.thisMon && b.dataset.v === s.refType);
+    });
+    statusEl.innerHTML = statusHtml(s);
+    statusEl.classList.toggle('vac', !!s.vac || s.ref === null);
+
+    const key = [sel, s.ref, s.thisMon, s.dow, showDates].join('|');
+    if (key === lastKey) return;
+    lastKey = key;
+
+    daysEl.classList.remove('swap');
+    daysEl.innerHTML = DAYS.map((_, i) => dayHtml(i, sel, s, showDates)).join('');
+    if (animate) { void daysEl.offsetWidth; daysEl.classList.add('swap'); }
+  }
+
+  seg.addEventListener('click', e => {
+    const b = e.target.closest('button[data-v]');
+    if (!b) return;
+    const s = getState();
+    manual = { value: b.dataset.v, ref: s.ref };
+    update(s, true);
+  });
+
+  function tick() {
+    const s = getState();
+    clockEl.hidden = !s.inHours;
+    if (s.inHours) {
+      timeEl.textContent = `${pad(s.p.hour)}:${pad(s.p.minute)}:${pad(s.p.second)}`;
+      dateEl.textContent = clockDateFmt.format(s.date);
+    }
+    update(s, false);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>
