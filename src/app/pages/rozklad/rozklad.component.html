@@ -1,0 +1,132 @@
+<section class="rozklad">
+  <header class="rozklad__head">
+    <h1 class="rozklad__title">Розклад уроків</h1>
+    <p class="rozklad__sub">{{ data.year }} навчальний рік · 5–11 класи</p>
+  </header>
+
+  <div class="controls">
+    <div class="seg" role="radiogroup" aria-label="Чий розклад" [attr.data-value]="mode()">
+      <span class="seg__thumb" aria-hidden="true"></span>
+      <button type="button" role="radio" class="seg__btn"
+              [attr.aria-checked]="mode() === 'klas'" (click)="setMode('klas')">Учні</button>
+      <button type="button" role="radio" class="seg__btn"
+              [attr.aria-checked]="mode() === 'vchytel'" (click)="setMode('vchytel')">Вчителі</button>
+    </div>
+
+    <label class="pick">
+      <span class="pick__label">{{ mode() === 'klas' ? 'Клас' : 'Вчитель' }}</span>
+      <select class="pick__select" [value]="pick()" (change)="setPick($any($event.target).value)">
+        @if (mode() === 'klas') {
+          @for (c of data.classes; track c) {
+            <option [value]="c" [selected]="c === klas()">{{ c }}</option>
+          }
+        } @else {
+          @for (t of data.teachers; track t.id) {
+            <option [value]="'' + t.id" [selected]="'' + t.id === vchytel()">{{ t.full }}</option>
+          }
+        }
+      </select>
+    </label>
+  </div>
+
+  @if (clock(); as c) {
+    <div class="status">
+      <span class="status__week" [class.is-off]="!c.week">
+        @if (c.week) {
+          <i class="status__dot" aria-hidden="true"></i>
+        }
+        {{ c.weekText }}
+      </span>
+      @if (nowText()) {
+        <span class="status__now">
+          <b>{{ c.time }}</b> {{ nowText() }}
+        </span>
+      }
+    </div>
+
+    <div class="table-wrap" #wrap>
+      <table class="grid">
+        <caption class="visually-hidden">Розклад: {{ pickTitle() }}</caption>
+        <thead>
+          <tr>
+            <th class="grid__corner" scope="col">Урок</th>
+            @for (name of dayNames; track name; let i = $index) {
+              <th scope="col" class="grid__day" [class.is-today]="c.today === i"
+                  [class.is-holiday]="c.holidays[i]">
+                <span class="grid__day-name">{{ name }}</span>
+                @if (c.dates) {
+                  <span class="grid__day-date">
+                    {{ c.dates[i] }}{{ c.holidays[i] ? ' · свято' : c.today === i ? ' · сьогодні' : '' }}
+                  </span>
+                }
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of grid(); track $index; let k = $index) {
+            <tr [class.is-now]="c.lesson === k + 1">
+              <th scope="row" class="grid__time" [class.is-now]="c.lesson === k + 1"
+                  [class.is-next]="c.next === k + 1">
+                <span class="grid__num">{{ k + 1 }}</span>
+                <span class="grid__bell">{{ data.bells[k][0] }}–{{ data.bells[k][1] }}</span>
+                @if (c.lesson === k + 1) {
+                  <span class="grid__left">ще {{ c.left }} хв</span>
+                }
+              </th>
+              @for (cell of row; track $index; let i = $index) {
+                <td class="grid__cell"
+                    [class.is-today]="c.today === i"
+                    [class.is-holiday]="c.holidays[i]"
+                    [class.is-current]="c.today === i && c.lesson === k + 1"
+                    [class.is-empty]="!cell.split && !cell.weekly.length">
+                  @if (c.today === i && c.lesson === k + 1) {
+                    <span class="grid__elapsed" [style.width.%]="c.progress * 100" aria-hidden="true"></span>
+                    <span class="grid__progress" [style.width.%]="c.progress * 100"
+                          role="progressbar" aria-label="Скільки уроку минуло"
+                          [attr.aria-valuenow]="c.percent" aria-valuemin="0" aria-valuemax="100"></span>
+                  }
+                  @if (cell.split) {
+                    <div class="half" [class.is-active]="c.week === 'N'" [class.is-dim]="!isActive('N')">
+                      <span class="half__label">чис.</span>
+                      <ng-container *ngTemplateOutlet="items; context: { $implicit: cell.N }"></ng-container>
+                    </div>
+                    <div class="half" [class.is-active]="c.week === 'D'" [class.is-dim]="!isActive('D')">
+                      <span class="half__label">знам.</span>
+                      <ng-container *ngTemplateOutlet="items; context: { $implicit: cell.D }"></ng-container>
+                    </div>
+                  } @else if (cell.weekly.length) {
+                    <ng-container *ngTemplateOutlet="items; context: { $implicit: cell.weekly }"></ng-container>
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <p class="note">
+    Де в клітинці дві половини, <b>чис.</b> — урок у чисельнику, <b>знам.</b> — у знаменнику;
+    яскравіше — той, що цього тижня. {{ data.source }}.
+  </p>
+</section>
+
+<ng-template #items let-items>
+  @for (it of items; track $index) {
+    <div class="lesson">
+      <span class="lesson__title">
+        @if (it.tag) {
+          <span class="lesson__tag">{{ it.tag }}</span>
+        }
+        {{ it.title }}
+      </span>
+      @if (it.sub) {
+        <span class="lesson__sub">{{ it.sub }}</span>
+      }
+    </div>
+  } @empty {
+    <span class="lesson__none">—</span>
+  }
+</ng-template>

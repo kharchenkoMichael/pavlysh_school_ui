@@ -1,0 +1,314 @@
+@use "../../../assets/styles/variables" as v;
+
+$line: #e3e8e5;
+$line-soft: #edf1ee;
+$muted: #7c8b83;
+$tint: #e8f5e9;
+$tint-ink: #2e7d32;
+$head-bg: #f4f8f5;
+
+.rozklad {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 16px 60px;
+  color: v.$dark-text-color;
+  font-family: "Arial", sans-serif;
+
+  &__head { margin-bottom: 18px; }
+  &__title { margin: 0 0 4px; font-size: 28px; letter-spacing: -0.01em; }
+  &__sub { margin: 0; font-size: 14px; color: $muted; }
+}
+
+// ── перемикач і вибір ────────────────────────────────
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 16px;
+}
+
+.seg {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 260px;
+  padding: 4px;
+  border: 1px solid $line;
+  border-radius: 12px;
+  background: #fff;
+
+  &__thumb {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    border-radius: 9px;
+    background: v.$primary-color;
+    transition: transform 0.25s cubic-bezier(0.3, 0.9, 0.3, 1);
+  }
+
+  &[data-value="vchytel"] &__thumb { transform: translateX(100%); }
+
+  &__btn {
+    position: relative;
+    z-index: 1;
+    padding: 10px 8px;
+    border: 0;
+    border-radius: 9px;
+    background: none;
+    color: $muted;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &[aria-checked="true"] { color: #fff; }
+    &:focus-visible { outline: 3px solid rgba(76, 175, 80, 0.35); outline-offset: 1px; }
+  }
+}
+
+.pick {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__label { font-size: 12px; font-weight: 600; color: $muted; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  &__select {
+    min-width: 240px;
+    height: 46px;
+    padding: 0 36px 0 12px;
+    border: 1px solid #d5ddd8;
+    border-radius: 12px;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237c8b83' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center;
+    color: v.$dark-text-color;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    appearance: none;
+    cursor: pointer;
+
+    &:focus { outline: none; border-color: v.$primary-color; box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2); }
+  }
+}
+
+// ── рядок стану ──────────────────────────────────────
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 18px 0 14px;
+  font-size: 14px;
+
+  &__week {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: $tint;
+    color: $tint-ink;
+    font-weight: 600;
+
+    &.is-off { background: $head-bg; color: $muted; }
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: v.$primary-color;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.25);
+  }
+
+  &__now { color: #55655c; }
+  &__now b { color: v.$dark-text-color; font-variant-numeric: tabular-nums; margin-right: 4px; }
+}
+
+// ── таблиця ──────────────────────────────────────────
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid $line;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 40, 30, 0.04), 0 8px 24px rgba(20, 40, 30, 0.05);
+  -webkit-overflow-scrolling: touch;
+}
+
+.grid {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  font-size: 14px;
+
+  th, td {
+    border-bottom: 1px solid $line-soft;
+    border-left: 1px solid $line-soft;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  tbody tr:last-child > * { border-bottom: 0; }
+
+  thead th {
+    padding: 10px 12px;
+    background: $head-bg;
+    font-weight: 600;
+    white-space: nowrap;
+
+    // Тут, а не в &__day: інкапсуляція Angular додає атрибут кожному
+    // елементу селектора, і «.grid thead th» інакше перебиває «сьогодні».
+    &.is-today { background: v.$primary-color; color: #fff; }
+  }
+
+  &__corner {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    width: 92px;
+    border-left: 0 !important;
+    color: $muted;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    vertical-align: middle !important;
+  }
+
+  &__day {
+    &-name { display: block; font-size: 15px; }
+    &-date { display: block; margin-top: 1px; font-size: 12px; font-weight: 500; color: $muted; }
+
+    &.is-today &-date { color: rgba(255, 255, 255, 0.9); }
+    &.is-holiday &-date { color: #b26a00; }
+  }
+
+  &__time {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    padding: 10px 10px 10px 12px;
+    border-left: 0 !important;
+    background: #fafcfb;
+
+    &.is-now { background: $tint; box-shadow: inset 4px 0 0 v.$primary-color; }
+    &.is-next { box-shadow: inset 4px 0 0 rgba(76, 175, 80, 0.35); }
+  }
+
+  &__num { display: block; font-size: 18px; font-weight: 700; line-height: 1.1; }
+  &__time.is-now &__num { color: $tint-ink; }
+  &__bell { display: block; margin-top: 2px; font-size: 12px; color: $muted; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  &__left { display: block; margin-top: 4px; font-size: 12px; font-weight: 700; color: $tint-ink; }
+
+  &__cell {
+    position: relative;
+    height: 66px;
+    padding: 8px 10px;
+
+    &.is-today { background: #f7fbf7; }
+    &.is-holiday { background: repeating-linear-gradient(135deg, #fbfaf6 0 8px, #f5f3ec 8px 16px); }
+    &.is-holiday > * { opacity: 0.55; }
+    &.is-current { box-shadow: inset 0 0 0 2px v.$primary-color; }
+  }
+
+  tr.is-now > td:not(.is-today) { background: #fbfdfb; }
+
+  // Скільки уроку минуло: блідий фон зліва і смужка знизу.
+  &__elapsed {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(76, 175, 80, 0.09);
+    pointer-events: none;
+  }
+
+  &__progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    border-radius: 0 2px 2px 0;
+    background: v.$primary-color;
+    transition: width 1s linear;
+  }
+}
+
+// ── вміст клітинки ───────────────────────────────────
+.lesson {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  & + & { margin-top: 6px; }
+
+  &__title { font-weight: 600; line-height: 1.25; }
+  &__sub { font-size: 12px; color: $muted; line-height: 1.3; }
+  &__none { position: relative; color: #b8c2bc; }
+
+  &__tag {
+    display: inline-block;
+    margin-right: 3px;
+    padding: 0 5px;
+    border-radius: 5px;
+    background: #eef2f0;
+    color: #55655c;
+    font-size: 11px;
+    font-weight: 600;
+    vertical-align: 1px;
+  }
+}
+
+.half {
+  position: relative;
+  padding: 3px 7px 5px;
+  border-radius: 8px;
+  transition: opacity 0.2s;
+
+  & + & { margin-top: 4px; }
+
+  &__label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: $muted;
+  }
+
+  &.is-active { background: $tint; }
+  &.is-active &__label { color: $tint-ink; }
+  &.is-dim { opacity: 0.42; }
+}
+
+.note {
+  margin: 14px 2px 0;
+  font-size: 13px;
+  color: $muted;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .rozklad { padding-top: 20px; }
+  .rozklad__title { font-size: 24px; }
+  .controls { flex-direction: column; align-items: stretch; }
+  .seg { width: 100%; }
+  .pick__select { width: 100%; min-width: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seg__thumb, .grid__progress, .half { transition: none; }
+}
