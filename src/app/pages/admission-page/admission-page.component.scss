@@ -1,65 +1,40 @@
-@use "sass:color";
-
-$primary-color: #4caf50;
-$secondary-color: #66bb6a;
-$text-color: #fff;
-$dark-text-color: #333;
-$background-color: #f9f9f9;
-$button-hover-color: color.scale($secondary-color, $lightness: -10%);
+@use "../../../assets/styles/variables" as *;
+@use "../../../assets/styles/page" as *;
 
 .admission {
-  padding: 20px;
-  background-color: $background-color;
-  color: $dark-text-color;
-  font-family: "Arial", sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @include page-root;
 
   h1 {
+    @include page-title;
+  }
+
+  > p {
+    margin: 0 0 20px;
     text-align: center;
-    margin-bottom: 30px;
-    color: $primary-color;
-    font-size: 2.5em;
   }
 
   section {
-    margin-bottom: 30px;
-    padding: 20px;
-    border: 1px solid $primary-color;
-    border-radius: 10px;
-    background-color: color.adjust($background-color, $lightness: 10%);
-    position: relative;
-    overflow: hidden;
-    max-width: 800px;
-    width: 100%;
+    @include page-card;
+    @include card-text;
 
     h2 {
-      color: $secondary-color;
-      font-size: 1.8em;
-      margin-bottom: 15px;
+      @include card-heading;
     }
 
     h3 {
+      margin: 20px 0 10px;
       color: $primary-color;
-      font-size: 1.5em;
-      margin-top: 20px;
-    }
-
-    p {
-      margin-bottom: 15px;
-    }
-
-    ul,
-    ol {
-      li {
-        margin: 10px 0;
-      }
+      font-size: 1.25rem;
     }
 
     .signature {
       text-align: right;
       font-style: italic;
+    }
+
+    button {
+      @include pill-button;
+      margin-top: 12px;
     }
   }
 }

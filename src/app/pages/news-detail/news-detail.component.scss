@@ -1,8 +1,26 @@
+@use "../../../assets/styles/variables" as *;
+
 .news-detail-container {
-  text-align: center;
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
+  max-width: 820px;
+  margin: 24px auto 0;
+  padding: 24px 20px 32px;
+  background: $surface-color;
+  border: 1px solid $border-color;
+  border-radius: $radius;
+  box-shadow: $shadow-sm;
+
+  h1 {
+    margin: 0 0 8px;
+    color: $primary-color;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    overflow-wrap: anywhere;
+  }
+
+  .news-date {
+    margin-bottom: 16px;
+    color: $muted-text-color;
+    font-size: 0.9rem;
+  }
 
   .carousel {
     position: relative;
@@ -10,50 +28,59 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
+    border-radius: 10px;
+    background: #eaf1ea;
+    overflow: hidden;
 
     img {
-      width: 100%;          
-      max-height: 400px;    
-      object-fit: contain;   
-      border-radius: 8px;
+      display: block;
+      width: 100%;
+      max-height: 480px;
+      object-fit: contain;
     }
 
-    button {
+    .nav {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
       background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      border: none;
-      font-size: 1.5em;
-      padding: 10px;
-      cursor: pointer;
+      color: #fff;
+      font-size: 1.8rem;
+      line-height: 1;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: rgba(0, 0, 0, 0.75);
+      }
+
+      &.prev {
+        left: 10px;
+      }
+
+      &.next {
+        right: 10px;
       }
     }
-
-    button:first-of-type { 
-      left: 10px; 
-    }
-    
-    button:last-of-type { 
-      right: 10px; 
-    }
-  }
-
-  .news-date {
-    font-size: 0.9em;
-    color: gray;
-    margin-bottom: 10px;
   }
 
   .news-description {
-    font-size: 1.1em;
-    text-align: justify;
+    margin: 0;
+    font-size: 1.05rem;
     white-space: pre-wrap;
-    line-height: 1.6;
-    margin-top: 20px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 600px) {
+  .news-detail-container {
+    margin-top: 0;
+    padding: 16px 14px 24px;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
   }
 }

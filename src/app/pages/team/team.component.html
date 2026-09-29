@@ -1,21 +1,32 @@
 <div class="team-page-container">
+  <h1 class="page-title">Наша команда</h1>
   <div class="search">
     <input
-      type="text"
+      type="search"
       [(ngModel)]="search"
       (input)="onSearchChange()"
       placeholder="Пошук вчителів..."
+      aria-label="Пошук вчителів"
     />
   </div>
 
   <div *ngIf="loading" class="loading">Завантаження...</div>
 
-  <div class="employees" infiniteScroll 
+  <div class="employees" infiniteScroll
      [infiniteScrollDistance]="2"
      [infiniteScrollThrottle]="300"
      (scrolled)="onScrollDown()">
     <div class="employee-card" *ngFor="let emp of employees">
-      <img *ngIf="emp.photo" [src]="emp.photo" alt="{{ emp.first_name }} {{ emp.last_name }}">
+      <img
+        *ngIf="emp.photo && !emp.photoFailed"
+        [src]="emp.photo"
+        alt="{{ emp.first_name }} {{ emp.last_name }}"
+        loading="lazy"
+        (error)="emp.photoFailed = true"
+      />
+      <div *ngIf="!emp.photo || emp.photoFailed" class="photo-placeholder" aria-hidden="true">
+        {{ emp.last_name.charAt(0) }}{{ emp.first_name.charAt(0) }}
+      </div>
       <div class="info">
         <h3>{{ emp.last_name }} {{ emp.first_name }} {{ emp.middle_name || '' }}</h3>
         <p class="position">{{ emp.position }}</p>
@@ -25,7 +36,7 @@
         <p class="bio" *ngIf="emp.expanded">
           {{ emp.bio }}
         </p>
-        <button *ngIf="emp.bio && emp.bio.length > 100" (click)="emp.expanded = !emp.expanded">
+        <button type="button" *ngIf="emp.bio && emp.bio.length > 100" (click)="emp.expanded = !emp.expanded" [attr.aria-expanded]="!!emp.expanded">
           {{ emp.expanded ? 'Згорнути' : 'Розгорнути' }}
         </button>
       </div>

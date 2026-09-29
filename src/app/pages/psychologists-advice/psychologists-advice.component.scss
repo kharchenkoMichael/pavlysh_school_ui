@@ -1,52 +1,85 @@
-@use "sass:color";
-
-$primary-color: #4caf50;
-$secondary-color: #66bb6a;
-$text-color: #fff;
-$dark-text-color: #333;
-$background-color: #f9f9f9;
+@use "../../../assets/styles/variables" as *;
+@use "../../../assets/styles/page" as *;
 
 .psychologists-advice {
-  padding: 20px;
-  background-color: $background-color;
-  color: $dark-text-color;
-  font-family: "Arial", sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @include page-root(1100px);
 
   h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: $primary-color;
-    font-size: 2.5em;
+    @include page-title;
   }
 
   .large-image-container {
     width: 100%;
-    max-height: calc(100vh - 550px);
     margin-bottom: 20px;
     text-align: center;
 
     .large-image {
       width: 100%;
-      max-height: calc(100vh - 550px);
+      max-height: 70vh;
       object-fit: contain;
+      border-radius: $radius;
     }
   }
 
   owl-carousel-o {
+    display: block;
     margin: 0 auto;
-    width: 80%;
+    width: 100%;
 
     img {
       height: 100px;
       object-fit: contain;
+      cursor: pointer;
       transition: transform 0.3s ease;
     }
 
     img:hover {
-      transform: scale(1.2);
+      transform: scale(1.1);
+    }
+
+    ::ng-deep .owl-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+
+      [class*="owl-"] {
+        min-width: 88px;
+        margin: 0;
+        padding: 8px 18px;
+        border: 0;
+        border-radius: 999px;
+        background: $primary-color;
+        color: $text-color;
+        font-weight: 600;
+
+        &:hover {
+          background: $button-hover-color;
+          color: $text-color;
+        }
+      }
+    }
+
+    // Крапок багато (по одній на пораду) — робимо їх дрібними й акуратними.
+    ::ng-deep .owl-dots {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 14px;
+
+      .owl-dot span {
+        display: block;
+        width: 8px;
+        height: 8px;
+        margin: 0;
+        border-radius: 50%;
+        background: #c5d6c6;
+      }
+
+      .owl-dot.active span {
+        background: $primary-color;
+      }
     }
   }
 }

@@ -1,47 +1,97 @@
 @use "../../../../assets/styles/variables" as *;
 
 .footer-container {
-  background-color: $background-color;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  padding: 36px 20px 20px;
+  background-color: #1b3a1f;
+  color: #e6efe6;
+}
 
-  .footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+.footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.4fr;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    .footer-section {
-      flex: 1;
-      min-width: 200px;
-      max-width: 300px;
+.footer-section {
+  h3 {
+    margin: 0 0 12px;
+    color: #fff;
+    font-size: 16px;
+  }
 
-      h3 {
-        color: $primary-color;
-        margin-bottom: 10px;
-      }
+  p {
+    margin: 0 0 8px;
+    color: #c5d6c6;
+  }
 
-      p,
-      a {
-        color: $dark-text-color;
-        margin-bottom: 10px;
-        text-decoration: none;
+  a {
+    color: #c5d6c6;
+    text-decoration: none;
 
-        &:hover {
-          color: $secondary-color;
-        }
-      }
-
-      a {
-        display: inline-block;
-        margin-right: 10px;
-
-        img {
-          width: 24px;
-          height: 24px;
-        }
-      }
+    &:hover {
+      color: #fff;
+      text-decoration: underline;
     }
+  }
+
+  &:focus-visible,
+  a:focus-visible {
+    outline-color: #fff;
+  }
+}
+
+.footer-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    margin-bottom: 6px;
+  }
+}
+
+.socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+
+    &:hover {
+      background: #e8f5e9;
+      text-decoration: none;
+    }
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.copyright {
+  max-width: 1200px;
+  margin: 28px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: #9fb6a1;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 }

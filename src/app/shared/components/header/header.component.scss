@@ -1,175 +1,314 @@
 @use "../../../../assets/styles/variables" as *;
 
-header {
-  background-color: $primary-color;
-  color: $text-color;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+$breakpoint: 900px;
 
 .fixed-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: $header-height;
+  background-color: $primary-color;
+  color: $text-color;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
   z-index: 1000;
 }
 
 nav {
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 80%;
+  justify-content: space-between;
+  gap: 16px;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-  margin-right: auto;
-}
-
-.logo a {
   color: $text-color;
   text-decoration: none;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.2;
+  max-width: 320px;
+
+  .logo-short {
+    display: none;
+  }
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .menu {
-  list-style: none;
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 2px;
+
+  > li {
+    position: relative;
+  }
 }
 
-.menu li {
-  position: relative;
-}
-
-.menu a {
+.menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
   color: $text-color;
+  font-size: 15px;
+  font-weight: 500;
   text-decoration: none;
-  padding: 10px;
   white-space: nowrap;
+  transition: background-color 0.15s;
+
+  &:hover,
+  &.active {
+    background-color: rgba(255, 255, 255, 0.16);
+  }
+}
+
+.caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  transition: transform 0.15s;
 }
 
 .submenu {
   display: none;
   position: absolute;
-  background-color: $secondary-color;
-  list-style: none;
-  padding: 10px;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  min-width: 240px;
+  padding: 8px;
+  background: $surface-color;
+  border-radius: $radius;
+  box-shadow: $shadow-md;
+
+  // Невидимий місток, щоб меню не зникало, коли курсор їде від пункту до списку.
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 0;
+    right: 0;
+    height: 10px;
+  }
+
+  a {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: $dark-text-color;
+    font-size: 15px;
+    text-decoration: none;
+
+    &:hover,
+    &.active {
+      background-color: #e8f5e9;
+      color: $primary-color;
+    }
+  }
 }
 
-.menu li:hover .submenu {
+.has-submenu:hover > .submenu,
+.has-submenu:focus-within > .submenu {
   display: block;
 }
 
-.menu li:hover > a {
-  background-color: $secondary-color;
-  color: $text-color;
+.has-submenu:hover > .menu-link .caret,
+.has-submenu:focus-within > .menu-link .caret {
+  transform: rotate(180deg);
 }
 
-.submenu li:hover > a {
-  background-color: $primary-color;
-  color: $text-color;
-}
-
-.submenu li {
-  padding: 10px 0px;
-}
-
-.submenu li a {
-  white-space: nowrap;
-}
+// ---- Мобільне меню ----
 
 .mobile-menu-icon {
   display: none;
-  cursor: pointer;
-  margin-right: 20px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+
+  .bar {
+    display: block;
+    height: 2px;
+    border-radius: 2px;
+    background: $text-color;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+  }
 }
 
-.back-arrow {
-  cursor: pointer;
-  color: $text-color;
-  padding: 10px;
-  font-size: 18px;
-}
-
-.mobile-menu.active {
-  display: block;
-  transform: translateX(0);
+.backdrop {
+  display: none;
 }
 
 .mobile-menu {
   display: none;
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 250px;
-  background-color: $primary-color;
-  padding: 20px;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-  transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
-  z-index: 1010;
 }
 
-.mobile-menu ul {
-  list-style: none;
-}
-
-.mobile-menu-list a {
-  display: block;
-  padding: 10px;
-  color: $text-color;
-  text-decoration: none;
-}
-
-.mobile-menu-list li {
-  position: relative;
-}
-
-.mobile-submenu {
-  display: none;
-  background-color: $secondary-color;
-  padding: 10px;
-  margin-left: 20px;
-}
-
-.mobile-submenu li {
-  margin: 0px 10px;
-}
-
-.mobile-submenu.active {
-  display: block;
-}
-
-.mobile-menu-list li:hover > a {
-  background-color: $secondary-color;
-  color: $text-color;
-}
-
-.mobile-submenu li:hover > a {
-  background-color: $primary-color;
-  color: $text-color;
-}
-
-@media (max-width: 830px) {
-  nav {
-    width: 100%;
-    justify-content: space-between;
-  }
-
+@media (max-width: $breakpoint) {
   .menu {
     display: none;
   }
 
   .mobile-menu-icon {
+    display: flex;
+  }
+
+  .logo {
+    font-size: 16px;
+
+    .logo-full {
+      display: none;
+    }
+
+    .logo-short {
+      display: inline;
+    }
+  }
+
+  .backdrop {
     display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s, visibility 0.25s;
+    z-index: 1005;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: min(320px, 86vw);
+    background: $surface-color;
+    box-shadow: -6px 0 24px rgba(0, 0, 0, 0.25);
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.28s ease, visibility 0.28s;
+    z-index: 1010;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    &.active {
+      transform: translateX(0);
+      visibility: visible;
+    }
+  }
+
+  .mobile-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: $header-height;
+    padding: 0 8px 0 20px;
+    background: $primary-color;
+    color: $text-color;
+    font-weight: 700;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+
+  .close-btn {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: $text-color;
+    font-size: 30px;
+    line-height: 1;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.16);
+    }
+  }
+
+  .mobile-menu-list {
+    padding: 8px 12px 24px;
+
+    > li > a,
+    .accordion {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 48px;
+      padding: 12px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: $dark-text-color;
+      font-size: 17px;
+      font-weight: 500;
+      text-align: left;
+      text-decoration: none;
+
+      &:hover,
+      &.active,
+      &.open {
+        background-color: #e8f5e9;
+        color: $primary-color;
+      }
+    }
+
+    .accordion.open .caret {
+      transform: rotate(180deg);
+    }
+  }
+
+  .mobile-submenu {
+    display: none;
+    margin: 2px 0 6px 12px;
+    padding-left: 10px;
+    border-left: 2px solid $border-color;
+
+    &.active {
+      display: block;
+    }
+
+    a {
+      display: block;
+      padding: 11px 12px;
+      border-radius: 8px;
+      color: $dark-text-color;
+      font-size: 16px;
+      text-decoration: none;
+
+      &:hover,
+      &.active {
+        background-color: #e8f5e9;
+        color: $primary-color;
+      }
+    }
   }
 }

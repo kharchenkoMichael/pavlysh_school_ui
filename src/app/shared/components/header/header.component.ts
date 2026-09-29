@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -10,18 +10,38 @@ import { RouterModule } from '@angular/router';
 })
 export class HeaderComponent {
   mobileMenuActive = false;
+  openSubmenu: 'school' | 'parents' | null = null;
 
   toggleMobileMenu() {
     this.mobileMenuActive = !this.mobileMenuActive;
+    this.lockScroll(this.mobileMenuActive);
+    if (!this.mobileMenuActive) this.openSubmenu = null;
   }
 
-  toggleSubmenu(event: Event) {
-    const submenus = document.querySelectorAll('.mobile-submenu');
-    submenus.forEach((submenu) => submenu.classList.remove('active'));
+  closeMobileMenu() {
+    if (!this.mobileMenuActive) return;
+    this.mobileMenuActive = false;
+    this.openSubmenu = null;
+    this.lockScroll(false);
+  }
 
-    const submenu = (event.target as HTMLElement).nextElementSibling;
-    if (submenu) {
-      submenu.classList.toggle('active');
-    }
+  toggleSubmenu(name: 'school' | 'parents') {
+    this.openSubmenu = this.openSubmenu === name ? null : name;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.closeMobileMenu();
+  }
+
+  // Якщо вікно розтягнули до десктопної ширини, меню-шухляду закриваємо.
+  @HostListener('window:resize')
+  onResize() {
+    if (window.innerWidth > 900) this.closeMobileMenu();
+  }
+
+  // Поки відкрите мобільне меню, сторінка за ним не гортається.
+  private lockScroll(lock: boolean) {
+    document.body.style.overflow = lock ? 'hidden' : '';
   }
 }

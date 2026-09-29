@@ -1,22 +1,18 @@
 @use "../../../assets/styles/variables" as *;
+@use "../../../assets/styles/page" as *;
 
 .psychologists-advice {
-  padding: 20px;
-  background-color: $background-color;
-  color: $dark-text-color;
-  font-family: "Arial", sans-serif;
+  @include page-root(1000px);
 
   h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: $primary-color;
-    font-size: 2.5em;
+    @include page-title;
   }
 
   .contact-section {
+    @include page-card;
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 24px;
 
     &.left {
       flex-direction: row;
@@ -27,26 +23,45 @@
     }
 
     img {
-      width: 20%; // Зменшення розміру зображення
+      flex: 0 0 180px;
+      width: 180px;
+      max-width: 30%;
       height: auto;
       object-fit: contain;
-      margin: 0 20px;
     }
 
     .text {
-      width: 60%;
-      text-align: left;
+      flex: 1;
+      min-width: 0;
 
       h2 {
-        color: $secondary-color;
-        font-size: 2em;
-        margin-bottom: 10px;
+        @include card-heading;
       }
 
       p {
-        font-size: 1.2em;
-        color: $dark-text-color;
+        margin: 0 0 10px;
+        font-size: 1.05rem;
       }
+
+      a {
+        color: $primary-color;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .psychologists-advice .contact-section {
+    &.left,
+    &.right {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    img {
+      flex-basis: auto;
+      width: 60%;
+      max-width: 220px;
     }
   }
 }

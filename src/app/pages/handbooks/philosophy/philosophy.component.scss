@@ -1,78 +1,40 @@
 @use "../../../../assets/styles/variables" as *;
-@use "sass:color";
+@use "../../../../assets/styles/page" as *;
 
 .philosophy {
-  padding: 20px;
-  background-color: $background-color;
-  color: $dark-text-color;
-  font-family: "Arial", sans-serif;
+  @include page-root;
 
   h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: $primary-color;
-    font-size: 2.5em;
+    @include page-title;
   }
 
   section {
-    margin-bottom: 30px;
-    padding: 20px;
-    border: 1px solid $primary-color;
-    border-radius: 10px;
-    background-color: color.adjust($background-color, $lightness: 10%);
-    position: relative;
-    overflow: hidden;
+    @include page-card;
+    @include card-text;
 
     h2 {
-      color: $secondary-color;
-      font-size: 1.8em;
-      margin-bottom: 15px;
+      @include card-heading;
     }
 
     h3 {
+      margin: 20px 0 10px;
       color: $primary-color;
-      font-size: 1.5em;
-      margin-top: 20px;
+      font-size: 1.25rem;
     }
+
     ul {
-      list-style-type: none;
+      list-style: none;
       padding: 0;
-
-      li {
-        margin: 10px 0;
-
-        a {
-          color: $primary-color;
-          text-decoration: none;
-          font-size: 1.2em;
-
-          &:hover {
-            text-decoration: underline;
-            color: color.adjust($primary-color, $lightness: -10%);
-          }
-        }
-      }
     }
   }
 
   button {
-    background-color: $primary-color;
-    color: $text-color;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
+    @include pill-button;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-
-    &:hover {
-      background-color: color.adjust($primary-color, $lightness: -10%);
-    }
+    margin: 20px auto 0;
   }
 }
+
 .offset {
   position: relative;
   top: -70px;

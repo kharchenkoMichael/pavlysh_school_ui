@@ -7,4 +7,5 @@ export interface Employee {
   photo?: string;
   bio?: string;
   expanded?: boolean;
+  photoFailed?: boolean;
 }

@@ -1,90 +1,92 @@
 <header class="fixed-header">
-  <nav>
-    <div class="logo">
-      <a [routerLink]="['/']"> Павлиський ліцей імені В.О.Сухомлинського</a>
-    </div>
+  <nav aria-label="Головна навігація">
+    <a class="logo" [routerLink]="['/']" (click)="closeMobileMenu()">
+      <span class="logo-full">Павлиський ліцей імені В.О.Сухомлинського</span>
+      <span class="logo-short">Павлиський ліцей</span>
+    </a>
+
     <ul class="menu">
-      <li>
-        <a href="#">Про школу</a>
+      <li class="has-submenu">
+        <button type="button" class="menu-link" aria-haspopup="true">
+          Про школу <span class="caret" aria-hidden="true"></span>
+        </button>
         <ul class="submenu">
-          <li><a [routerLink]="['/team']">Команда</a></li>
-          <li><a [routerLink]="['/registration-open']">Реєстрація</a></li>
-          <li><a [routerLink]="['/school-history']">Історія закладу</a></li>
-          <li><a [routerLink]="['/museum']">Музей</a></li>
-          <li><a [routerLink]="['/school-pride']">Гордість школи</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/team']">Команда</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/registration-open']">Реєстрація</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/school-history']">Історія закладу</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/museum']">Музей</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/school-pride']">Гордість школи</a></li>
         </ul>
       </li>
-      <li>
-        <a [routerLink]="['/admission']">Вступ</a>
-      </li>
-      <li><a  [routerLink]="['/news']">Новини</a></li>
-      <li><a [routerLink]="['/rozklad']">Розклад</a></li>
-      <li><a [routerLink]="['/parent-handbook']">Нормативна база</a></li>
-      <li>
-        <a [routerLink]="['/parent-handbook']">Для батьків</a>
+      <li><a class="menu-link" routerLinkActive="active" [routerLink]="['/admission']">Вступ</a></li>
+      <li><a class="menu-link" routerLinkActive="active" [routerLink]="['/news']">Новини</a></li>
+      <li><a class="menu-link" routerLinkActive="active" [routerLink]="['/rozklad']">Розклад</a></li>
+      <li><a class="menu-link" routerLinkActive="active" [routerLink]="['/parent-handbook']">Нормативна база</a></li>
+      <li class="has-submenu">
+        <button type="button" class="menu-link" aria-haspopup="true">
+          Для батьків <span class="caret" aria-hidden="true"></span>
+        </button>
         <ul class="submenu">
-          <li>
-            <a [routerLink]="['/education-campaign']">
-              Кожне покоління лишає слід
-            </a>
-          </li>
-          <li><a href="https://olgariz.blogspot.com/" target="_blank">Блог шкільного психолога</a></li>
-          <li>
-            <a [routerLink]="['/distance-learning']">Дистанційна освіта</a>
-          </li>
-          <li><a [routerLink]="['/advice']">Психолог радить</a></li>
-          <li>
-            <a [routerLink]="['/psychological']"
-              >Контакти психологічної допомоги</a
-            >
-          </li>
-          <li><a [routerLink]="['/anti-bullying']">Стоп булінг</a></li>
-          <li>
-            <a [routerLink]="['/internet-safety']">Безпека в інтернеті</a>
-          </li>
+          <li><a routerLinkActive="active" [routerLink]="['/education-campaign']">Кожне покоління лишає слід</a></li>
+          <li><a href="https://olgariz.blogspot.com/" target="_blank" rel="noopener">Блог шкільного психолога</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/distance-learning']">Дистанційна освіта</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/advice']">Психолог радить</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/psychological']">Контакти психологічної допомоги</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/anti-bullying']">Стоп булінг</a></li>
+          <li><a routerLinkActive="active" [routerLink]="['/internet-safety']">Безпека в інтернеті</a></li>
         </ul>
       </li>
     </ul>
-    <div class="mobile-menu-icon" (click)="toggleMobileMenu()">&#9776;</div>
+
+    <button
+      type="button"
+      class="mobile-menu-icon"
+      (click)="toggleMobileMenu()"
+      [attr.aria-expanded]="mobileMenuActive"
+      aria-controls="mobile-menu"
+      aria-label="Відкрити меню"
+    >
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
   </nav>
 </header>
-<div class="mobile-menu" [class.active]="mobileMenuActive">
-  <div class="back-arrow" (click)="toggleMobileMenu()">&#8594; Назад</div>
+
+<div class="backdrop" [class.active]="mobileMenuActive" (click)="closeMobileMenu()"></div>
+
+<div class="mobile-menu" id="mobile-menu" [class.active]="mobileMenuActive" [attr.aria-hidden]="!mobileMenuActive">
+  <div class="mobile-menu-head">
+    <span>Меню</span>
+    <button type="button" class="close-btn" (click)="closeMobileMenu()" aria-label="Закрити меню">&times;</button>
+  </div>
   <ul class="mobile-menu-list">
     <li>
-      <a (click)="toggleSubmenu($event)">Про школу</a>
-      <ul class="mobile-submenu">
-        <li><a [routerLink]="['/team']">Команда</a></li>
-        <li><a [routerLink]="['/registration-open']">Реєстрація</a></li>
-        <li><a [routerLink]="['/school-history']">Історія закладу</a></li>
-        <li><a [routerLink]="['/museum']">Музей</a></li>
-        <li><a [routerLink]="['/school-pride']">Гордість школи</a></li>
+      <button type="button" class="accordion" [class.open]="openSubmenu === 'school'" (click)="toggleSubmenu('school')" [attr.aria-expanded]="openSubmenu === 'school'">
+        Про школу <span class="caret" aria-hidden="true"></span>
+      </button>
+      <ul class="mobile-submenu" [class.active]="openSubmenu === 'school'">
+        <li><a routerLinkActive="active" [routerLink]="['/team']" (click)="closeMobileMenu()">Команда</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/registration-open']" (click)="closeMobileMenu()">Реєстрація</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/school-history']" (click)="closeMobileMenu()">Історія закладу</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/museum']" (click)="closeMobileMenu()">Музей</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/school-pride']" (click)="closeMobileMenu()">Гордість школи</a></li>
       </ul>
     </li>
+    <li><a routerLinkActive="active" [routerLink]="['/admission']" (click)="closeMobileMenu()">Вступ</a></li>
+    <li><a routerLinkActive="active" [routerLink]="['/news']" (click)="closeMobileMenu()">Новини</a></li>
+    <li><a routerLinkActive="active" [routerLink]="['/rozklad']" (click)="closeMobileMenu()">Розклад</a></li>
+    <li><a routerLinkActive="active" [routerLink]="['/parent-handbook']" (click)="closeMobileMenu()">Нормативна база</a></li>
     <li>
-      <a [routerLink]="['/admission']">Вступ</a>
-    </li>
-    <li><a [routerLink]="['/news']">Новини</a></li>
-    <li><a [routerLink]="['/rozklad']">Розклад</a></li>
-    <li><a [routerLink]="['/parent-handbook']">Нормативна база</a></li>
-    <li>
-      <a (click)="toggleSubmenu($event)">Для батьків</a>
-      <ul class="mobile-submenu">
-        <li>
-          <a [routerLink]="['/education-campaign']">
-            Кожне покоління лишає слід
-          </a>
-        </li>
-        <li><a href="https://olgariz.blogspot.com/" target="_blank">Блог шкільного психолога</a></li>
-        <li><a [routerLink]="['/distance-learning']">Дистанційна освіта</a></li>
-        <li><a [routerLink]="['/advice']">Психолог радить</a></li>
-        <li>
-          <a [routerLink]="['/psychological']"
-            >Контакти психологічної допомоги</a
-          >
-        </li>
-        <li><a [routerLink]="['/anti-bullying']">Стоп булінг</a></li>
-        <li><a [routerLink]="['/internet-safety']">Безпека в інтернеті</a></li>
+      <button type="button" class="accordion" [class.open]="openSubmenu === 'parents'" (click)="toggleSubmenu('parents')" [attr.aria-expanded]="openSubmenu === 'parents'">
+        Для батьків <span class="caret" aria-hidden="true"></span>
+      </button>
+      <ul class="mobile-submenu" [class.active]="openSubmenu === 'parents'">
+        <li><a routerLinkActive="active" [routerLink]="['/education-campaign']" (click)="closeMobileMenu()">Кожне покоління лишає слід</a></li>
+        <li><a href="https://olgariz.blogspot.com/" target="_blank" rel="noopener">Блог шкільного психолога</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/distance-learning']" (click)="closeMobileMenu()">Дистанційна освіта</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/advice']" (click)="closeMobileMenu()">Психолог радить</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/psychological']" (click)="closeMobileMenu()">Контакти психологічної допомоги</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/anti-bullying']" (click)="closeMobileMenu()">Стоп булінг</a></li>
+        <li><a routerLinkActive="active" [routerLink]="['/internet-safety']" (click)="closeMobileMenu()">Безпека в інтернеті</a></li>
       </ul>
     </li>
   </ul>

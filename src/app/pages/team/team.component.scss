@@ -1,124 +1,145 @@
 @use "../../../assets/styles/variables" as *;
-@use "sass:color";
 
 .team-page-container {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 0;
   gap: 20px;
-  box-sizing: border-box;
+
+  .page-title {
+    margin: 0;
+    color: $primary-color;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    text-align: center;
+  }
 
   .search {
     width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
 
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px 16px;
       font-size: 1rem;
-      border: 1px solid darken($background-color, 10%);
-      border-radius: 6px;
-      box-sizing: border-box;
+      border: 1px solid $border-color;
+      border-radius: 999px;
+      background: $surface-color;
+      box-shadow: $shadow-sm;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+      }
     }
+  }
+
+  .loading {
+    color: $muted-text-color;
+    text-align: center;
   }
 
   .employees {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
     gap: 20px;
     width: 100%;
 
     .employee-card {
       display: flex;
-      flex-direction: row;
-      background-color: $background-color;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-      transition: transform 0.2s;
-      max-width: 100%; 
-      box-sizing: border-box;
+      gap: 16px;
+      padding: 16px;
+      background-color: $surface-color;
+      border: 1px solid $border-color;
+      border-radius: $radius;
+      box-shadow: $shadow-sm;
+      transition: box-shadow 0.2s, transform 0.2s;
 
       &:hover {
-        transform: translateY(-5px);
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+      }
+
+      img,
+      .photo-placeholder {
+        width: 120px;
+        height: 160px;
+        flex-shrink: 0;
+        border-radius: 10px;
       }
 
       img {
-        width: 150px;
-        height: 200px;
         object-fit: cover;
-        margin: 10px;
-        border-radius: 10%;
-        flex-shrink: 0;
+        background: #e8f5e9;
+      }
+
+      .photo-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f5e9;
+        color: $primary-color;
+        font-size: 2rem;
+        font-weight: 700;
       }
 
       .info {
-        padding: 10px;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        min-width: 0;
 
         h3 {
-          font-size: 1.2rem;
-          font-weight: bold;
-          margin: 0 0 5px 0;
+          margin: 0 0 4px;
+          font-size: 1.1rem;
+          overflow-wrap: anywhere;
         }
 
         .position {
-          font-size: 1rem;
-          font-weight: bold;
-          color: $dark-text-color;
-          margin-bottom: 5px;
+          margin: 0 0 8px;
+          color: $primary-color;
+          font-size: 0.95rem;
+          font-weight: 600;
         }
 
         .bio {
-          font-size: 0.75rem;
-          color: $dark-text-color;
-          overflow: hidden;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          transition: max-height 0.3s;
+          margin: 0 0 12px;
+          color: $muted-text-color;
+          font-size: 0.9rem;
+          line-height: 1.5;
         }
 
         button {
           margin-top: auto;
           align-self: flex-start;
-          background-color: $primary-color;
-          color: $text-color;
-          border: none;
-          padding: 5px 10px;
-          border-radius: 4px;
-          cursor: pointer;
+          padding: 6px 14px;
+          border: 1px solid $primary-color;
+          border-radius: 999px;
+          background: transparent;
+          color: $primary-color;
+          font-size: 0.9rem;
+          font-weight: 600;
 
           &:hover {
-            background-color: $button-hover-color;
+            background-color: $primary-color;
+            color: $text-color;
           }
         }
       }
     }
   }
+}
 
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+@media (max-width: 480px) {
+  .team-page-container .employees .employee-card {
+    padding: 12px;
 
-    button {
-      background-color: $secondary-color;
-      color: $text-color;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-
-      &:disabled {
-        background-color: lighten($secondary-color, 30%);
-        cursor: not-allowed;
-      }
-
-      &:hover:enabled {
-        background-color: $button-hover-color;
-      }
+    img,
+    .photo-placeholder {
+      width: 90px;
+      height: 120px;
     }
   }
 }

@@ -1,64 +1,45 @@
 @use "../../../assets/styles/variables" as *;
+@use "../../../assets/styles/page" as *;
 
 .anti-bullying {
-  padding: 20px;
-  background-color: $background-color;
-  color: $dark-text-color;
-  font-family: "Arial", sans-serif;
-
-  h1,
-  h2,
-  h3 {
-    text-align: center;
-    color: $primary-color;
-  }
+  @include page-root;
 
   h1 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
+    @include page-title;
+  }
+
+  h2,
+  h3 {
+    color: $primary-color;
+    text-align: center;
   }
 
   h2 {
-    font-size: 2em;
-    margin-bottom: 10px;
+    margin: 0 0 12px;
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
   }
 
   h3 {
-    font-size: 1.8em;
-    margin-bottom: 10px;
+    margin: 16px 0 10px;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
   }
 
   .policy-section,
   .instructions-section,
   .contacts-section {
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #f0f0f0; // Світло-сірий фон
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.5s ease-in-out forwards;
-
-    p,
-    ul {
-      color: $dark-text-color;
-    }
+    @include page-card;
+    @include card-text;
+    animation: fadeInUp 0.4s ease-out both;
 
     ul {
-      list-style-type: disc;
-      padding-left: 20px;
-
-      li {
-        margin-bottom: 10px;
-      }
+      list-style: disc;
     }
   }
 
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(14px);
     }
     to {
       opacity: 1;

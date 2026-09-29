@@ -1,66 +1,32 @@
-@use "sass:color";
-
-$primary-color: #4caf50;
-$secondary-color: #66bb6a;
-$text-color: #fff;
-$dark-text-color: #333;
-$background-color: #f9f9f9;
-$button-hover-color: color.scale($secondary-color, $lightness: -10%);
+@use "../../../assets/styles/variables" as *;
+@use "../../../assets/styles/page" as *;
 
 .distance-learning {
-  padding: 20px;
-  background-color: $background-color;
-  color: $dark-text-color;
-  font-family: "Arial", sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @include page-root;
 
   h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: $primary-color;
-    font-size: 2.5em;
+    @include page-title;
   }
 
-  h2 {
-    color: $secondary-color;
-    font-size: 2em;
-    margin-bottom: 20px;
+  > h2 {
+    margin: 0 0 16px;
+    color: $primary-color;
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    text-align: center;
   }
 
   section {
-    margin-bottom: 30px;
-    padding: 20px;
-    border: 1px solid $primary-color;
-    border-radius: 10px;
-    background-color: color.adjust($background-color, $lightness: 10%);
-    position: relative;
-    overflow: hidden;
-    max-width: 800px;
-    width: 100%;
+    @include page-card;
+    @include card-text;
 
     h3 {
-      color: $secondary-color;
-      font-size: 1.8em;
-      margin-bottom: 15px;
+      @include card-heading;
     }
 
     h4 {
+      margin: 20px 0 10px;
       color: $primary-color;
-      font-size: 1.5em;
-      margin-top: 20px;
-    }
-
-    p {
-      margin-bottom: 15px;
-    }
-
-    ul,
-    ol {
-      li {
-        margin: 10px 0;
-      }
+      font-size: 1.2rem;
     }
   }
 }

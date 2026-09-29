@@ -1,10 +1,10 @@
 <div *ngIf="newsItem" class="news-detail-container">
-  <h2>{{ newsItem.title }}</h2>
-  <div class="carousel">
-    <button (click)="prevPhoto()">&lt;</button>
-    <img [src]="newsItem.images[currentPhotoIndex]" alt="News Photo" />
-    <button (click)="nextPhoto()">&gt;</button>
-  </div>
+  <h1>{{ newsItem.title }}</h1>
   <div class="news-date">{{ newsItem.date }}</div>
+  <div class="carousel" *ngIf="newsItem.images?.length">
+    <button type="button" class="nav prev" (click)="prevPhoto()" aria-label="Попереднє фото" *ngIf="newsItem.images.length > 1">&lsaquo;</button>
+    <img [src]="newsItem.images[currentPhotoIndex]" [alt]="newsItem.title" />
+    <button type="button" class="nav next" (click)="nextPhoto()" aria-label="Наступне фото" *ngIf="newsItem.images.length > 1">&rsaquo;</button>
+  </div>
   <p class="news-description">{{ newsItem.description }}</p>
 </div>
