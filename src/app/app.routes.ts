@@ -162,7 +162,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/rozklad/rozklad.component').then(m => m.RozkladComponent),
     data: {
       title: 'Розклад уроків – Павлиська школа',
-      description: 'Розклад уроків 5–11 класів на тиждень: для кожного класу й кожного вчителя.'
+      description: 'Розклад уроків 1–11 класів на тиждень: для кожного класу й кожного вчителя.'
     }
   },
   {
