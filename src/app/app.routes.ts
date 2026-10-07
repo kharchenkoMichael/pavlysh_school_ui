@@ -11,6 +11,7 @@ import { PsychologistsAdviceComponent } from './pages/psychologists-advice/psych
 import { PsychologicalHelpComponent } from './pages/psychological-help/psychological-help.component';
 import { AntiBullyingComponent } from './pages/anti-bullying/anti-bullying.component';
 import { InternetSafetyComponent } from './pages/internet-safety/internet-safety.component';
+import { AntiNicotineComponent } from './pages/anti-nicotine/anti-nicotine.component';
 import { RegistrationOpenComponent } from './pages/registration-open/registration-open.component';
 import { NewsDetailComponent } from './pages/news-detail/news-detail.component';
 import { NewsPageComponent } from './pages/news-page/news-page.component';
@@ -112,6 +113,14 @@ export const routes: Routes = [
     data: {
       title: 'Безпека в інтернеті – Павлиська школа',
       description: 'Поради та правила безпечного користування інтернетом для учнів.'
+    }
+  },
+  {
+    path: 'anti-nicotine',
+    component: AntiNicotineComponent,
+    data: {
+      title: 'Тютюнові компанії полюють на дітей – Павлиська школа',
+      description: 'Матеріали соціальної кампанії про захист дітей і молоді від тютюнових та нікотинових виробів.'
     }
   },
   {
