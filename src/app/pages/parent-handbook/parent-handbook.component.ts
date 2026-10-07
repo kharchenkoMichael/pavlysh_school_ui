@@ -74,6 +74,10 @@ export class ParentHandbookComponent {
         link: '/assets/documents/Положення про ВСОЯО.pdf',
       },
       {
+        name: 'Правила доступу і перебування учасників освітнього процесу та інших осіб на території та в приміщеннях ліцею (погоджено наказом відділу освіти від 28.09.2026 № 447-ОД)',
+        link: '/assets/documents/pravyla_dostupu_i_perebuvannia.pdf',
+      },
+      {
         name: 'Заява на отримання ліцензії',
         link: '/assets/documents/zajava_na_otrimannja_licenziji.pdf',
       },
